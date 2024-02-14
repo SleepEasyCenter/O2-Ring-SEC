@@ -98,6 +98,8 @@ class MainActivity : AppCompatActivity(), BleChangeObserver {
         Bluetooth.MODEL_VCOMIN,   // VcominActivity
     )
 
+    //pc102/pc80b/pc60fw/ap20/pod1w/pc68b/checkme/pc303...
+
     private var list = arrayListOf<Bluetooth>()
     private var adapter = DeviceAdapter(R.layout.device_item, list)
 

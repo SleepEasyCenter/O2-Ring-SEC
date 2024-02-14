@@ -36,6 +36,7 @@ android {
             dirs 'libs'
         }
     }
+    namespace 'com.example.lpdemo'
 
 }
 
