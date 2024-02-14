@@ -16,9 +16,12 @@
         android:icon="@mipmap/sleepeasylogo"
         android:label="SleepEasy (AX, DX, TX, MX) "
         android:roundIcon="@mipmap/ic_launcher_round"
-        android:supportsRtl="true"
+            android:supportsRtl="true"
         android:theme="@style/Theme.LepuDemo">
-        <activity android:name=".MainActivity" android:exported="true">
+        <activity
+            android:name=".MainActivity"
+            android:theme="@style/Theme.App.SplashScreen"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

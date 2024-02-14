@@ -61,5 +61,6 @@ dependencies {
     implementation 'commons-io:commons-io:2.6'
     // pdf
     implementation 'com.github.barteksc:android-pdf-viewer:2.8.2'
+    implementation "androidx.core:core-splashscreen:1.0.0"
 
 }
