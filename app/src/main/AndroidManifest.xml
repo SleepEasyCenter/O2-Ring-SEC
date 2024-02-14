@@ -14,9 +14,9 @@
     <application
         android:allowBackup="true"
         android:icon="@mipmap/sleepeasylogo"
-        android:label="SleepEasy (AX, DX, TX, MX) "
+        android:label="SleepEasy O2 Project"
         android:roundIcon="@mipmap/ic_launcher_round"
-            android:supportsRtl="true"
+        android:supportsRtl="true"
         android:theme="@style/Theme.LepuDemo">
         <activity
             android:name=".MainActivity"

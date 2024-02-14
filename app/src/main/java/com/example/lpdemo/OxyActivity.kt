@@ -142,20 +142,24 @@ class OxyActivity : AppCompatActivity(), BleChangeObserver {
                 // data.lightStr：0-2
                 // data.buzzer：checkO2Plus（0-20：MIN，20-40：LOW，40-60：MID，60-80：HIGH，80-100：MAX）
             }
+        //Reading File Error
         LiveEventBus.get<InterfaceEvent>(InterfaceEvent.Oxy.EventOxyReadFileError)
             .observe(this) {
                 val data = it.data as Boolean
                 data_log.text = "EventOxyReadFileError $data"
             }
+        //Reading File InProgress
         LiveEventBus.get<InterfaceEvent>(InterfaceEvent.Oxy.EventOxyReadingFileProgress)
             .observe(this) {
                 val data = it.data as Int
                 data_log.text = "进度 $data%"
             }
+        //Finished Reading File
         LiveEventBus.get<InterfaceEvent>(InterfaceEvent.Oxy.EventOxyReadFileComplete)
             .observe(this) {
                 val data = it.data as OxyFile
                 data_log.text = "$data"
+                Log.d(TAG, "Reading Databyte ${data.data[1]}")
                 fileNames.removeAt(0)
                 readFile()
                 // data.operationMode：0（Sleep Mode），1（Minitor Mode）
@@ -171,6 +175,7 @@ class OxyActivity : AppCompatActivity(), BleChangeObserver {
                 // data.o2Score：Range: 0~100（For range 0~10, should be (O2 Score) / 10）
                 // data.stepCounter：Total steps
             }
+        //Real Time data presentation
         LiveEventBus.get<InterfaceEvent>(InterfaceEvent.Oxy.EventOxyRtParamData)
             .observe(this) {
                 val data = it.data as RtParam
@@ -182,11 +187,13 @@ class OxyActivity : AppCompatActivity(), BleChangeObserver {
                 // data.batteryState：0（no charge），1（charging），2（charging complete）
                 // data.state：0（lead off），1（lead on），other（error）
             }
+        //Factory Reset
         LiveEventBus.get<InterfaceEvent>(InterfaceEvent.Oxy.EventOxyFactoryReset)
             .observe(this) {
                 val data = it.data as Boolean
                 data_log.text = "EventOxyFactoryReset $data"
             }
+        //Sync Device
         LiveEventBus.get<InterfaceEvent>(InterfaceEvent.Oxy.EventOxySyncDeviceInfo)
             .observe(this) {
                 val types = it.data as Array<String>
@@ -198,7 +205,9 @@ class OxyActivity : AppCompatActivity(), BleChangeObserver {
 
     private fun readFile() {
         if (fileNames.size == 0) return
+        val fileName = BleServiceHelper.BleServiceHelper.oxyReadFile(model, fileNames[0])
         BleServiceHelper.BleServiceHelper.oxyReadFile(model, fileNames[0])
+        Log.d(TAG, "Reading file: $fileName")
     }
 
     override fun onBleStateChanged(model: Int, state: Int) {

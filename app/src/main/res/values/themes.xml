@@ -19,7 +19,7 @@
         <item name="cardCornerRadius">5dp</item>
     </style>
 
-    <style name="Theme.App.SplashScreen" parent="Theme.SplashScreen">
+    <style name="Theme.App.SplashScreen" parent="Theme.LepuDemo">
         <item name="windowSplashScreenBackground">@color/white</item>
         <item name="windowSplashScreenAnimatedIcon">@drawable/logowithshadow </item>
         <item name="postSplashScreenTheme">@style/Theme.LepuDemo </item>
