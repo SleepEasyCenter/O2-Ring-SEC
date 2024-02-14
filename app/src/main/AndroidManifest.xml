@@ -16,8 +16,7 @@
         android:icon="@mipmap/sleepeasylogo"
         android:label="SleepEasy O2 Project"
         android:roundIcon="@mipmap/ic_launcher_round"
-        android:supportsRtl="true"
-        android:theme="@style/Theme.LepuDemo">
+        android:supportsRtl="true">
         <activity
             android:name=".MainActivity"
             android:theme="@style/Theme.App.SplashScreen"
