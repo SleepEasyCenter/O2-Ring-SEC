@@ -25,16 +25,16 @@
         android:text="scan"/>
 
     <EditText
+        android:id="@+id/ble_split"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/ble_split"
-        android:hint="Filter"
         android:layout_marginStart="20dp"
-        android:layout_marginEnd="20dp"
+        android:hint="Filter"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@id/scan"
         app:layout_constraintStart_toEndOf="@id/scan"
         app:layout_constraintTop_toTopOf="@id/scan"
-        app:layout_constraintBottom_toBottomOf="@id/scan"
-        android:textSize="18sp"/>
+        app:layout_constraintVertical_bias="0.0" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rcv"
