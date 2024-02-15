@@ -1,5 +1,6 @@
 package com.example.lpdemo
 
+import com.example.lpdemo.utils.FileUtils
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
@@ -32,7 +33,7 @@ class OxyActivity : AppCompatActivity(), BleChangeObserver {
     // Bluetooth.MODEL_AI_S100, Bluetooth.MODEL_O2M_WPS
     // Bluetooth.MODEL_CMRING, Bluetooth.MODEL_OXYFIT_WPS,
     // Bluetooth.MODEL_KIDSO2_WPS, Bluetooth.MODEL_SI_PO6
-    private var model = Bluetooth.MODEL_O2RING
+    private var model =  Bluetooth.MODEL_O2RING
 
     private var fileNames = arrayListOf<String>()
 
@@ -159,7 +160,7 @@ class OxyActivity : AppCompatActivity(), BleChangeObserver {
             .observe(this) {
                 val data = it.data as OxyFile
                 data_log.text = "$data"
-                Log.d(TAG, "Reading Databyte ${data.data[1]}")
+                FileUtils.initiateDownload(data, applicationContext);
                 fileNames.removeAt(0)
                 readFile()
                 // data.operationMode：0（Sleep Mode），1（Minitor Mode）
