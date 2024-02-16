@@ -74,40 +74,6 @@ object FileUtils {
             Log.e("Download Error", "Error creating CSV file: ${e.message}")
         }
     }
-//
-//    fun initiateDownload(dataList: OxyFile, context: Context) {
-//        // Create a file in the local directory
-//        val downloadDirectory = File(context.filesDir, "data.csv")
-//        Log.d("Directory", "$downloadDirectory");
-//        try {
-//            val writer = CSVWriter(FileWriter(downloadDirectory))
-//
-//            // Create data to be written to the CSV file
-//            val data = listOf(
-//                arrayOf("Country", "Capital"),
-//                arrayOf("India", "New Delhi"),
-//                arrayOf("United States", "Washington D.C"),
-//                arrayOf("Germany", "Berlin")
-//            )
-//
-//            writer.writeAll(data)
-//
-//            // Close the writer
-//            writer.close()
-//
-//            Log.d("Download Notice", "CSV file successfully created at: ${downloadDirectory.absolutePath}")
-//
-//            Toast.makeText(context, "CSV file saved at: ${downloadDirectory.absolutePath}", Toast.LENGTH_LONG).show()
-//
-//            openCsvFile(downloadDirectory, context)
-//
-//
-//        } catch (e: IOException) {
-//            e.printStackTrace()
-//
-//            Log.e("Download Error", "Error creating CSV file: ${e.message}")
-//        }
-//    }
 
     private fun openCsvFile(file: File, context: Context) {
         try {
