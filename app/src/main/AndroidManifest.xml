@@ -17,7 +17,7 @@
         android:icon="@mipmap/sleepeasylogo"
         android:label="SleepEasy O2 Project"
         android:roundIcon="@mipmap/ic_launcher_round"
-        android:theme="@style/Theme.App.SplashScreen"
+        android:theme="@style/Theme.LepuDemo"
         android:supportsRtl="true">
         <provider
             android:name="androidx.core.content.FileProvider"
