@@ -74,7 +74,6 @@ object FileUtils {
             Log.e("Download Error", "Error creating CSV file: ${e.message}")
         }
     }
-
     private fun openCsvFile(file: File, context: Context) {
         try {
             val contentUri = FileProvider.getUriForFile(
