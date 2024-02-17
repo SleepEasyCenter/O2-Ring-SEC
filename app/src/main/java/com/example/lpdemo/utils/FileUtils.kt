@@ -1,18 +1,14 @@
 package com.example.lpdemo.utils
 
-import android.app.DownloadManager
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
-import android.nfc.Tag
-import android.os.Environment
 import android.util.Log
 import android.widget.Toast
 import androidx.core.content.FileProvider
 import com.lepu.blepro.ext.oxy.OxyFile
 import com.opencsv.CSVWriter
-import java.io.FileWriter
 import java.io.File
+import java.io.FileWriter
 import java.io.IOException
 
 object FileUtils {
@@ -38,18 +34,22 @@ object FileUtils {
             // Write headers
             writer.writeNext(
                 arrayOf(
+                    "Time",
+                    "Oxygen Level",
                     "Pulse Rate",
-                    "Oxygen Level"
+                    "Motion"
                 )
             )
 
             for (i in dataList.data.indices) {
                 val dataPoint = dataList.data[i]
                 // Accessing specific properties of each data point
+                val time = "${dataList.day}/${dataList.month}/${dataList.year} ${dataList.hour}:${dataList.minute}:${dataList.second}"
                 val pr = dataPoint.pr
                 val spo2 = dataPoint.spo2
-                // Do whatever you need with 'pr' and 'spo2' here
-                writer.writeNext(arrayOf(dataPoint.pr.toString(), dataPoint.spo2.toString()))
+                val motion = dataPoint.vector;
+
+                writer.writeNext(arrayOf(time, pr.toString(), spo2.toString(), motion.toString()))
             }
 
             Log.d(
