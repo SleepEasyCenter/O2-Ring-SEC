@@ -1,19 +1,18 @@
 package com.example.lpdemo.utils
 
-import android.app.DownloadManager
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
-import android.nfc.Tag
-import android.os.Environment
 import android.util.Log
 import android.widget.Toast
 import androidx.core.content.FileProvider
 import com.lepu.blepro.ext.oxy.OxyFile
 import com.opencsv.CSVWriter
-import java.io.FileWriter
 import java.io.File
+import java.io.FileWriter
 import java.io.IOException
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Locale
 
 object FileUtils {
     fun initiateDownload(dataList: OxyFile, context: Context) {
@@ -23,6 +22,7 @@ object FileUtils {
         // Specify the directory name
         val directoryName = "data"
 
+
         // Create the directory if it doesn't exist
         val directory = File(internalDir, directoryName)
         if (!directory.exists()) {
@@ -30,7 +30,7 @@ object FileUtils {
         }
 
         // Create a file in the directory
-        val downloadDirectory = File(directory, "data.csv")
+        val downloadDirectory = File(directory, "O2_Ring  ${dataList.day}${dataList.month}${dataList.year}")
         try {
             // Create a CSV writer
             val writer = CSVWriter(FileWriter(downloadDirectory))
@@ -38,18 +38,28 @@ object FileUtils {
             // Write headers
             writer.writeNext(
                 arrayOf(
+                    "Time",
+                    "Oxygen Level",
                     "Pulse Rate",
-                    "Oxygen Level"
+                    "Motion"
                 )
             )
+            var startTime = Calendar.getInstance().apply {
+                set(dataList.year, dataList.month - 1, dataList.day, dataList.hour, dataList.minute, dataList.second)
+            }
 
             for (i in dataList.data.indices) {
                 val dataPoint = dataList.data[i]
                 // Accessing specific properties of each data point
+                val time = SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.getDefault()).format(startTime.time)
+
+                // Update the start time by adding 4 seconds
+                startTime.add(Calendar.SECOND, 4)
                 val pr = dataPoint.pr
                 val spo2 = dataPoint.spo2
-                // Do whatever you need with 'pr' and 'spo2' here
-                writer.writeNext(arrayOf(dataPoint.pr.toString(), dataPoint.spo2.toString()))
+                val motion = dataPoint.vector;
+
+                writer.writeNext(arrayOf(time, pr.toString(), spo2.toString(), motion.toString()))
             }
 
             Log.d(
