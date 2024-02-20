@@ -9,28 +9,37 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.LocationManager
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
-import android.widget.Toast
 import android.provider.Settings
+import android.util.Log
 import android.util.SparseArray
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.app.ActivityCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.lpdemo.utils.*
+import com.example.lpdemo.utils.DeviceAdapter
+import com.example.lpdemo.utils._bleState
+import com.example.lpdemo.utils.bleState
+import com.example.lpdemo.utils.deviceAddress
+import com.example.lpdemo.utils.deviceModel
+import com.example.lpdemo.utils.deviceName
 import com.jeremyliao.liveeventbus.LiveEventBus
-import com.lepu.blepro.ext.BleServiceHelper
 import com.lepu.blepro.constants.Ble
 import com.lepu.blepro.event.EventMsgConst
 import com.lepu.blepro.event.InterfaceEvent
+import com.lepu.blepro.ext.BleServiceHelper
 import com.lepu.blepro.objs.Bluetooth
 import com.lepu.blepro.objs.BluetoothController
 import com.lepu.blepro.observer.BIOL
 import com.lepu.blepro.observer.BleChangeObserver
 import com.permissionx.guolindev.PermissionX
-import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_main.ble_split
+import kotlinx.android.synthetic.main.activity_main.rcv
+import kotlinx.android.synthetic.main.activity_main.scan
+import kotlinx.android.synthetic.main.navigation.bottomNavigationView
 import no.nordicsemi.android.ble.observer.ConnectionObserver
 
 class MainActivity : AppCompatActivity(), BleChangeObserver {
@@ -108,12 +117,34 @@ class MainActivity : AppCompatActivity(), BleChangeObserver {
         super.onCreate(savedInstanceState)
         Thread.sleep(3000)
         installSplashScreen()
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.navigation)
+        val firstFragment=FirstFragment()
+        val secondFragment=SecondFragment()
+        val thirdFragment=ThirdFragment()
+
+        setCurrentFragment(firstFragment)
+
+        bottomNavigationView.selectedItemId = R.id.person
+        bottomNavigationView.setOnNavigationItemSelectedListener {
+            when(it.itemId){
+                R.id.home->setCurrentFragment(firstFragment)
+                R.id.person->setCurrentFragment(secondFragment)
+                R.id.settings->setCurrentFragment(thirdFragment)
+
+            }
+            true
+        }
+
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-        initView()
         initEventBus()
         needPermission()
     }
+    private fun setCurrentFragment(fragment: Fragment)=
+        supportFragmentManager.beginTransaction().apply {
+            replace(R.id.flFragment,fragment)
+            commit()
+        }
+
 
     private fun needService() {
         var gpsEnabled = false
@@ -253,7 +284,7 @@ class MainActivity : AppCompatActivity(), BleChangeObserver {
         }
     }
 
-    private fun initView() {
+    fun initView() {
 
         dialog = ProgressDialog(this)
 

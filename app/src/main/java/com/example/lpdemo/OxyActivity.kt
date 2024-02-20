@@ -1,23 +1,36 @@
 package com.example.lpdemo
 
-import com.example.lpdemo.utils.FileUtils
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.example.lpdemo.utils.FileUtils
 import com.example.lpdemo.utils._bleState
 import com.example.lpdemo.utils.bleState
 import com.example.lpdemo.utils.deviceName
 import com.jeremyliao.liveeventbus.LiveEventBus
-import com.lepu.blepro.ext.BleServiceHelper
 import com.lepu.blepro.constants.Ble
 import com.lepu.blepro.event.InterfaceEvent
-import com.lepu.blepro.ext.oxy.*
+import com.lepu.blepro.ext.BleServiceHelper
+import com.lepu.blepro.ext.oxy.DeviceInfo
+import com.lepu.blepro.ext.oxy.OxyFile
+import com.lepu.blepro.ext.oxy.RtParam
 import com.lepu.blepro.objs.Bluetooth
 import com.lepu.blepro.observer.BIOL
 import com.lepu.blepro.observer.BleChangeObserver
-import kotlinx.android.synthetic.main.activity_oxy.*
+import kotlinx.android.synthetic.main.activity_oxy.ble_name
+import kotlinx.android.synthetic.main.activity_oxy.data_log
+import kotlinx.android.synthetic.main.activity_oxy.factory_reset
+import kotlinx.android.synthetic.main.activity_oxy.get_info
+import kotlinx.android.synthetic.main.activity_oxy.get_rt_param
+import kotlinx.android.synthetic.main.activity_oxy.oxy_ble_state
+import kotlinx.android.synthetic.main.activity_oxy.read_file
+import kotlinx.android.synthetic.main.activity_oxy.set_buzzer
+import kotlinx.android.synthetic.main.activity_oxy.set_motor
+import kotlinx.android.synthetic.main.activity_oxy.tv_oxy
+import kotlinx.android.synthetic.main.activity_oxy.tv_pi
+import kotlinx.android.synthetic.main.activity_oxy.tv_pr
 
 class OxyActivity : AppCompatActivity(), BleChangeObserver {
 
@@ -160,6 +173,7 @@ class OxyActivity : AppCompatActivity(), BleChangeObserver {
             .observe(this) {
                 val data = it.data as OxyFile
                 data_log.text = "$data"
+                FileUtils.saveOxyFileData(this, data);
                 FileUtils.initiateDownload(data, applicationContext);
                 fileNames.removeAt(0)
                 readFile()
@@ -202,6 +216,26 @@ class OxyActivity : AppCompatActivity(), BleChangeObserver {
                     Log.d(TAG, "$type success")
                 }
             }
+    }
+
+    private fun generateLineChart(lineChart: LineChart, spo2Value: Float) {
+        // Get existing entries from the chart, or create a new list if the chart is empty
+        val entries = if (lineChart.data != null && lineChart.data.dataSetCount > 0) {
+            (lineChart.data.getDataSetByIndex(0) as LineDataSet).values
+        } else {
+            mutableListOf()
+        }
+
+        // Add a new entry with the spo2Value
+        entries.add(Entry(entries.size.toFloat(), spo2Value))
+
+        // Create a LineDataSet with the updated entries
+        val dataSet = LineDataSet(entries, "Spo2 Values")
+        val lineData = LineData(dataSet)
+
+        // Set the LineData to the LineChart and refresh the chart
+        lineChart.data = lineData
+        lineChart.invalidate()
     }
 
     private fun readFile() {
