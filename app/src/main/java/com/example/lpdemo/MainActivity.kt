@@ -117,12 +117,14 @@ class MainActivity : AppCompatActivity(), BleChangeObserver {
         super.onCreate(savedInstanceState)
         Thread.sleep(3000)
         installSplashScreen()
+
         setContentView(R.layout.navigation)
         val firstFragment=FirstFragment()
         val secondFragment=SecondFragment()
         val thirdFragment=ThirdFragment()
 
         setCurrentFragment(firstFragment)
+
 
         bottomNavigationView.selectedItemId = R.id.person
         bottomNavigationView.setOnNavigationItemSelectedListener {

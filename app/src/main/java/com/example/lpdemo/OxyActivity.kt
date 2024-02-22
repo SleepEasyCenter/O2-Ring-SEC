@@ -5,10 +5,12 @@ import android.os.Handler
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.example.lpdemo.utils.GraphManager
 import com.example.lpdemo.utils.FileUtils
 import com.example.lpdemo.utils._bleState
 import com.example.lpdemo.utils.bleState
 import com.example.lpdemo.utils.deviceName
+import com.github.mikephil.charting.charts.LineChart
 import com.jeremyliao.liveeventbus.LiveEventBus
 import com.lepu.blepro.constants.Ble
 import com.lepu.blepro.event.InterfaceEvent
@@ -34,6 +36,7 @@ import kotlinx.android.synthetic.main.activity_oxy.tv_pr
 
 class OxyActivity : AppCompatActivity(), BleChangeObserver {
 
+    private lateinit var lineChart: LineChart
     private val TAG = "OxyActivity"
     // Bluetooth.MODEL_O2RING, Bluetooth.MODEL_O2M,
     // Bluetooth.MODEL_BABYO2, Bluetooth.MODEL_BABYO2N,
@@ -67,6 +70,7 @@ class OxyActivity : AppCompatActivity(), BleChangeObserver {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_oxy)
+        lineChart = findViewById(R.id.lineChart)
         model = intent.getIntExtra("model", model)
         lifecycle.addObserver(BIOL(this, intArrayOf(model)))
         initView()
@@ -197,6 +201,8 @@ class OxyActivity : AppCompatActivity(), BleChangeObserver {
                 tv_oxy.text = data.spo2.toString()
                 tv_pr.text = data.pr.toString()
                 tv_pi.text = data.pi.toString()
+                val graphManager = GraphManager( lineChart)
+                graphManager.startUpdatingChart(data.spo2.toFloat())
                 data_log.text = "$data"
                 // data.battery：0-100
                 // data.batteryState：0（no charge），1（charging），2（charging complete）
@@ -258,5 +264,6 @@ class OxyActivity : AppCompatActivity(), BleChangeObserver {
         BleServiceHelper.BleServiceHelper.disconnect(false)
         super.onDestroy()
     }
+
 
 }
