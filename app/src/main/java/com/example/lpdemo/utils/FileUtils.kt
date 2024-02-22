@@ -20,7 +20,9 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 
+
 object FileUtils {
+
     private const val PREF_NAME = "OxyFilePref"
     private const val KEY_OXY_FILE_DATA = "oxyFileData"
     private val gson = Gson()
@@ -118,6 +120,7 @@ object FileUtils {
             Toast.makeText(context, "Failed to open CSV file", Toast.LENGTH_SHORT).show()
         }
     }
+    
     fun saveOxyFileData(context: Context, data: OxyFile) {
         val editor = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE).edit()
         val jsonString = gson.toJson(data)
@@ -147,6 +150,5 @@ object FileUtils {
         lineChart.data = lineData
         lineChart.invalidate() // Refresh the chart
     }
-
 
 }

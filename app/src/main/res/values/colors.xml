@@ -18,4 +18,8 @@
 
     <color name="ecg_bkg">#3e4e5e</color>
     <color name="color_blue">#4b97c1</color>
+
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#FF4081</color>
 </resources>
