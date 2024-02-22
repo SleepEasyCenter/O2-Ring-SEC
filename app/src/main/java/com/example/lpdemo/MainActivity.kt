@@ -109,6 +109,24 @@ class MainActivity : AppCompatActivity(), BleChangeObserver {
         Thread.sleep(3000)
         installSplashScreen()
         setContentView(R.layout.activity_main)
+        setContentView(R.layout.navigation)
+        val firstFragment=FirstFragment()
+        val secondFragment=SecondFragment()
+        val thirdFragment=ThirdFragment()
+
+        setCurrentFragment(firstFragment)
+
+        bottomNavigationView.selectedItemId = R.id.home
+        bottomNavigationView.setOnNavigationItemSelectedListener {
+            when(it.itemId){
+                R.id.home->setCurrentFragment(firstFragment)
+                R.id.person->setCurrentFragment(secondFragment)
+                R.id.settings->setCurrentFragment(thirdFragment)
+
+            }
+            true
+        }
+
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
         initView()
         initEventBus()
@@ -253,7 +271,7 @@ class MainActivity : AppCompatActivity(), BleChangeObserver {
         }
     }
 
-    private fun initView() {
+    fun initView() {
 
         dialog = ProgressDialog(this)
 
