@@ -113,18 +113,18 @@ class MainActivity : AppCompatActivity(), BleChangeObserver {
     private var list = arrayListOf<Bluetooth>()
     private var adapter = DeviceAdapter(R.layout.device_item, list)
 
+    private val firstFragment=FirstFragment()
+    private val secondFragment=SecondFragment()
+    private val thirdFragment=ThirdFragment()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Thread.sleep(3000)
         installSplashScreen()
 
         setContentView(R.layout.navigation)
-        val firstFragment=FirstFragment()
-        val secondFragment=SecondFragment()
-        val thirdFragment=ThirdFragment()
 
         setCurrentFragment(firstFragment)
-
 
         bottomNavigationView.selectedItemId = R.id.person
         bottomNavigationView.setOnNavigationItemSelectedListener {
@@ -141,7 +141,9 @@ class MainActivity : AppCompatActivity(), BleChangeObserver {
         initEventBus()
         needPermission()
     }
+
     private fun setCurrentFragment(fragment: Fragment)=
+        //sets the fragment of choice as the main screen
         supportFragmentManager.beginTransaction().apply {
             replace(R.id.flFragment,fragment)
             commit()
