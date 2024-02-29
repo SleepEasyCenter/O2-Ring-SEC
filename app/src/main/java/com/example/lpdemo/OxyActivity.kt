@@ -11,9 +11,6 @@ import com.example.lpdemo.utils._bleState
 import com.example.lpdemo.utils.bleState
 import com.example.lpdemo.utils.deviceName
 import com.github.mikephil.charting.charts.LineChart
-import com.github.mikephil.charting.data.Entry
-import com.github.mikephil.charting.data.LineData
-import com.github.mikephil.charting.data.LineDataSet
 import com.jeremyliao.liveeventbus.LiveEventBus
 import com.lepu.blepro.constants.Ble
 import com.lepu.blepro.event.InterfaceEvent
@@ -225,26 +222,6 @@ class OxyActivity : AppCompatActivity(), BleChangeObserver {
                     Log.d(TAG, "$type success")
                 }
             }
-    }
-
-    private fun generateLineChart(lineChart: LineChart, spo2Value: Float) {
-        // Get existing entries from the chart, or create a new list if the chart is empty
-        val entries = if (lineChart.data != null && lineChart.data.dataSetCount > 0) {
-            (lineChart.data.getDataSetByIndex(0) as LineDataSet).values
-        } else {
-            mutableListOf()
-        }
-
-        // Add a new entry with the spo2Value
-        entries.add(Entry(entries.size.toFloat(), spo2Value))
-
-        // Create a LineDataSet with the updated entries
-        val dataSet = LineDataSet(entries, "Spo2 Values")
-        val lineData = LineData(dataSet)
-
-        // Set the LineData to the LineChart and refresh the chart
-        lineChart.data = lineData
-        lineChart.invalidate()
     }
 
     private fun readFile() {
