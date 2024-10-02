@@ -11,6 +11,7 @@ import android.widget.ArrayAdapter
 import android.widget.SeekBar
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.lpdemo.databinding.ActivityVentilatorBinding
 import com.example.lpdemo.utils.StringAdapter
 import com.example.lpdemo.utils._bleState
 import com.example.lpdemo.utils.bleState
@@ -25,7 +26,6 @@ import com.lepu.blepro.objs.Bluetooth
 import com.lepu.blepro.observer.BIOL
 import com.lepu.blepro.observer.BleChangeObserver
 import com.lepu.blepro.utils.DateUtil
-import kotlinx.android.synthetic.main.activity_ventilator.*
 import java.util.*
 import kotlin.math.max
 import kotlin.math.min
@@ -47,9 +47,11 @@ class VentilatorActivity : AppCompatActivity(), BleChangeObserver {
     private var spinnerSet = true
     private var deviceInfo = DeviceInfo()
     private lateinit var rtState: RtState
+    private lateinit var binding: ActivityVentilatorBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+        super.onCreate(savedInstanceState);
+        binding = ActivityVentilatorBinding.inflate(layoutInflater);
         setContentView(R.layout.activity_ventilator)
         model = intent.getIntExtra("model", model)
         lifecycle.addObserver(BIOL(this, intArrayOf(model)))
@@ -61,13 +63,13 @@ class VentilatorActivity : AppCompatActivity(), BleChangeObserver {
     }
 
     private fun initView() {
-        ble_name.text = deviceName
+        binding.bleName.text = deviceName;
         LinearLayoutManager(this).apply {
             this.orientation = LinearLayoutManager.VERTICAL
-            wifi_rcv.layoutManager = this
+            binding.wifiRcv.layoutManager = this
         }
         wifiAdapter = StringAdapter(R.layout.device_item, null).apply {
-            wifi_rcv.adapter = this
+            binding.wifiRcv.adapter = this
         }
         wifiAdapter.setOnItemClickListener { adapter, view, position ->
             (adapter.getItem(position) as String).let {
