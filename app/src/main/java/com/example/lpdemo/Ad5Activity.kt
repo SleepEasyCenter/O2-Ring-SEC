@@ -3,6 +3,7 @@ package com.example.lpdemo
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import com.example.lpdemo.databinding.ActivityVentilatorBinding
 import com.example.lpdemo.utils._bleState
 import com.example.lpdemo.utils.bleState
 import com.example.lpdemo.utils.deviceName
@@ -14,16 +15,23 @@ import com.lepu.blepro.ext.Ad5Data
 import com.lepu.blepro.objs.Bluetooth
 import com.lepu.blepro.observer.BIOL
 import com.lepu.blepro.observer.BleChangeObserver
-import kotlinx.android.synthetic.main.activity_log.*
+//import kotlinx.android.synthetic.main.activity_log.*
 
 class Ad5Activity : AppCompatActivity(), BleChangeObserver {
 
     private val TAG = "Ad5Activity"
     // Bluetooth.MODEL_VTM_AD5, Bluetooth.MODEL_FETAL
     private var model = Bluetooth.MODEL_VTM_AD5
+    private lateinit var binding: ActivityVentilatorBinding
 
+    var ble_state = binding.bleState
+    var ble_name = binding.bleName
+    var data_log = binding.dataLog
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        binding = ActivityVentilatorBinding.inflate(layoutInflater)
+        val view = binding.root
+        setContentView(view)
         setContentView(R.layout.activity_log)
         model = intent.getIntExtra("model", model)
         lifecycle.addObserver(BIOL(this, intArrayOf(model)))

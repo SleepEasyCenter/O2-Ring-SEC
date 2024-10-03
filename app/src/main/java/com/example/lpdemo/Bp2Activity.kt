@@ -19,7 +19,7 @@ import com.lepu.blepro.observer.BIOL
 import com.lepu.blepro.observer.BleChangeObserver
 import com.lepu.blepro.utils.DateUtil
 import com.lepu.blepro.utils.FilterUtil
-import kotlinx.android.synthetic.main.activity_bp2.*
+//import kotlinx.android.synthetic.main.activity_bp2.*
 import kotlin.math.floor
 
 class Bp2Activity : AppCompatActivity(), BleChangeObserver {

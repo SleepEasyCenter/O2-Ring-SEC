@@ -3,6 +3,7 @@ package com.example.lpdemo
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import com.example.lpdemo.databinding.ActivityVentilatorBinding
 import com.example.lpdemo.utils._bleState
 import com.example.lpdemo.utils.bleState
 import com.example.lpdemo.utils.deviceName
@@ -14,13 +15,17 @@ import com.lepu.blepro.ext.aoj20a.*
 import com.lepu.blepro.objs.Bluetooth
 import com.lepu.blepro.observer.BIOL
 import com.lepu.blepro.observer.BleChangeObserver
-import kotlinx.android.synthetic.main.activity_aoj20a.*
+//import kotlinx.android.synthetic.main.activity_aoj20a.*
 
 class Aoj20aActivity : AppCompatActivity(), BleChangeObserver {
 
     private val TAG = "Aoj20aActivity"
     private val model = Bluetooth.MODEL_AOJ20A
+    private lateinit var binding: ActivityVentilatorBinding
 
+    var ble_name = binding.bleName
+    var ble_state = binding.bleState
+    var data_log = binding.dataLog
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_aoj20a)

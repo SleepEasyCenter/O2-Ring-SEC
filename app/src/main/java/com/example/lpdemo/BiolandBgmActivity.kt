@@ -14,7 +14,7 @@ import com.lepu.blepro.ext.bioland.*
 import com.lepu.blepro.objs.Bluetooth
 import com.lepu.blepro.observer.BIOL
 import com.lepu.blepro.observer.BleChangeObserver
-import kotlinx.android.synthetic.main.activity_bioland_bgm.*
+//import kotlinx.android.synthetic.main.activity_bioland_bgm.*
 
 class BiolandBgmActivity : AppCompatActivity(), BleChangeObserver {
 

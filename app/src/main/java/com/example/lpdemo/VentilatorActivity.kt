@@ -32,6 +32,7 @@ import kotlin.math.min
 
 class VentilatorActivity : AppCompatActivity(), BleChangeObserver {
 
+
     private val TAG = "VentilatorActivity"
     // Bluetooth.MODEL_R20, Bluetooth.MODEL_R21, Bluetooth.MODEL_R10, Bluetooth.MODEL_R11, Bluetooth.MODEL_LERES
     private var model = Bluetooth.MODEL_R20
@@ -49,8 +50,189 @@ class VentilatorActivity : AppCompatActivity(), BleChangeObserver {
     private lateinit var rtState: RtState
     private lateinit var binding: ActivityVentilatorBinding
 
+
+    // all the variables that are migrated.
+    var ventilator_ventilation_switch = binding.ventilatorVentilationSwitch
+    var ventilator_mask_test = binding.ventilatorMaskTest
+    var get_rt_state = binding.getRtState
+    var get_rt_param = binding.getRtParam
+    var get_file_list = binding.getFileList
+    var read_file = binding.readFile
+    var get_wifi_list = binding.getWifiList
+    var get_wifi_config = binding.getWifiConfig
+
+    var ble_state = binding.bleState
+    var pin = binding.pin
+    var unit = binding.unit
+    var bound = binding.bound
+    var doctor_mode = binding.doctorMode
+    var language = binding.language
+    var brightness = binding.brightness
+    var brightness_sub = binding.brightnessSub
+    var brightness_add = binding.brightnessAdd
+    var brightness_range = binding.brightnessRange
+    var brightness_process = binding.brightnessProcess
+    var screen_off = binding.screenOff
+    var filter = binding.filter
+    var filter_sub = binding.filterSub
+    var filter_add = binding.filterAdd
+    var filter_range = binding.filterRange
+    var filter_process = binding.filterProcess
+    var mask = binding.mask
+    var mask_sub = binding.maskSub
+    var mask_add = binding.maskAdd
+    var mask_range = binding.maskRange
+    var mask_process = binding.maskProcess
+    var tube = binding.tube
+    var tube_sub = binding.tubeSub
+    var tube_add = binding.tubeAdd
+    var tube_range = binding.tubeRange
+    var tube_process = binding.tubeProcess
+    var tank = binding.tank
+    var tank_sub = binding.tankSub
+    var tank_add = binding.tankAdd
+    var tank_range = binding.tankRange
+    var tank_process = binding.tankProcess
+    var volume = binding.volume
+    var volume_sub = binding.volumeSub
+    var volume_add = binding.volumeAdd
+    var volume_range = binding.volumeRange
+    var volume_process = binding.volumeProcess
+    var humidification = binding.humidification
+    var epr = binding.epr
+    var epr_layout = binding.eprLayout
+    var auto_start = binding.autoStart
+    var auto_end = binding.autoEnd
+    var pre_heat = binding.preHeat
+    var ramp_pressure = binding.rampPressure
+    var ramp_pressure_sub = binding.rampPressureSub
+    var ramp_pressure_add = binding.rampPressureAdd
+    var ramp_pressure_range = binding.rampPressureRange
+    var ramp_pressure_process = binding.rampPressureProcess
+    var ramp_time = binding.rampTime
+    var ramp_time_sub = binding.rampTimeSub
+    var ramp_time_add = binding.rampTimeAdd
+    var ramp_time_range = binding.rampTimeRange
+    var ramp_time_process = binding.rampTimeProcess
+    var tube_type = binding.tubeType
+    var mask_type = binding.maskType
+    var mask_pressure = binding.maskPressure
+    var mask_pressure_sub = binding.maskPressureSub
+    var mask_pressure_add = binding.maskPressureAdd
+    var mask_pressure_range = binding.maskPressureRange
+    var mask_pressure_process = binding.maskPressureProcess
+    var ventilation_mode = binding.ventilationMode
+    var cpap_pressure = binding.cpapPressure
+    var cpap_pressure_sub = binding.cpapPressureSub
+    var cpap_pressure_add = binding.cpapPressureAdd
+    var apap_pressure_max = binding.apapPressureMax
+    var cpap_pressure_range = binding.cpapPressureRange
+    var cpap_pressure_process = binding.cpapPressureProcess
+    var cpap_pressure_layout = binding.cpapPressureLayout
+    var apap_pressure_max_sub = binding.apapPressureMaxSub
+    var apap_pressure_max_add = binding.apapPressureMaxAdd
+    var apap_pressure_max_range = binding.apapPressureMaxRange
+    var apap_pressure_max_process = binding.apapPressureMaxProcess
+    var apap_pressure_max_layout = binding.apapPressureMaxLayout
+    var apap_pressure_min = binding.apapPressureMin
+    var apap_pressure_min_sub = binding.apapPressureMinSub
+    var apap_pressure_min_add = binding.apapPressureMinAdd
+    var apap_pressure_min_range = binding.apapPressureMinRange
+    var apap_pressure_min_process = binding.apapPressureMinProcess
+    var apap_pressure_min_layout = binding.apapPressureMinLayout
+    var ipap_pressure = binding.ipapPressure
+    var ipap_pressure_sub = binding.ipapPressureSub
+    var ipap_pressure_add = binding.ipapPressureAdd
+    var ipap_pressure_range = binding.ipapPressureRange
+    var ipap_pressure_process = binding.ipapPressureProcess
+    var ipap_pressure_layout = binding.ipapPressureLayout
+    var epap_pressure = binding.epapPressure
+    var epap_pressure_sub = binding.epapPressureSub
+    var epap_pressure_add = binding.epapPressureAdd
+    var epap_pressure_range = binding.epapPressureRange
+    var epap_pressure_process = binding.epapPressureProcess
+    var epap_pressure_layout = binding.epapPressureLayout
+    var inspiratory_time = binding.inspiratoryTime
+    var inspiratory_time_sub = binding.inspiratoryTimeSub
+    var inspiratory_time_add = binding.inspiratoryTimeAdd
+    var inspiratory_time_range = binding.inspiratoryTimeRange
+    var inspiratory_time_process = binding.inspiratoryTimeProcess
+    var inspiratory_time_layout = binding.inspiratoryTimeLayout
+    var respiratory_frequency = binding.respiratoryFrequency
+    var respiratory_frequency_sub = binding.respiratoryFrequencySub
+    var respiratory_frequency_add = binding.respiratoryFrequencyAdd
+    var respiratory_frequency_range = binding.respiratoryFrequencyRange
+    var respiratory_frequency_process = binding.respiratoryFrequencyProcess
+    var respiratory_frequency_layout = binding.respiratoryFrequencyLayout
+    var raise_time = binding.raiseTime
+    var raise_time_sub = binding.raiseTimeSub
+    var raise_time_add = binding.raiseTimeAdd
+    var raise_time_range = binding.raiseTimeRange
+    var raise_time_process = binding.raiseTimeProcess
+    var raise_time_layout = binding.raiseTimeLayout
+    var i_trigger = binding.iTrigger
+    var i_trigger_layout = binding.iTriggerLayout
+    var e_trigger = binding.eTrigger
+    var e_trigger_layout = binding.eTriggerLayout
+    var leak_high = binding.leakHigh
+    var apnea = binding.apnea
+    var vt_low = binding.vtLow
+    var vt_low_sub = binding.vtLowSub
+    var vt_low_add = binding.vtLowAdd
+    var vt_low_range = binding.vtLowRange
+    var vt_low_process = binding.vtLowProcess
+    var vt_low_layout = binding.vtLowLayout
+    var low_ventilation = binding.lowVentilation
+    var low_ventilation_sub = binding.lowVentilationSub
+    var low_ventilation_add = binding.lowVentilationAdd
+    var low_ventilation_range = binding.lowVentilationRange
+    var low_ventilation_process = binding.lowVentilationProcess
+    var low_ventilation_layout = binding.lowVentilationLayout
+    var rr_high = binding.rrHigh
+    var rr_high_sub = binding.rrHighSub
+    var rr_high_add = binding.rrHighAdd
+    var rr_high_range = binding.rrHighRange
+    var rr_high_process = binding.rrHighProcess
+    var rr_high_layout = binding.rrHighLayout
+    var rr_low = binding.rrLow
+    var rr_low_sub= binding.rrLowSub
+    var rr_low_add = binding.rrLowAdd
+    var rr_low_range = binding.rrLowRange
+    var rr_low_process = binding.rrLowProcess
+    var rr_low_layout = binding.rrLowLayout
+    var spo2_low = binding.spo2Low
+    var spo2_low_sub = binding.spo2LowSub
+    var spo2_low_add = binding.spo2LowAdd
+    var spo2_low_range = binding.spo2LowRange
+    var spo2_low_process = binding.spo2LowProcess
+    var hr_high = binding.hrHigh
+    var hr_high_sub = binding.hrHighSub
+    var hr_high_add = binding.hrHighAdd
+    var hr_high_range = binding.hrHighRange
+    var hr_high_process = binding.hrHighProcess
+    var hr_low = binding.hrLow
+    var hr_low_sub = binding.hrLowSub
+    var hr_low_add = binding.hrLowAdd
+    var hr_low_range = binding.hrLowRange
+    var hr_low_process = binding.hrLowProcess
+    var ventilator_event = binding.ventilatorEvent
+
+    var data_log = binding.dataLog
+    var device_mode = binding.deviceMode
+    var ventilation_setting = binding.ventilationSetting
+    var warning_setting = binding.warningSetting
+    var ventilation_setting_layout = binding.ventilationSettingLayout
+    var warning_setting_layout = binding.warningSettingLayout
+    var system_setting = binding.systemSetting
+    var system_setting_layout = binding.systemSettingLayout
+    var measure_setting = binding.measureSetting
+    var measure_setting_layout = binding.measureSettingLayout
+    var ventilator_mask_test_text = binding.ventilatorMaskTestText
+    var other_setting = binding.otherSetting
+    var other_layout = binding.otherLayout
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState);
+        super.onCreate(savedInstanceState)  
+
         binding = ActivityVentilatorBinding.inflate(layoutInflater);
         setContentView(R.layout.activity_ventilator)
         model = intent.getIntExtra("model", model)
@@ -85,33 +267,42 @@ class VentilatorActivity : AppCompatActivity(), BleChangeObserver {
                 adapter.notifyDataSetChanged()
             }
         }
+
+
         ventilator_ventilation_switch.setOnCheckedChangeListener { buttonView, isChecked ->
             if (buttonView.isPressed) {
                 BleServiceHelper.BleServiceHelper.ventilatorVentilationSwitch(model, isChecked)
             }
         }
+
         ventilator_mask_test.setOnCheckedChangeListener { buttonView, isChecked ->
             if (buttonView.isPressed) {
                 BleServiceHelper.BleServiceHelper.ventilatorMaskTest(model, isChecked)
             }
         }
+
         get_rt_state.setOnClickListener {
             BleServiceHelper.BleServiceHelper.ventilatorGetRtState(model)
         }
+
         get_rt_param.setOnClickListener {
             BleServiceHelper.BleServiceHelper.ventilatorGetRtParam(model)
         }
+
         get_file_list.setOnClickListener {
             fileNames.clear()
             BleServiceHelper.BleServiceHelper.ventilatorGetFileList(model)
         }
+
         read_file.setOnClickListener {
             readFile()
         }
+
         get_wifi_list.setOnClickListener {
             wifiList.clear()
             BleServiceHelper.BleServiceHelper.ventilatorGetWifiList(model)
         }
+
         get_wifi_config.setOnClickListener {
             BleServiceHelper.BleServiceHelper.ventilatorGetWifiConfig(model)
         }
@@ -122,6 +313,7 @@ class VentilatorActivity : AppCompatActivity(), BleChangeObserver {
                 ble_state.setImageResource(R.mipmap.bluetooth_error)
             }
         }
+
         system_setting.setOnClickListener {
             system_setting.background = getDrawable(R.drawable.string_selected)
             measure_setting.background = getDrawable(R.drawable.dialog_hint_shape)
@@ -136,6 +328,7 @@ class VentilatorActivity : AppCompatActivity(), BleChangeObserver {
             spinnerSet = false
             BleServiceHelper.BleServiceHelper.ventilatorGetSystemSetting(model)
         }
+
         measure_setting.setOnClickListener {
             measure_setting.background = getDrawable(R.drawable.string_selected)
             system_setting.background = getDrawable(R.drawable.dialog_hint_shape)
@@ -151,6 +344,7 @@ class VentilatorActivity : AppCompatActivity(), BleChangeObserver {
             BleServiceHelper.BleServiceHelper.ventilatorGetVentilationSetting(model)
             BleServiceHelper.BleServiceHelper.ventilatorGetMeasureSetting(model)
         }
+
         ventilation_setting.setOnClickListener {
             ventilation_setting.background = getDrawable(R.drawable.string_selected)
             system_setting.background = getDrawable(R.drawable.dialog_hint_shape)
@@ -166,6 +360,7 @@ class VentilatorActivity : AppCompatActivity(), BleChangeObserver {
             spinnerSet = false
             BleServiceHelper.BleServiceHelper.ventilatorGetVentilationSetting(model)
         }
+
         warning_setting.setOnClickListener {
             warning_setting.background = getDrawable(R.drawable.string_selected)
             system_setting.background = getDrawable(R.drawable.dialog_hint_shape)
@@ -180,6 +375,7 @@ class VentilatorActivity : AppCompatActivity(), BleChangeObserver {
             spinnerSet = false
             BleServiceHelper.BleServiceHelper.ventilatorGetWarningSetting(model)
         }
+
         other_setting.setOnClickListener {
             other_setting.background = getDrawable(R.drawable.string_selected)
             system_setting.background = getDrawable(R.drawable.dialog_hint_shape)
@@ -194,10 +390,12 @@ class VentilatorActivity : AppCompatActivity(), BleChangeObserver {
             BleServiceHelper.BleServiceHelper.ventilatorGetRtState(model)
         }
         // 绑定/解绑
+
         bound.setOnCheckedChangeListener { buttonView, isChecked ->
             BleServiceHelper.BleServiceHelper.ventilatorDeviceBound(model, isChecked)
         }
         // 进入医生模式
+
         doctor_mode.setOnCheckedChangeListener { buttonView, isChecked ->
             if (buttonView.isPressed) {
                 if (isChecked) {
@@ -218,6 +416,7 @@ class VentilatorActivity : AppCompatActivity(), BleChangeObserver {
         ArrayAdapter(this, android.R.layout.simple_list_item_1, arrayListOf("cmH2O", "hPa")).apply {
             unit.adapter = this
         }
+
         unit.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 if (spinnerSet) {
@@ -233,6 +432,7 @@ class VentilatorActivity : AppCompatActivity(), BleChangeObserver {
         ArrayAdapter(this, android.R.layout.simple_list_item_1, arrayListOf("英文", "中文")).apply {
             language.adapter = this
         }
+
         language.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 if (spinnerSet) {
@@ -245,6 +445,7 @@ class VentilatorActivity : AppCompatActivity(), BleChangeObserver {
             }
         }
         // 屏幕设置：屏幕亮度
+
         brightness.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 if (fromUser) {
@@ -262,11 +463,13 @@ class VentilatorActivity : AppCompatActivity(), BleChangeObserver {
             override fun onStopTrackingTouch(seekBar: SeekBar?) {
             }
         })
+
         brightness_sub.setOnClickListener {
             systemSetting.type = Constant.VentilatorSystemSetting.SCREEN
             systemSetting.screenSetting.brightness = --brightness.progress
             BleServiceHelper.BleServiceHelper.ventilatorSetSystemSetting(model, systemSetting)
         }
+
         brightness_add.setOnClickListener {
             systemSetting.type = Constant.VentilatorSystemSetting.SCREEN
             systemSetting.screenSetting.brightness = ++brightness.progress
@@ -276,6 +479,7 @@ class VentilatorActivity : AppCompatActivity(), BleChangeObserver {
         ArrayAdapter(this, android.R.layout.simple_list_item_1, arrayListOf("常亮", "30秒", "60秒", "90秒", "120秒")).apply {
             screen_off.adapter = this
         }
+
         screen_off.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 if (spinnerSet) {
@@ -288,6 +492,7 @@ class VentilatorActivity : AppCompatActivity(), BleChangeObserver {
             }
         }
         // 耗材设置：过滤棉
+
         filter.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 if (fromUser) {
@@ -307,17 +512,20 @@ class VentilatorActivity : AppCompatActivity(), BleChangeObserver {
             override fun onStopTrackingTouch(seekBar: SeekBar?) {
             }
         })
+
         filter_sub.setOnClickListener {
             systemSetting.type = Constant.VentilatorSystemSetting.REPLACEMENT
             systemSetting.replacements.filter = --filter.progress
             BleServiceHelper.BleServiceHelper.ventilatorSetSystemSetting(model, systemSetting)
         }
+
         filter_add.setOnClickListener {
             systemSetting.type = Constant.VentilatorSystemSetting.REPLACEMENT
             systemSetting.replacements.filter = ++filter.progress
             BleServiceHelper.BleServiceHelper.ventilatorSetSystemSetting(model, systemSetting)
         }
         // 耗材设置：面罩
+
         mask.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 if (fromUser) {
@@ -337,17 +545,20 @@ class VentilatorActivity : AppCompatActivity(), BleChangeObserver {
             override fun onStopTrackingTouch(seekBar: SeekBar?) {
             }
         })
+
         mask_sub.setOnClickListener {
             systemSetting.type = Constant.VentilatorSystemSetting.REPLACEMENT
             systemSetting.replacements.mask = --mask.progress
             BleServiceHelper.BleServiceHelper.ventilatorSetSystemSetting(model, systemSetting)
         }
+
         mask_add.setOnClickListener {
             systemSetting.type = Constant.VentilatorSystemSetting.REPLACEMENT
             systemSetting.replacements.mask = ++mask.progress
             BleServiceHelper.BleServiceHelper.ventilatorSetSystemSetting(model, systemSetting)
         }
         // 耗材设置：管道
+
         tube.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 if (fromUser) {
@@ -367,17 +578,20 @@ class VentilatorActivity : AppCompatActivity(), BleChangeObserver {
             override fun onStopTrackingTouch(seekBar: SeekBar?) {
             }
         })
+
         tube_sub.setOnClickListener {
             systemSetting.type = Constant.VentilatorSystemSetting.REPLACEMENT
             systemSetting.replacements.tube = --tube.progress
             BleServiceHelper.BleServiceHelper.ventilatorSetSystemSetting(model, systemSetting)
         }
+
         tube_add.setOnClickListener {
             systemSetting.type = Constant.VentilatorSystemSetting.REPLACEMENT
             systemSetting.replacements.tube = ++tube.progress
             BleServiceHelper.BleServiceHelper.ventilatorSetSystemSetting(model, systemSetting)
         }
         // 耗材设置：水箱
+
         tank.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 if (fromUser) {
@@ -397,17 +611,20 @@ class VentilatorActivity : AppCompatActivity(), BleChangeObserver {
             override fun onStopTrackingTouch(seekBar: SeekBar?) {
             }
         })
+
         tank_sub.setOnClickListener {
             systemSetting.type = Constant.VentilatorSystemSetting.REPLACEMENT
             systemSetting.replacements.tank = --tank.progress
             BleServiceHelper.BleServiceHelper.ventilatorSetSystemSetting(model, systemSetting)
         }
+
         tank_add.setOnClickListener {
             systemSetting.type = Constant.VentilatorSystemSetting.REPLACEMENT
             systemSetting.replacements.tank = ++tank.progress
             BleServiceHelper.BleServiceHelper.ventilatorSetSystemSetting(model, systemSetting)
         }
         // 音量设置
+
         volume.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 if (fromUser) {
@@ -425,12 +642,14 @@ class VentilatorActivity : AppCompatActivity(), BleChangeObserver {
             override fun onStopTrackingTouch(seekBar: SeekBar?) {
             }
         })
+
         volume_sub.setOnClickListener {
             systemSetting.type = Constant.VentilatorSystemSetting.VOLUME
             volume.progress--
             systemSetting.volumeSetting.volume = volume.progress.times(5)
             BleServiceHelper.BleServiceHelper.ventilatorSetSystemSetting(model, systemSetting)
         }
+
         volume_add.setOnClickListener {
             systemSetting.type = Constant.VentilatorSystemSetting.VOLUME
             volume.progress++
@@ -442,6 +661,7 @@ class VentilatorActivity : AppCompatActivity(), BleChangeObserver {
         ArrayAdapter(this, android.R.layout.simple_list_item_1, arrayListOf("关闭", "1", "2", "3", "4", "5", "自动")).apply {
             humidification.adapter = this
         }
+
         humidification.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 if (spinnerSet) {
@@ -461,6 +681,7 @@ class VentilatorActivity : AppCompatActivity(), BleChangeObserver {
         ArrayAdapter(this, android.R.layout.simple_list_item_1, arrayListOf("关闭", "1", "2", "3")).apply {
             epr.adapter = this
         }
+
         epr.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 if (spinnerSet) {
@@ -473,6 +694,7 @@ class VentilatorActivity : AppCompatActivity(), BleChangeObserver {
             }
         }
         // 自动启停：自动启动
+
         auto_start.setOnCheckedChangeListener { buttonView, isChecked ->
             if (buttonView.isPressed) {
                 measureSetting.type = Constant.VentilatorMeasureSetting.AUTO_SWITCH
@@ -481,6 +703,7 @@ class VentilatorActivity : AppCompatActivity(), BleChangeObserver {
             }
         }
         // 自动启停：自动停止
+
         auto_end.setOnCheckedChangeListener { buttonView, isChecked ->
             if (buttonView.isPressed) {
                 measureSetting.type = Constant.VentilatorMeasureSetting.AUTO_SWITCH
@@ -489,6 +712,7 @@ class VentilatorActivity : AppCompatActivity(), BleChangeObserver {
             }
         }
         // 预加热
+
         pre_heat.setOnCheckedChangeListener { buttonView, isChecked ->
             if (buttonView.isPressed) {
                 measureSetting.type = Constant.VentilatorMeasureSetting.PRE_HEAT
@@ -497,6 +721,7 @@ class VentilatorActivity : AppCompatActivity(), BleChangeObserver {
             }
         }
         // 缓冲压力
+
         ramp_pressure.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 if (fromUser) {
@@ -522,12 +747,14 @@ class VentilatorActivity : AppCompatActivity(), BleChangeObserver {
             override fun onStopTrackingTouch(seekBar: SeekBar?) {
             }
         })
+
         ramp_pressure_sub.setOnClickListener {
             ramp_pressure.progress--
             measureSetting.type = Constant.VentilatorMeasureSetting.RAMP
             measureSetting.ramp.pressure = ramp_pressure.progress.times(0.5f)
             BleServiceHelper.BleServiceHelper.ventilatorSetMeasureSetting(model, measureSetting)
         }
+
         ramp_pressure_add.setOnClickListener {
             ramp_pressure.progress++
             measureSetting.type = Constant.VentilatorMeasureSetting.RAMP
@@ -535,6 +762,7 @@ class VentilatorActivity : AppCompatActivity(), BleChangeObserver {
             BleServiceHelper.BleServiceHelper.ventilatorSetMeasureSetting(model, measureSetting)
         }
         // 缓冲时间
+
         ramp_time.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 if (fromUser) {
@@ -550,12 +778,14 @@ class VentilatorActivity : AppCompatActivity(), BleChangeObserver {
             override fun onStopTrackingTouch(seekBar: SeekBar?) {
             }
         })
+
         ramp_time_sub.setOnClickListener {
             ramp_time.progress--
             measureSetting.type = Constant.VentilatorMeasureSetting.RAMP
             measureSetting.ramp.time = ramp_time.progress.times(5)
             BleServiceHelper.BleServiceHelper.ventilatorSetMeasureSetting(model, measureSetting)
         }
+
         ramp_time_add.setOnClickListener {
             ramp_time.progress++
             measureSetting.type = Constant.VentilatorMeasureSetting.RAMP
@@ -566,6 +796,7 @@ class VentilatorActivity : AppCompatActivity(), BleChangeObserver {
         ArrayAdapter(this, android.R.layout.simple_list_item_1, arrayListOf("15mm", "22mm")).apply {
             tube_type.adapter = this
         }
+
         tube_type.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 if (spinnerSet) {
@@ -581,6 +812,7 @@ class VentilatorActivity : AppCompatActivity(), BleChangeObserver {
         ArrayAdapter(this, android.R.layout.simple_list_item_1, arrayListOf("口鼻罩", "鼻罩", "鼻枕")).apply {
             mask_type.adapter = this
         }
+
         mask_type.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 if (spinnerSet) {
@@ -593,6 +825,7 @@ class VentilatorActivity : AppCompatActivity(), BleChangeObserver {
             }
         }
         // 面罩佩戴匹配测试压力
+
         mask_pressure.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 if (fromUser) {
@@ -618,12 +851,14 @@ class VentilatorActivity : AppCompatActivity(), BleChangeObserver {
             override fun onStopTrackingTouch(seekBar: SeekBar?) {
             }
         })
+
         mask_pressure_sub.setOnClickListener {
             mask_pressure.progress--
             measureSetting.type = Constant.VentilatorMeasureSetting.MASK
             measureSetting.mask.pressure = mask_pressure.progress.toFloat()
             BleServiceHelper.BleServiceHelper.ventilatorSetMeasureSetting(model, measureSetting)
         }
+
         mask_pressure_add.setOnClickListener {
             mask_pressure.progress++
             measureSetting.type = Constant.VentilatorMeasureSetting.MASK
@@ -652,6 +887,7 @@ class VentilatorActivity : AppCompatActivity(), BleChangeObserver {
         ArrayAdapter(this, android.R.layout.simple_list_item_1, modes).apply {
             ventilation_mode.adapter = this
         }
+
         ventilation_mode.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 if (spinnerSet) {
@@ -664,6 +900,7 @@ class VentilatorActivity : AppCompatActivity(), BleChangeObserver {
             }
         }
         // CPAP模式压力
+
         cpap_pressure.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 if (fromUser) {
@@ -689,12 +926,14 @@ class VentilatorActivity : AppCompatActivity(), BleChangeObserver {
             override fun onStopTrackingTouch(seekBar: SeekBar?) {
             }
         })
+
         cpap_pressure_sub.setOnClickListener {
             cpap_pressure.progress--
             ventilationSetting.type = Constant.VentilatorVentilationSetting.PRESSURE
             ventilationSetting.cpapPressure.pressure = cpap_pressure.progress.times(0.5f)
             BleServiceHelper.BleServiceHelper.ventilatorSetVentilationSetting(model, ventilationSetting)
         }
+
         cpap_pressure_add.setOnClickListener {
             cpap_pressure.progress++
             ventilationSetting.type = Constant.VentilatorVentilationSetting.PRESSURE
@@ -702,6 +941,7 @@ class VentilatorActivity : AppCompatActivity(), BleChangeObserver {
             BleServiceHelper.BleServiceHelper.ventilatorSetVentilationSetting(model, ventilationSetting)
         }
         // APAP模式压力最大值Pmax
+
         apap_pressure_max.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 if (fromUser) {
@@ -727,12 +967,14 @@ class VentilatorActivity : AppCompatActivity(), BleChangeObserver {
             override fun onStopTrackingTouch(seekBar: SeekBar?) {
             }
         })
+
         apap_pressure_max_sub.setOnClickListener {
             apap_pressure_max.progress--
             ventilationSetting.type = Constant.VentilatorVentilationSetting.PRESSURE_MAX
             ventilationSetting.apapPressureMax.max = apap_pressure_max.progress.times(0.5f)
             BleServiceHelper.BleServiceHelper.ventilatorSetVentilationSetting(model, ventilationSetting)
         }
+
         apap_pressure_max_add.setOnClickListener {
             apap_pressure_max.progress++
             ventilationSetting.type = Constant.VentilatorVentilationSetting.PRESSURE_MAX
@@ -740,6 +982,7 @@ class VentilatorActivity : AppCompatActivity(), BleChangeObserver {
             BleServiceHelper.BleServiceHelper.ventilatorSetVentilationSetting(model, ventilationSetting)
         }
         // APAP模式压力最小值Pmin
+
         apap_pressure_min.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 if (fromUser) {
@@ -765,12 +1008,14 @@ class VentilatorActivity : AppCompatActivity(), BleChangeObserver {
             override fun onStopTrackingTouch(seekBar: SeekBar?) {
             }
         })
+
         apap_pressure_min_sub.setOnClickListener {
             apap_pressure_min.progress--
             ventilationSetting.type = Constant.VentilatorVentilationSetting.PRESSURE_MIN
             ventilationSetting.apapPressureMin.min = apap_pressure_min.progress.times(0.5f)
             BleServiceHelper.BleServiceHelper.ventilatorSetVentilationSetting(model, ventilationSetting)
         }
+
         apap_pressure_min_add.setOnClickListener {
             apap_pressure_min.progress++
             ventilationSetting.type = Constant.VentilatorVentilationSetting.PRESSURE_MIN
@@ -778,6 +1023,7 @@ class VentilatorActivity : AppCompatActivity(), BleChangeObserver {
             BleServiceHelper.BleServiceHelper.ventilatorSetVentilationSetting(model, ventilationSetting)
         }
         // 吸气压力
+
         ipap_pressure.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 if (fromUser) {
@@ -803,12 +1049,14 @@ class VentilatorActivity : AppCompatActivity(), BleChangeObserver {
             override fun onStopTrackingTouch(seekBar: SeekBar?) {
             }
         })
+
         ipap_pressure_sub.setOnClickListener {
             ipap_pressure.progress--
             ventilationSetting.type = Constant.VentilatorVentilationSetting.PRESSURE_INHALE
             ventilationSetting.pressureInhale.inhale = ipap_pressure.progress.times(0.5f)
             BleServiceHelper.BleServiceHelper.ventilatorSetVentilationSetting(model, ventilationSetting)
         }
+
         ipap_pressure_add.setOnClickListener {
             ipap_pressure.progress++
             ventilationSetting.type = Constant.VentilatorVentilationSetting.PRESSURE_INHALE
@@ -816,6 +1064,7 @@ class VentilatorActivity : AppCompatActivity(), BleChangeObserver {
             BleServiceHelper.BleServiceHelper.ventilatorSetVentilationSetting(model, ventilationSetting)
         }
         // 呼气压力
+
         epap_pressure.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 if (fromUser) {
@@ -841,12 +1090,14 @@ class VentilatorActivity : AppCompatActivity(), BleChangeObserver {
             override fun onStopTrackingTouch(seekBar: SeekBar?) {
             }
         })
+
         epap_pressure_sub.setOnClickListener {
             epap_pressure.progress--
             ventilationSetting.type = Constant.VentilatorVentilationSetting.PRESSURE_EXHALE
             ventilationSetting.pressureExhale.exhale = epap_pressure.progress.times(0.5f)
             BleServiceHelper.BleServiceHelper.ventilatorSetVentilationSetting(model, ventilationSetting)
         }
+
         epap_pressure_add.setOnClickListener {
             epap_pressure.progress++
             ventilationSetting.type = Constant.VentilatorVentilationSetting.PRESSURE_EXHALE
@@ -854,6 +1105,7 @@ class VentilatorActivity : AppCompatActivity(), BleChangeObserver {
             BleServiceHelper.BleServiceHelper.ventilatorSetVentilationSetting(model, ventilationSetting)
         }
         // 吸气时间
+
         inspiratory_time.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 if (fromUser) {
@@ -871,12 +1123,14 @@ class VentilatorActivity : AppCompatActivity(), BleChangeObserver {
             override fun onStopTrackingTouch(seekBar: SeekBar?) {
             }
         })
+
         inspiratory_time_sub.setOnClickListener {
             inspiratory_time.progress--
             ventilationSetting.type = Constant.VentilatorVentilationSetting.INHALE_DURATION
             ventilationSetting.inhaleDuration.duration = inspiratory_time.progress.div(10f)
             BleServiceHelper.BleServiceHelper.ventilatorSetVentilationSetting(model, ventilationSetting)
         }
+
         inspiratory_time_add.setOnClickListener {
             inspiratory_time.progress++
             ventilationSetting.type = Constant.VentilatorVentilationSetting.INHALE_DURATION
@@ -884,6 +1138,7 @@ class VentilatorActivity : AppCompatActivity(), BleChangeObserver {
             BleServiceHelper.BleServiceHelper.ventilatorSetVentilationSetting(model, ventilationSetting)
         }
         // 呼吸频率
+
         respiratory_frequency.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 if (fromUser) {
@@ -901,12 +1156,14 @@ class VentilatorActivity : AppCompatActivity(), BleChangeObserver {
             override fun onStopTrackingTouch(seekBar: SeekBar?) {
             }
         })
+
         respiratory_frequency_sub.setOnClickListener {
             respiratory_frequency.progress--
             ventilationSetting.type = Constant.VentilatorVentilationSetting.RESPIRATORY_RATE
             ventilationSetting.respiratoryRate.rate = respiratory_frequency.progress
             BleServiceHelper.BleServiceHelper.ventilatorSetVentilationSetting(model, ventilationSetting)
         }
+
         respiratory_frequency_add.setOnClickListener {
             respiratory_frequency.progress++
             ventilationSetting.type = Constant.VentilatorVentilationSetting.RESPIRATORY_RATE
@@ -914,6 +1171,7 @@ class VentilatorActivity : AppCompatActivity(), BleChangeObserver {
             BleServiceHelper.BleServiceHelper.ventilatorSetVentilationSetting(model, ventilationSetting)
         }
         // 压力上升时间
+
         raise_time.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 if (fromUser) {
@@ -931,12 +1189,14 @@ class VentilatorActivity : AppCompatActivity(), BleChangeObserver {
             override fun onStopTrackingTouch(seekBar: SeekBar?) {
             }
         })
+
         raise_time_sub.setOnClickListener {
             raise_time.progress--
             ventilationSetting.type = Constant.VentilatorVentilationSetting.RAISE_DURATION
             ventilationSetting.pressureRaiseDuration.duration = raise_time.progress.times(50)
             BleServiceHelper.BleServiceHelper.ventilatorSetVentilationSetting(model, ventilationSetting)
         }
+
         raise_time_add.setOnClickListener {
             raise_time.progress++
             ventilationSetting.type = Constant.VentilatorVentilationSetting.RAISE_DURATION
@@ -947,6 +1207,7 @@ class VentilatorActivity : AppCompatActivity(), BleChangeObserver {
         ArrayAdapter(this, android.R.layout.simple_list_item_1, arrayListOf("自动挡", "1", "2", "3", "4", "5")).apply {
             i_trigger.adapter = this
         }
+
         i_trigger.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 if (spinnerSet) {
@@ -962,6 +1223,7 @@ class VentilatorActivity : AppCompatActivity(), BleChangeObserver {
         ArrayAdapter(this, android.R.layout.simple_list_item_1, arrayListOf("自动挡", "1", "2", "3", "4", "5")).apply {
             e_trigger.adapter = this
         }
+
         e_trigger.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 if (spinnerSet) {
@@ -978,6 +1240,7 @@ class VentilatorActivity : AppCompatActivity(), BleChangeObserver {
         ArrayAdapter(this, android.R.layout.simple_list_item_1, arrayListOf("关闭", "15s", "30s", "45s", "60s")).apply {
             leak_high.adapter = this
         }
+
         leak_high.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 if (spinnerSet) {
@@ -1018,6 +1281,7 @@ class VentilatorActivity : AppCompatActivity(), BleChangeObserver {
         ArrayAdapter(this, android.R.layout.simple_list_item_1, arrayListOf("关闭", "10s", "20s", "30s")).apply {
             apnea.adapter = this
         }
+
         apnea.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 if (spinnerSet) {
@@ -1030,6 +1294,7 @@ class VentilatorActivity : AppCompatActivity(), BleChangeObserver {
             }
         }
         // 潮气量低
+
         vt_low.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 if (fromUser) {
@@ -1053,6 +1318,7 @@ class VentilatorActivity : AppCompatActivity(), BleChangeObserver {
             override fun onStopTrackingTouch(seekBar: SeekBar?) {
             }
         })
+
         vt_low_sub.setOnClickListener {
             vt_low.progress--
             warningSetting.type = Constant.VentilatorWarningSetting.VT_LOW
@@ -1063,6 +1329,7 @@ class VentilatorActivity : AppCompatActivity(), BleChangeObserver {
             }
             BleServiceHelper.BleServiceHelper.ventilatorSetWarningSetting(model, warningSetting)
         }
+
         vt_low_add.setOnClickListener {
             vt_low.progress++
             warningSetting.type = Constant.VentilatorWarningSetting.VT_LOW
@@ -1070,6 +1337,7 @@ class VentilatorActivity : AppCompatActivity(), BleChangeObserver {
             BleServiceHelper.BleServiceHelper.ventilatorSetWarningSetting(model, warningSetting)
         }
         // 分钟通气量低
+
         low_ventilation.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 if (fromUser) {
@@ -1089,12 +1357,14 @@ class VentilatorActivity : AppCompatActivity(), BleChangeObserver {
             override fun onStopTrackingTouch(seekBar: SeekBar?) {
             }
         })
+
         low_ventilation_sub.setOnClickListener {
             low_ventilation.progress--
             warningSetting.type = Constant.VentilatorWarningSetting.LOW_VENTILATION
             warningSetting.warningVentilation.low = low_ventilation.progress
             BleServiceHelper.BleServiceHelper.ventilatorSetWarningSetting(model, warningSetting)
         }
+
         low_ventilation_add.setOnClickListener {
             low_ventilation.progress++
             warningSetting.type = Constant.VentilatorWarningSetting.LOW_VENTILATION
@@ -1102,6 +1372,7 @@ class VentilatorActivity : AppCompatActivity(), BleChangeObserver {
             BleServiceHelper.BleServiceHelper.ventilatorSetWarningSetting(model, warningSetting)
         }
         // 呼吸频率高
+
         rr_high.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 if (fromUser) {
@@ -1121,12 +1392,14 @@ class VentilatorActivity : AppCompatActivity(), BleChangeObserver {
             override fun onStopTrackingTouch(seekBar: SeekBar?) {
             }
         })
+
         rr_high_sub.setOnClickListener {
             rr_high.progress--
             warningSetting.type = Constant.VentilatorWarningSetting.RR_HIGH
             warningSetting.warningRrHigh.high = rr_high.progress
             BleServiceHelper.BleServiceHelper.ventilatorSetWarningSetting(model, warningSetting)
         }
+
         rr_high_add.setOnClickListener {
             rr_high.progress++
             warningSetting.type = Constant.VentilatorWarningSetting.RR_HIGH
@@ -1134,6 +1407,7 @@ class VentilatorActivity : AppCompatActivity(), BleChangeObserver {
             BleServiceHelper.BleServiceHelper.ventilatorSetWarningSetting(model, warningSetting)
         }
         // 呼吸频率低
+
         rr_low.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 if (fromUser) {
@@ -1153,12 +1427,14 @@ class VentilatorActivity : AppCompatActivity(), BleChangeObserver {
             override fun onStopTrackingTouch(seekBar: SeekBar?) {
             }
         })
+
         rr_low_sub.setOnClickListener {
             rr_low.progress--
             warningSetting.type = Constant.VentilatorWarningSetting.RR_LOW
             warningSetting.warningRrLow.low = rr_low.progress
             BleServiceHelper.BleServiceHelper.ventilatorSetWarningSetting(model, warningSetting)
         }
+
         rr_low_add.setOnClickListener {
             rr_low.progress++
             warningSetting.type = Constant.VentilatorWarningSetting.RR_LOW
@@ -1166,6 +1442,7 @@ class VentilatorActivity : AppCompatActivity(), BleChangeObserver {
             BleServiceHelper.BleServiceHelper.ventilatorSetWarningSetting(model, warningSetting)
         }
         // 血氧饱和度低
+
         spo2_low.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 if (fromUser) {
@@ -1189,6 +1466,7 @@ class VentilatorActivity : AppCompatActivity(), BleChangeObserver {
             override fun onStopTrackingTouch(seekBar: SeekBar?) {
             }
         })
+
         spo2_low_sub.setOnClickListener {
             spo2_low.progress--
             warningSetting.type = Constant.VentilatorWarningSetting.SPO2_LOW
@@ -1199,6 +1477,7 @@ class VentilatorActivity : AppCompatActivity(), BleChangeObserver {
             }
             BleServiceHelper.BleServiceHelper.ventilatorSetWarningSetting(model, warningSetting)
         }
+
         spo2_low_add.setOnClickListener {
             spo2_low.progress++
             warningSetting.type = Constant.VentilatorWarningSetting.SPO2_LOW
@@ -1206,6 +1485,7 @@ class VentilatorActivity : AppCompatActivity(), BleChangeObserver {
             BleServiceHelper.BleServiceHelper.ventilatorSetWarningSetting(model, warningSetting)
         }
         // 脉率/心率高
+
         hr_high.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 if (fromUser) {
@@ -1229,6 +1509,7 @@ class VentilatorActivity : AppCompatActivity(), BleChangeObserver {
             override fun onStopTrackingTouch(seekBar: SeekBar?) {
             }
         })
+
         hr_high_sub.setOnClickListener {
             hr_high.progress--
             warningSetting.type = Constant.VentilatorWarningSetting.HR_HIGH
@@ -1239,6 +1520,7 @@ class VentilatorActivity : AppCompatActivity(), BleChangeObserver {
             }
             BleServiceHelper.BleServiceHelper.ventilatorSetWarningSetting(model, warningSetting)
         }
+
         hr_high_add.setOnClickListener {
             hr_high.progress++
             warningSetting.type = Constant.VentilatorWarningSetting.HR_HIGH
@@ -1246,6 +1528,7 @@ class VentilatorActivity : AppCompatActivity(), BleChangeObserver {
             BleServiceHelper.BleServiceHelper.ventilatorSetWarningSetting(model, warningSetting)
         }
         // 脉率/心率低
+
         hr_low.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 if (fromUser) {
@@ -1269,6 +1552,7 @@ class VentilatorActivity : AppCompatActivity(), BleChangeObserver {
             override fun onStopTrackingTouch(seekBar: SeekBar?) {
             }
         })
+
         hr_low_sub.setOnClickListener {
             hr_low.progress--
             warningSetting.type = Constant.VentilatorWarningSetting.HR_LOW
@@ -1279,6 +1563,7 @@ class VentilatorActivity : AppCompatActivity(), BleChangeObserver {
             }
             BleServiceHelper.BleServiceHelper.ventilatorSetWarningSetting(model, warningSetting)
         }
+
         hr_low_add.setOnClickListener {
             hr_low.progress++
             warningSetting.type = Constant.VentilatorWarningSetting.HR_LOW
@@ -1552,6 +1837,7 @@ class VentilatorActivity : AppCompatActivity(), BleChangeObserver {
             .observe(this) {
                 val data = it.data as RtState
                 rtState = data
+
                 data_log.text = "$data"
                 ventilator_ventilation_switch.isChecked = data.isVentilated
                 ventilator_ventilation_switch.isEnabled = data.deviceMode == 2
