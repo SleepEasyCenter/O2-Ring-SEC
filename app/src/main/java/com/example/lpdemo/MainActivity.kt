@@ -373,11 +373,11 @@ class MainActivity : AppCompatActivity(), BleChangeObserver {
                 Log.d(TAG, "EventBleDeviceReady")
                 when (it) {
                     Bluetooth.MODEL_PC100 -> {
-                        startActivity(Intent(this, Pc102Activity::class.java))
+//                        startActivity(Intent(this, Pc102Activity::class.java))
                     }
                     Bluetooth.MODEL_PC80B, Bluetooth.MODEL_PC80B_BLE,
                     Bluetooth.MODEL_PC80B_BLE2 -> {
-                        val intent = Intent(this, Pc80bActivity::class.java)
+//                        val intent = Intent(this, Pc80bActivity::class.java)
                         intent.putExtra("model", it)
                         startActivity(intent)
                     }
@@ -391,44 +391,44 @@ class MainActivity : AppCompatActivity(), BleChangeObserver {
                     Bluetooth.MODEL_S7W, Bluetooth.MODEL_S7BW,
                     Bluetooth.MODEL_S6W, Bluetooth.MODEL_S6W1,
                     Bluetooth.MODEL_PC60NW_BLE, Bluetooth.MODEL_PC60NW_WPS,
-                    Bluetooth.MODEL_PC_60NW_NO_SN -> {
-                        val intent = Intent(this, Pc60fwActivity::class.java)
-                        intent.putExtra("model", it)
-                        startActivity(intent)
-                    }
-                    Bluetooth.MODEL_PC_68B -> {
-                        startActivity(Intent(this, Pc68bActivity::class.java))
-                    }
-                    Bluetooth.MODEL_PC300, Bluetooth.MODEL_PC300_BLE,
-                    Bluetooth.MODEL_GM_300SNT, Bluetooth.MODEL_GM_300SNT_BLE,
-                    Bluetooth.MODEL_CMI_PC303-> {
-                        val intent = Intent(this, Pc303Activity::class.java)
-                        intent.putExtra("model", it)
-                        startActivity(intent)
-                    }
-                    Bluetooth.MODEL_VETCORDER, Bluetooth.MODEL_CHECK_ADV -> {
-                        val intent = Intent(this, CheckmeMonitorActivity::class.java)
-                        intent.putExtra("model", it)
-                        startActivity(intent)
-                    }
-                    Bluetooth.MODEL_TV221U -> {
-                        startActivity(Intent(this, Vtm20fActivity::class.java))
-                    }
-                    Bluetooth.MODEL_BIOLAND_BGM -> {
-                        startActivity(Intent(this, BiolandBgmActivity::class.java))
-                    }
-                    Bluetooth.MODEL_POCTOR_M3102 -> {
-                        startActivity(Intent(this, PoctorM3102Activity::class.java))
-                    }
-                    Bluetooth.MODEL_LPM311 -> {
-                        startActivity(Intent(this, Lpm311Activity::class.java))
-                    }
-                    Bluetooth.MODEL_LEM -> {
-                        startActivity(Intent(this, LemActivity::class.java))
-                    }
-                    Bluetooth.MODEL_ECN -> {
-                        startActivity(Intent(this, EcnActivity::class.java))
-                    }
+//                    Bluetooth.MODEL_PC_60NW_NO_SN -> {
+//                        val intent = Intent(this, Pc60fwActivity::class.java)
+//                        intent.putExtra("model", it)
+//                        startActivity(intent)
+//                    }
+//                    Bluetooth.MODEL_PC_68B -> {
+//                        startActivity(Intent(this, Pc68bActivity::class.java))
+//                    }
+//                    Bluetooth.MODEL_PC300, Bluetooth.MODEL_PC300_BLE,
+//                    Bluetooth.MODEL_GM_300SNT, Bluetooth.MODEL_GM_300SNT_BLE,
+//                    Bluetooth.MODEL_CMI_PC303-> {
+//                        val intent = Intent(this, Pc303Activity::class.java)
+//                        intent.putExtra("model", it)
+//                        startActivity(intent)
+//                    }
+//                    Bluetooth.MODEL_VETCORDER, Bluetooth.MODEL_CHECK_ADV -> {
+//                        val intent = Intent(this, CheckmeMonitorActivity::class.java)
+//                        intent.putExtra("model", it)
+//                        startActivity(intent)
+//                    }
+//                    Bluetooth.MODEL_TV221U -> {
+//                        startActivity(Intent(this, Vtm20fActivity::class.java))
+//                    }
+//                    Bluetooth.MODEL_BIOLAND_BGM -> {
+//                        startActivity(Intent(this, BiolandBgmActivity::class.java))
+//                    }
+//                    Bluetooth.MODEL_POCTOR_M3102 -> {
+//                        startActivity(Intent(this, PoctorM3102Activity::class.java))
+//                    }
+//                    Bluetooth.MODEL_LPM311 -> {
+//                        startActivity(Intent(this, Lpm311Activity::class.java))
+//                    }
+//                    Bluetooth.MODEL_LEM -> {
+//                        startActivity(Intent(this, LemActivity::class.java))
+//                    }
+//                    Bluetooth.MODEL_ECN -> {
+//                        startActivity(Intent(this, EcnActivity::class.java))
+//                    }
                     Bluetooth.MODEL_R20, Bluetooth.MODEL_R21,
                     Bluetooth.MODEL_R10, Bluetooth.MODEL_R11,
                     Bluetooth.MODEL_LERES -> {
@@ -436,17 +436,17 @@ class MainActivity : AppCompatActivity(), BleChangeObserver {
                         intent.putExtra("model", it)
                         startActivity(intent)
                     }
-                    Bluetooth.MODEL_FHR -> {
-                        startActivity(Intent(this, FhrActivity::class.java))
-                    }
-                    Bluetooth.MODEL_VTM_AD5, Bluetooth.MODEL_FETAL -> {
-                        val intent = Intent(this, Ad5Activity::class.java)
-                        intent.putExtra("model", it)
-                        startActivity(intent)
-                    }
-                    Bluetooth.MODEL_VCOMIN -> {
-                        startActivity(Intent(this, VcominActivity::class.java))
-                    }
+//                    Bluetooth.MODEL_FHR -> {
+//                        startActivity(Intent(this, FhrActivity::class.java))
+//                    }
+//                    Bluetooth.MODEL_VTM_AD5, Bluetooth.MODEL_FETAL -> {
+//                        val intent = Intent(this, Ad5Activity::class.java)
+//                        intent.putExtra("model", it)
+//                        startActivity(intent)
+//                    }
+//                    Bluetooth.MODEL_VCOMIN -> {
+//                        startActivity(Intent(this, VcominActivity::class.java))
+//                    }
                     else -> {
                         Toast.makeText(this, "connect success", Toast.LENGTH_SHORT).show()
                         adapter.setList(null)
@@ -460,7 +460,7 @@ class MainActivity : AppCompatActivity(), BleChangeObserver {
                 if (this::dialog.isInitialized) {
                     dialog.dismiss()
                 }
-                val intent = Intent(this, Ap20Activity::class.java)
+//                val intent = Intent(this, Ap20Activity::class.java)
                 intent.putExtra("model", it.model)
                 startActivity(intent)
             }
@@ -470,7 +470,7 @@ class MainActivity : AppCompatActivity(), BleChangeObserver {
                 if (this::dialog.isInitialized) {
                     dialog.dismiss()
                 }
-                val intent = Intent(this, PulsebitExActivity::class.java)
+//                val intent = Intent(this, PulsebitExActivity::class.java)
                 intent.putExtra("model", it.model)
                 startActivity(intent)
             }
@@ -480,7 +480,7 @@ class MainActivity : AppCompatActivity(), BleChangeObserver {
                 if (this::dialog.isInitialized) {
                     dialog.dismiss()
                 }
-                startActivity(Intent(this, CheckmeLeActivity::class.java))
+//                startActivity(Intent(this, CheckmeLeActivity::class.java))
             }
         //----------------------checkme pod---------------------------
         LiveEventBus.get<InterfaceEvent>(InterfaceEvent.CheckmePod.EventCheckmePodSetTime)
@@ -488,7 +488,7 @@ class MainActivity : AppCompatActivity(), BleChangeObserver {
                 if (this::dialog.isInitialized) {
                     dialog.dismiss()
                 }
-                val intent = Intent(this, CheckmePodActivity::class.java)
+//                val intent = Intent(this, CheckmePodActivity::class.java)
                 intent.putExtra("model", it.model)
                 startActivity(intent)
             }
@@ -498,7 +498,7 @@ class MainActivity : AppCompatActivity(), BleChangeObserver {
                 if (this::dialog.isInitialized) {
                     dialog.dismiss()
                 }
-                startActivity(Intent(this, Aoj20aActivity::class.java))
+//                startActivity(Intent(this, Aoj20aActivity::class.java))
             }
         //----------------------sp20/sp20wps---------------------------
         LiveEventBus.get<InterfaceEvent>(InterfaceEvent.SP20.EventSp20SetTime)
@@ -506,7 +506,7 @@ class MainActivity : AppCompatActivity(), BleChangeObserver {
                 if (this::dialog.isInitialized) {
                     dialog.dismiss()
                 }
-                val intent = Intent(this, Sp20Activity::class.java)
+//                val intent = Intent(this, Sp20Activity::class.java)
                 intent.putExtra("model", it.model)
                 startActivity(intent)
             }
@@ -530,7 +530,7 @@ class MainActivity : AppCompatActivity(), BleChangeObserver {
                 if (this::dialog.isInitialized) {
                     dialog.dismiss()
                 }
-                startActivity(Intent(this, BpmActivity::class.java))
+//                startActivity(Intent(this, BpmActivity::class.java))
             }
         //----------------------er1/vbeat/hhm1-------------------
         LiveEventBus.get<InterfaceEvent>(InterfaceEvent.ER1.EventEr1SetTime)
@@ -538,7 +538,7 @@ class MainActivity : AppCompatActivity(), BleChangeObserver {
                 if (this::dialog.isInitialized) {
                     dialog.dismiss()
                 }
-                val intent = Intent(this, Er1Activity::class.java)
+//                val intent = Intent(this, Er1Activity::class.java)
                 intent.putExtra("model", it.model)
                 startActivity(intent)
             }
@@ -555,11 +555,11 @@ class MainActivity : AppCompatActivity(), BleChangeObserver {
                 val data = it.data as com.lepu.blepro.ext.er2.DeviceInfo
                 // ER2-S信心相联 定制版本
                 if (data.branchCode.equals("40020000")) {
-                    val intent = Intent(this, Er2SActivity::class.java)
+//                    val intent = Intent(this, Er2SActivity::class.java)
                     intent.putExtra("model", it.model)
                     startActivity(intent)
                 } else {
-                    val intent = Intent(this, Er2Activity::class.java)
+//                    val intent = Intent(this, Er2Activity::class.java)
                     intent.putExtra("model", it.model)
                     startActivity(intent)
                 }
@@ -570,7 +570,7 @@ class MainActivity : AppCompatActivity(), BleChangeObserver {
                 if (this::dialog.isInitialized) {
                     dialog.dismiss()
                 }
-                val intent = Intent(this, Bp2Activity::class.java)
+//                val intent = Intent(this, Bp2Activity::class.java)
                 intent.putExtra("model", it.model)
                 startActivity(intent)
             }
@@ -580,7 +580,7 @@ class MainActivity : AppCompatActivity(), BleChangeObserver {
                 if (this::dialog.isInitialized) {
                     dialog.dismiss()
                 }
-                startActivity(Intent(this, Bp2wActivity::class.java))
+//                startActivity(Intent(this, Bp2wActivity::class.java))
             }
         //------------------lp-bp2w----------------
         LiveEventBus.get<InterfaceEvent>(InterfaceEvent.LpBp2w.EventLpBp2wSyncUtcTime)
@@ -588,7 +588,7 @@ class MainActivity : AppCompatActivity(), BleChangeObserver {
                 if (this::dialog.isInitialized) {
                     dialog.dismiss()
                 }
-                startActivity(Intent(this, LpBp2wActivity::class.java))
+//                startActivity(Intent(this, LpBp2wActivity::class.java))
             }
         //------------------er3----------------
         LiveEventBus.get<InterfaceEvent>(InterfaceEvent.ER3.EventEr3SetTime)
@@ -596,7 +596,7 @@ class MainActivity : AppCompatActivity(), BleChangeObserver {
                 if (this::dialog.isInitialized) {
                     dialog.dismiss()
                 }
-                startActivity(Intent(this, Er3Activity::class.java))
+//                startActivity(Intent(this, Er3Activity::class.java))
             }
         //------------------lepod----------------
         LiveEventBus.get<InterfaceEvent>(InterfaceEvent.Lepod.EventLepodSetTime)
@@ -604,7 +604,7 @@ class MainActivity : AppCompatActivity(), BleChangeObserver {
                 if (this::dialog.isInitialized) {
                     dialog.dismiss()
                 }
-                startActivity(Intent(this, LepodActivity::class.java))
+//                startActivity(Intent(this, LepodActivity::class.java))
             }
     }
 
