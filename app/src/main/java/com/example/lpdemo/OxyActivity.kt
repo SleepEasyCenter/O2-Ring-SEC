@@ -5,6 +5,7 @@ import android.os.Handler
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.example.lpdemo.databinding.ActivityMainBinding
 import com.example.lpdemo.utils.FileUtils
 import com.example.lpdemo.utils.GraphManager
 import com.example.lpdemo.utils._bleState
@@ -21,18 +22,19 @@ import com.lepu.blepro.ext.oxy.RtParam
 import com.lepu.blepro.objs.Bluetooth
 import com.lepu.blepro.observer.BIOL
 import com.lepu.blepro.observer.BleChangeObserver
-import kotlinx.android.synthetic.main.activity_oxy.ble_name
-import kotlinx.android.synthetic.main.activity_oxy.data_log
-import kotlinx.android.synthetic.main.activity_oxy.factory_reset
-import kotlinx.android.synthetic.main.activity_oxy.get_info
-import kotlinx.android.synthetic.main.activity_oxy.get_rt_param
-import kotlinx.android.synthetic.main.activity_oxy.oxy_ble_state
-import kotlinx.android.synthetic.main.activity_oxy.read_file
-import kotlinx.android.synthetic.main.activity_oxy.set_buzzer
-import kotlinx.android.synthetic.main.activity_oxy.set_motor
-import kotlinx.android.synthetic.main.activity_oxy.tv_oxy
-import kotlinx.android.synthetic.main.activity_oxy.tv_pi
-import kotlinx.android.synthetic.main.activity_oxy.tv_pr
+//import kotlinx.android.synthetic.main.activity_oxy.ble_name
+//import kotlinx.android.synthetic.main.activity_oxy.data_log
+//import kotlinx.android.synthetic.main.activity_oxy.factory_reset
+//import kotlinx.android.synthetic.main.activity_oxy.get_info
+//import kotlinx.android.synthetic.main.activity_oxy.get_rt_param
+//import kotlinx.android.synthetic.main.activity_oxy.oxy_ble_state
+//import kotlinx.android.synthetic.main.activity_oxy.read_file
+//import kotlinx.android.synthetic.main.activity_oxy.set_buzzer
+//import kotlinx.android.synthetic.main.activity_oxy.set_motor
+//import kotlinx.android.synthetic.main.activity_oxy.tv_oxy
+//import kotlinx.android.synthetic.main.activity_oxy.tv_pi
+//import kotlinx.android.synthetic.main.activity_oxy.tv_pr
+import com.example.lpdemo.databinding.ActivityOxyBinding
 
 class OxyActivity : AppCompatActivity(), BleChangeObserver {
 
@@ -53,12 +55,26 @@ class OxyActivity : AppCompatActivity(), BleChangeObserver {
 
     private var fileNames = arrayListOf<String>()
 
+    private lateinit var binding: ActivityOxyBinding
     /**
      * PS: O2 devices do not support processing multiple commands.
      *     If you want to use other command and start rtTask, you must stop rtTask.
      */
     private var rtHandler = Handler()
     private var rtTask = RtTask()
+
+    var ble_name = binding.bleName
+    var oxy_ble_state = binding.oxyBleState
+    var get_info = binding.getInfo
+    var read_file = binding.readFile
+    var set_motor = binding.setMotor
+    var set_buzzer = binding.setBuzzer
+    var get_rt_param = binding.getRtParam
+    var factory_reset = binding.factoryReset
+    var data_log = binding.dataLog
+    var tv_oxy = binding.tvOxy
+    var tv_pi = binding.tvPi
+    var tv_pr = binding.tvPr
 
     inner class RtTask: Runnable {
         override fun run() {

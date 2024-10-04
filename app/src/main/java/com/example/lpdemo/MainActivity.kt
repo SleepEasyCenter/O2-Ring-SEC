@@ -36,17 +36,21 @@ import com.lepu.blepro.objs.BluetoothController
 import com.lepu.blepro.observer.BIOL
 import com.lepu.blepro.observer.BleChangeObserver
 import com.permissionx.guolindev.PermissionX
-import kotlinx.android.synthetic.main.activity_main.ble_split
-import kotlinx.android.synthetic.main.activity_main.rcv
-import kotlinx.android.synthetic.main.activity_main.scan
-import kotlinx.android.synthetic.main.navigation.bottomNavigationView
+//import kotlinx.android.synthetic.main.activity_main.ble_split
+//import kotlinx.android.synthetic.main.activity_main.rcv
+//import kotlinx.android.synthetic.main.activity_main.scan
+//import kotlinx.android.synthetic.main.navigation.bottomNavigationView
 import no.nordicsemi.android.ble.observer.ConnectionObserver
+import com.example.lpdemo.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity(), BleChangeObserver {
 
     private val TAG = "MainActivity"
 
     private lateinit var dialog: ProgressDialog
+
+    private lateinit var binding: ActivityMainBinding
+
 
     private val models = intArrayOf(
         Bluetooth.MODEL_PC60FW, Bluetooth.MODEL_PC_60NW, Bluetooth.MODEL_PC_60NW_1,
@@ -117,6 +121,10 @@ class MainActivity : AppCompatActivity(), BleChangeObserver {
     private val secondFragment=SecondFragment()
     private val thirdFragment=ThirdFragment()
 
+    var scan = binding.scan
+    var rcv = binding.rcv
+    var ble_split = binding.bleSplit
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Thread.sleep(3000)
@@ -126,16 +134,16 @@ class MainActivity : AppCompatActivity(), BleChangeObserver {
 
         setCurrentFragment(firstFragment)
 
-        bottomNavigationView.selectedItemId = R.id.person
-        bottomNavigationView.setOnNavigationItemSelectedListener {
-            when(it.itemId){
-                R.id.home->setCurrentFragment(firstFragment)
-                R.id.person->setCurrentFragment(secondFragment)
-                R.id.settings->setCurrentFragment(thirdFragment)
-
-            }
-            true
-        }
+//        bottomNavigationView.selectedItemId = R.id.person
+//        bottomNavigationView.setOnNavigationItemSelectedListener {
+//            when(it.itemId){
+//                R.id.home->setCurrentFragment(firstFragment)
+//                R.id.person->setCurrentFragment(secondFragment)
+//                R.id.settings->setCurrentFragment(thirdFragment)
+//
+//            }
+//            true
+//        }
 
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
         initEventBus()
