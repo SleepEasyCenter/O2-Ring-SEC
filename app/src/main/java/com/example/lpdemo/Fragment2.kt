@@ -1,13 +1,19 @@
 package com.example.lpdemo
 
-import android.util.Log
+import android.os.Bundle
+import android.view.View
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 
 class SecondFragment:Fragment(R.layout.activity_main) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        Toast.makeText(context, "Second Fragment Launched", Toast.LENGTH_SHORT).show()
+    }
+
     override fun onResume() {
         super.onResume()
-        Log.d("Test Run", "Test Run")
-        // Call initView() from MainActivity when the fragment is resumed
+        // Call `initView()` safely only if the activity is an instance of `MainActivity`
         (activity as? MainActivity)?.initView()
     }
 }

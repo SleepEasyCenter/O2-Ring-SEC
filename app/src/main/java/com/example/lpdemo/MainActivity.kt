@@ -10,6 +10,7 @@ import android.content.pm.PackageManager
 import android.location.LocationManager
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
 import android.provider.Settings
 import android.util.Log
 import android.util.SparseArray
@@ -42,6 +43,7 @@ import com.permissionx.guolindev.PermissionX
 //import kotlinx.android.synthetic.main.navigation.bottomNavigationView
 import no.nordicsemi.android.ble.observer.ConnectionObserver
 import com.example.lpdemo.databinding.ActivityMainBinding
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity : AppCompatActivity(), BleChangeObserver {
 
@@ -119,41 +121,47 @@ class MainActivity : AppCompatActivity(), BleChangeObserver {
 
     private val firstFragment=FirstFragment()
     private val secondFragment=SecondFragment()
-    private val thirdFragment=ThirdFragment()
+//    private val thirdFragment=ThirdFragment()
 
-    var scan = binding.scan
-    var rcv = binding.rcv
-    var ble_split = binding.bleSplit
+//    var scan = binding.scan
+//    var rcv = binding.rcv
+//    var ble_split = binding.bleSplit
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Thread.sleep(3000)
         installSplashScreen()
 
-        setContentView(R.layout.navigation)
+        val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
 
-        setCurrentFragment(firstFragment)
 
-//        bottomNavigationView.selectedItemId = R.id.person
-//        bottomNavigationView.setOnNavigationItemSelectedListener {
-//            when(it.itemId){
-//                R.id.home->setCurrentFragment(firstFragment)
-//                R.id.person->setCurrentFragment(secondFragment)
-//                R.id.settings->setCurrentFragment(thirdFragment)
-//
-//            }
-//            true
-//        }
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+
+        setCurrentFragment(secondFragment)
+
+        Handler(mainLooper).postDelayed({
+            setCurrentFragment(secondFragment)
+        }, 3000) // Delay for 3 seconds without blocking UI
+//        setContentView(R.layout.navigation)
+
+
+        bottomNavigationView.setOnNavigationItemSelectedListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.home -> setCurrentFragment(firstFragment)
+                R.id.person -> setCurrentFragment(secondFragment)
+            }
+            true
+        }
 
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
         initEventBus()
         needPermission()
     }
 
-    private fun setCurrentFragment(fragment: Fragment)=
-        //sets the fragment of choice as the main screen
+    private fun setCurrentFragment(fragment: Fragment) =
         supportFragmentManager.beginTransaction().apply {
-            replace(R.id.flFragment,fragment)
+            replace(R.id.flFragment, fragment)
             commit()
         }
 
@@ -300,14 +308,14 @@ class MainActivity : AppCompatActivity(), BleChangeObserver {
 
         dialog = ProgressDialog(this)
 
-        scan.setOnClickListener {
+        binding.scan.setOnClickListener {
             BleServiceHelper.BleServiceHelper.startScan(models)
         }
         LinearLayoutManager(this).apply {
             this.orientation = LinearLayoutManager.VERTICAL
-            rcv.layoutManager = this
+            binding.rcv.layoutManager = this
         }
-        rcv.adapter = adapter
+        binding.rcv.adapter = adapter
         adapter.setOnItemClickListener { adapter, view, position ->
             (adapter.getItem(position) as Bluetooth).let {
                 // set interface before connect
@@ -327,7 +335,7 @@ class MainActivity : AppCompatActivity(), BleChangeObserver {
                     dialog.show()
                 }
                 BluetoothController.clear()
-                splitDevices(ble_split.text.toString())
+                splitDevices(binding.bleSplit.text.toString())
             }
         }
     }
@@ -342,7 +350,7 @@ class MainActivity : AppCompatActivity(), BleChangeObserver {
         LiveEventBus.get<Bluetooth>(EventMsgConst.Discovery.EventDeviceFound)
             .observe(this) {
                 // scan result
-                splitDevices(ble_split.text.toString())
+                splitDevices(binding.bleSplit.text.toString())
                 Log.d(TAG, "EventDeviceFound")
             }
         LiveEventBus.get<Int>(EventMsgConst.Ble.EventBleDeviceDisconnectReason)
@@ -627,4 +635,6 @@ class MainActivity : AppCompatActivity(), BleChangeObserver {
         _bleState.value = state == Ble.State.CONNECTED
         Log.d(TAG, "bleState $bleState")
     }
+
+
 }

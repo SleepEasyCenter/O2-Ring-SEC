@@ -63,18 +63,7 @@ class OxyActivity : AppCompatActivity(), BleChangeObserver {
     private var rtHandler = Handler()
     private var rtTask = RtTask()
 
-    var ble_name = binding.bleName
-    var oxy_ble_state = binding.oxyBleState
-    var get_info = binding.getInfo
-    var read_file = binding.readFile
-    var set_motor = binding.setMotor
-    var set_buzzer = binding.setBuzzer
-    var get_rt_param = binding.getRtParam
-    var factory_reset = binding.factoryReset
-    var data_log = binding.dataLog
-    var tv_oxy = binding.tvOxy
-    var tv_pi = binding.tvPi
-    var tv_pr = binding.tvPr
+
 
     inner class RtTask: Runnable {
         override fun run() {
@@ -94,21 +83,21 @@ class OxyActivity : AppCompatActivity(), BleChangeObserver {
     }
 
     private fun initView() {
-        ble_name.text = deviceName
+        binding.bleName.text = deviceName
         bleState.observe(this) {
             if (it) {
-                oxy_ble_state.setImageResource(R.mipmap.bluetooth_ok)
+                binding.oxyBleState.setImageResource(R.mipmap.bluetooth_ok)
             } else {
-                oxy_ble_state.setImageResource(R.mipmap.bluetooth_error)
+                binding.oxyBleState.setImageResource(R.mipmap.bluetooth_error)
             }
         }
 
-        get_info.setOnClickListener {
+        binding.getInfo.setOnClickListener {
             rtHandler.removeCallbacks(rtTask)
             fileNames.clear()
             BleServiceHelper.BleServiceHelper.oxyGetInfo(model)
         }
-        read_file.setOnClickListener {
+        binding.readFile.setOnClickListener {
             rtHandler.removeCallbacks(rtTask)
             readFile()
         }
@@ -124,22 +113,22 @@ class OxyActivity : AppCompatActivity(), BleChangeObserver {
          *                          (2) O2Ring(0-20: MIN, 20-40: LOW, 40-60: MID, 60-80: HIGH, 80-100: MAX, 0 is off)
          *       "SetBuzzer", value: just for checkO2Plus(0-20：MIN，20-40：LOW，40-60：MID，60-80：HIGH，80-100：MAX，0 is off)
          */
-        set_motor.setOnClickListener {
+        binding.setMotor.setOnClickListener {
             rtHandler.removeCallbacks(rtTask)
             // KidsO2、Oxylink（0-5：MIN，5-10：LOW，10-17：MID，17-22：HIGH，22-35：MAX，0 is off）
             // O2Ring（0-20：MIN，20-40：LOW，40-60：MID，60-80：HIGH，80-100：MAX，0 is off）
             BleServiceHelper.BleServiceHelper.oxyUpdateSetting(model, "SetMotor", 20)
         }
-        set_buzzer.setOnClickListener {
+        binding.setBuzzer.setOnClickListener {
             rtHandler.removeCallbacks(rtTask)
             // checkO2Plus（0-20：MIN，20-40：LOW，40-60：MID，60-80：HIGH，80-100：MAX，0 is off）
             BleServiceHelper.BleServiceHelper.oxyUpdateSetting(model, "SetBuzzer", 20)
         }
-        get_rt_param.setOnClickListener {
+        binding.getRtParam.setOnClickListener {
             rtHandler.removeCallbacks(rtTask)
             rtHandler.post(rtTask)
         }
-        factory_reset.setOnClickListener {
+        binding.factoryReset.setOnClickListener {
             rtHandler.removeCallbacks(rtTask)
             BleServiceHelper.BleServiceHelper.oxyFactoryReset(model)
         }
@@ -149,7 +138,7 @@ class OxyActivity : AppCompatActivity(), BleChangeObserver {
         LiveEventBus.get<InterfaceEvent>(InterfaceEvent.Oxy.EventOxyInfo)
             .observe(this) {
                 val data = it.data as DeviceInfo
-                data_log.text = "$data"
+                binding.dataLog.text = "$data"
                 val list = data.fileList.split(",")
                 for (name in list) {
                     if (name == "") continue
@@ -180,19 +169,19 @@ class OxyActivity : AppCompatActivity(), BleChangeObserver {
         LiveEventBus.get<InterfaceEvent>(InterfaceEvent.Oxy.EventOxyReadFileError)
             .observe(this) {
                 val data = it.data as Boolean
-                data_log.text = "EventOxyReadFileError $data"
+                binding.dataLog.text = "EventOxyReadFileError $data"
             }
         //Reading File InProgress
         LiveEventBus.get<InterfaceEvent>(InterfaceEvent.Oxy.EventOxyReadingFileProgress)
             .observe(this) {
                 val data = it.data as Int
-                data_log.text = "进度 $data%"
+                binding.dataLog.text = "进度 $data%"
             }
         //Finished Reading File
         LiveEventBus.get<InterfaceEvent>(InterfaceEvent.Oxy.EventOxyReadFileComplete)
             .observe(this) {
                 val data = it.data as OxyFile
-                data_log.text = "$data"
+                binding.dataLog.text = "$data"
                 FileUtils.saveOxyFileData(this, data);
                 FileUtils.initiateDownload(data, applicationContext);
                 fileNames.removeAt(0)
@@ -214,12 +203,12 @@ class OxyActivity : AppCompatActivity(), BleChangeObserver {
         LiveEventBus.get<InterfaceEvent>(InterfaceEvent.Oxy.EventOxyRtParamData)
             .observe(this) {
                 val data = it.data as RtParam
-                tv_oxy.text = data.spo2.toString()
-                tv_pr.text = data.pr.toString()
-                tv_pi.text = data.pi.toString()
+                binding.tvOxy.text = data.spo2.toString()
+                binding.tvPr.text = data.pr.toString()
+                binding.tvPi.text = data.pi.toString()
                 val graphManager = GraphManager( lineChart)
                 graphManager.startUpdatingChart(data.spo2.toFloat())
-                data_log.text = "$data"
+                binding.dataLog.text = "$data"
                 // data.battery：0-100
                 // data.batteryState：0（no charge），1（charging），2（charging complete）
                 // data.state：0（lead off），1（lead on），other（error）
@@ -228,7 +217,7 @@ class OxyActivity : AppCompatActivity(), BleChangeObserver {
         LiveEventBus.get<InterfaceEvent>(InterfaceEvent.Oxy.EventOxyFactoryReset)
             .observe(this) {
                 val data = it.data as Boolean
-                data_log.text = "EventOxyFactoryReset $data"
+                binding.dataLog.text = "EventOxyFactoryReset $data"
             }
         //Sync Device
         LiveEventBus.get<InterfaceEvent>(InterfaceEvent.Oxy.EventOxySyncDeviceInfo)
