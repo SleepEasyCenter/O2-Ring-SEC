@@ -30,7 +30,7 @@
         app:layout_constraintBottom_toBottomOf="@id/scan"
         app:layout_constraintStart_toEndOf="@id/scan"
         app:layout_constraintTop_toTopOf="@id/scan"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintVertical_bias="1.0" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rcv"
@@ -42,5 +42,18 @@
         android:layout_margin="20dp">
 
     </androidx.recyclerview.widget.RecyclerView>
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="25pt"
+        android:layout_height="25pt"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.923"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.001"
+        app:srcCompat="@mipmap/sleepeasylogo" />
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

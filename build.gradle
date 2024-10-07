@@ -33,7 +33,10 @@ allprojects {
                 header(HttpHeaderAuthentication)
             }
         }
+        
     }
+
+
 }
 
 task clean(type: Delete) {

@@ -118,6 +118,8 @@ class MainActivity : AppCompatActivity(), BleChangeObserver {
         Bluetooth.MODEL_CHECKME,   // CheckmeActivity
     )
 
+
+
     private var list = arrayListOf<Bluetooth>()
     private var adapter = DeviceAdapter(R.layout.device_item, list)
 
@@ -404,6 +406,7 @@ class MainActivity : AppCompatActivity(), BleChangeObserver {
                     Bluetooth.MODEL_S7W, Bluetooth.MODEL_S7BW,
                     Bluetooth.MODEL_S6W, Bluetooth.MODEL_S6W1,
                     Bluetooth.MODEL_PC60NW_BLE, Bluetooth.MODEL_PC60NW_WPS,
+                    Bluetooth.MODEL_O2RING, Bluetooth.MODEL_O2M,
 //                    Bluetooth.MODEL_PC_60NW_NO_SN -> {
 //                        val intent = Intent(this, Pc60fwActivity::class.java)
 //                        intent.putExtra("model", it)
@@ -527,19 +530,18 @@ class MainActivity : AppCompatActivity(), BleChangeObserver {
 //                startActivity(intent)
 //            }
         //----------------------oxy---------------------------
-        LiveEventBus.get<InterfaceEvent>(InterfaceEvent.Oxy.EventOxySyncDeviceInfo)
-            .observe(this) {
-                val types = it.data as Array<String>
-                if (types.isEmpty()) return@observe
-                if (types[0] == "SetTIME") {
-                    if (this::dialog.isInitialized) {
-                        dialog.dismiss()
+                LiveEventBus.get<Int>(EventMsgConst.Ble.EventBleDeviceReady)
+                    .observe(this) {
+                        if (this::dialog.isInitialized) {
+                            dialog.dismiss()
+                        }
+                        // Connect success: Launch Test1Activity with device details
+                        val intent = Intent(this, TestActivity::class.java)
+                        intent.putExtra("device_name", deviceName)
+                        intent.putExtra("battery_percentage", 90) // Placeholder: Replace with actual value when available
+                        intent.putExtra("device_clock", "12:30 PM") // Placeholder: Replace with actual value when available
+                        startActivity(intent)
                     }
-                    val intent = Intent(this, OxyActivity::class.java)
-                    intent.putExtra("model", it.model)
-                    startActivity(intent)
-                }
-            }
 //        //----------------------bpm---------------------------
 //        LiveEventBus.get<InterfaceEvent>(InterfaceEvent.BPM.EventBpmSyncTime)
 //            .observe(this) {
