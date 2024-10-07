@@ -74,13 +74,11 @@ class OxyActivity : AppCompatActivity(), BleChangeObserver {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityOxyBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        setContentView(R.layout.activity_oxy)
         lineChart = findViewById(R.id.lineChart)
-        model = intent.getIntExtra("model", Bluetooth.MODEL_O2RING)
+        model = intent.getIntExtra("model", model)
         lifecycle.addObserver(BIOL(this, intArrayOf(model)))
         initView()
-        Log.d(TAG, "OxyActivity started with model: $model")
         initEventBus()
     }
 
