@@ -43,13 +43,16 @@ import com.permissionx.guolindev.PermissionX
 //import kotlinx.android.synthetic.main.navigation.bottomNavigationView
 import no.nordicsemi.android.ble.observer.ConnectionObserver
 import com.example.lpdemo.databinding.ActivityMainBinding
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity : AppCompatActivity(), BleChangeObserver {
 
     private val TAG = "MainActivity"
 
     private lateinit var dialog: ProgressDialog
+
     private lateinit var binding: ActivityMainBinding
+
 
     private val models = intArrayOf(
         Bluetooth.MODEL_PC60FW, Bluetooth.MODEL_PC_60NW, Bluetooth.MODEL_PC_60NW_1,
@@ -73,7 +76,7 @@ class MainActivity : AppCompatActivity(), BleChangeObserver {
         Bluetooth.MODEL_BBSM_S2, Bluetooth.MODEL_OXYU,
         Bluetooth.MODEL_AI_S100, Bluetooth.MODEL_O2M_WPS,
         Bluetooth.MODEL_CMRING, Bluetooth.MODEL_OXYFIT_WPS,
-        Bluetooth.MODEL_KIDSO2_WPS,  // OxyActivity
+        Bluetooth.MODEL_KIDSO2_WPS, Bluetooth.MODEL_SI_PO6,  // OxyActivity
         Bluetooth.MODEL_PC80B, Bluetooth.MODEL_PC80B_BLE,
         Bluetooth.MODEL_PC80B_BLE2,  // Pc80bActivity
         Bluetooth.MODEL_PC100,  // Pc102Activity
@@ -94,9 +97,7 @@ class MainActivity : AppCompatActivity(), BleChangeObserver {
         Bluetooth.MODEL_POCTOR_M3102,  // PoctorM3102Activity
         Bluetooth.MODEL_LPM311,  // Lpm311Activity
         Bluetooth.MODEL_LEM,  // LemActivity
-        Bluetooth.MODEL_ER1, Bluetooth.MODEL_ER1_N, Bluetooth.MODEL_HHM1,
-        Bluetooth.MODEL_ER1S, Bluetooth.MODEL_ER1_S, Bluetooth.MODEL_ER1_H,
-        Bluetooth.MODEL_ER1_W, Bluetooth.MODEL_ER1_L,  // Er1Activity
+        Bluetooth.MODEL_ER1, Bluetooth.MODEL_ER1_N, Bluetooth.MODEL_HHM1,  // Er1Activity
         Bluetooth.MODEL_ER2, Bluetooth.MODEL_LP_ER2, Bluetooth.MODEL_DUOEK,
         Bluetooth.MODEL_HHM2, Bluetooth.MODEL_HHM3, Bluetooth.MODEL_ER2_S,  // Er2Activity
         Bluetooth.MODEL_BP2, Bluetooth.MODEL_BP2A, Bluetooth.MODEL_BP2T,  // Bp2Activity
@@ -111,27 +112,59 @@ class MainActivity : AppCompatActivity(), BleChangeObserver {
         Bluetooth.MODEL_FHR,  // FhrActivity
         Bluetooth.MODEL_VTM_AD5, Bluetooth.MODEL_FETAL,  // Ad5Activity
         Bluetooth.MODEL_VCOMIN,   // VcominActivity
-        Bluetooth.MODEL_AIRBP,   // AirBpActivity
-        Bluetooth.MODEL_PF_10AW_1, Bluetooth.MODEL_PF_10BWS,
-        Bluetooth.MODEL_SA10AW_PU, Bluetooth.MODEL_PF10BW_VE,   // Pf10Aw1Activity
-        Bluetooth.MODEL_O2RING_S, Bluetooth.MODEL_S8_AW,   // OxyIIActivity
-        Bluetooth.MODEL_CHECKME,   // CheckmeActivity
     )
+
+    //pc102/pc80b/pc60fw/ap20/pod1w/pc68b/checkme/pc303...
 
     private var list = arrayListOf<Bluetooth>()
     private var adapter = DeviceAdapter(R.layout.device_item, list)
 
+    private val firstFragment=FirstFragment()
+    private val secondFragment=SecondFragment()
+//    private val thirdFragment=ThirdFragment()
+
+//    var scan = binding.scan
+//    var rcv = binding.rcv
+//    var ble_split = binding.bleSplit
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        installSplashScreen()
+
+        val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
+
+
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+
+        setCurrentFragment(secondFragment)
+
+        Handler(mainLooper).postDelayed({
+            setCurrentFragment(secondFragment)
+        }, 3000) // Delay for 3 seconds without blocking UI
+//        setContentView(R.layout.navigation)
+
+
+        bottomNavigationView.setOnNavigationItemSelectedListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.home -> setCurrentFragment(firstFragment)
+                R.id.person -> setCurrentFragment(secondFragment)
+            }
+            true
+        }
+
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-//        LogcatHelper.getInstance(this).stop()
-//        LogcatHelper.getInstance(this).start()
-        initView()
         initEventBus()
         needPermission()
     }
+
+    private fun setCurrentFragment(fragment: Fragment) =
+        supportFragmentManager.beginTransaction().apply {
+            replace(R.id.flFragment, fragment)
+            commit()
+        }
+
 
     private fun needService() {
         var gpsEnabled = false
@@ -166,36 +199,7 @@ class MainActivity : AppCompatActivity(), BleChangeObserver {
     }
 
     private fun needPermission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            PermissionX.init(this)
-                .permissions(
-                    Manifest.permission.BLUETOOTH_SCAN,
-                    Manifest.permission.BLUETOOTH_CONNECT,
-                    Manifest.permission.BLUETOOTH_ADVERTISE,
-                    Manifest.permission.ACCESS_FINE_LOCATION,
-                    Manifest.permission.ACCESS_COARSE_LOCATION,
-                    Manifest.permission.READ_MEDIA_IMAGES,
-                    Manifest.permission.READ_MEDIA_VIDEO,
-                    Manifest.permission.READ_MEDIA_AUDIO,
-                )
-                .onExplainRequestReason { scope, deniedList ->
-                    scope.showRequestReasonDialog(
-                        deniedList, "location permission", "ok", "ignore"
-                    )
-                }
-                .onForwardToSettings { scope, deniedList ->
-                    scope.showForwardToSettingsDialog(
-                        deniedList, "location setting", "ok", "ignore"
-                    )
-                }
-                .request { allGranted, grantedList, deniedList ->
-                    Log.d(TAG, "permission : $allGranted, $grantedList, $deniedList")
-
-                    //permission OK, check Bluetooth status
-                    if (allGranted)
-                        checkBt()
-                }
-        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             PermissionX.init(this)
                 .permissions(
                     Manifest.permission.BLUETOOTH_SCAN,
@@ -292,27 +296,18 @@ class MainActivity : AppCompatActivity(), BleChangeObserver {
         } else {
             // Save the original file path. Er1, VBeat and HHM1 are currently supported
             val rawFolders = SparseArray<String>()
-            rawFolders.set(Bluetooth.MODEL_ER1, "${getExternalFilesDir(null)?.absolutePath}/er1")
-            rawFolders.set(Bluetooth.MODEL_HHM1, "${getExternalFilesDir(null)?.absolutePath}/er1")
-            rawFolders.set(Bluetooth.MODEL_ER1S, "${getExternalFilesDir(null)?.absolutePath}/er1")
-            rawFolders.set(Bluetooth.MODEL_ER1_S, "${getExternalFilesDir(null)?.absolutePath}/er1")
-            rawFolders.set(Bluetooth.MODEL_ER1_H, "${getExternalFilesDir(null)?.absolutePath}/er1")
-            rawFolders.set(Bluetooth.MODEL_ER1_W, "${getExternalFilesDir(null)?.absolutePath}/er1")
-            rawFolders.set(Bluetooth.MODEL_ER1_L, "${getExternalFilesDir(null)?.absolutePath}/er1")
+//            rawFolders.set(Bluetooth.MODEL_ER1, "${getExternalFilesDir(null)?.absolutePath}/er1")
+//            rawFolders.set(Bluetooth.MODEL_ER1_N, "${getExternalFilesDir(null)?.absolutePath}/vbeat")
+//            rawFolders.set(Bluetooth.MODEL_HHM1, "${getExternalFilesDir(null)?.absolutePath}/hhm1")
 
-            // initRawFolder必须在initService之前调用
-            BleServiceHelper.BleServiceHelper.initRawFolder(rawFolders).initService(application).initLog(true)
+            BleServiceHelper.BleServiceHelper.initLog(true).initRawFolder(rawFolders).initService(application)
         }
     }
 
-    private fun initView() {
+    fun initView() {
 
         dialog = ProgressDialog(this)
 
-//        binding.demoModel.setOnLongClickListener {
-//            BleServiceHelper.BleServiceHelper.shareLog()
-//            true
-//        }
         binding.scan.setOnClickListener {
             BleServiceHelper.BleServiceHelper.startScan(models)
         }
@@ -385,15 +380,15 @@ class MainActivity : AppCompatActivity(), BleChangeObserver {
                 // connect success
                 Log.d(TAG, "EventBleDeviceReady")
                 when (it) {
-//                    Bluetooth.MODEL_PC100 -> {
+                    Bluetooth.MODEL_PC100 -> {
 //                        startActivity(Intent(this, Pc102Activity::class.java))
-//                    }
+                    }
                     Bluetooth.MODEL_PC80B, Bluetooth.MODEL_PC80B_BLE,
-//                    Bluetooth.MODEL_PC80B_BLE2 -> {
+                    Bluetooth.MODEL_PC80B_BLE2 -> {
 //                        val intent = Intent(this, Pc80bActivity::class.java)
-//                        intent.putExtra("model", it)
-//                        startActivity(intent)
-//                    }
+                        intent.putExtra("model", it)
+                        startActivity(intent)
+                    }
                     Bluetooth.MODEL_PC60FW, Bluetooth.MODEL_PC_60NW, Bluetooth.MODEL_PC_60NW_1,
                     Bluetooth.MODEL_PC66B, Bluetooth.MODEL_PF_10, Bluetooth.MODEL_PF_20,
                     Bluetooth.MODEL_OXYSMART, Bluetooth.MODEL_POD2B,
@@ -448,7 +443,7 @@ class MainActivity : AppCompatActivity(), BleChangeObserver {
                         val intent = Intent(this, VentilatorActivity::class.java)
                         intent.putExtra("model", it)
                         startActivity(intent)
-//                    }
+                    }
 //                    Bluetooth.MODEL_FHR -> {
 //                        startActivity(Intent(this, FhrActivity::class.java))
 //                    }
@@ -460,14 +455,11 @@ class MainActivity : AppCompatActivity(), BleChangeObserver {
 //                    Bluetooth.MODEL_VCOMIN -> {
 //                        startActivity(Intent(this, VcominActivity::class.java))
 //                    }
-//                    Bluetooth.MODEL_CHECKME -> {
-//                        startActivity(Intent(this, CheckmeActivity::class.java))
-//                    }
-//                    else -> {
-//                        Toast.makeText(this, "connect success", Toast.LENGTH_SHORT).show()
-//                        adapter.setList(null)
-//                        adapter.notifyDataSetChanged()
-//                    }
+                    else -> {
+                        Toast.makeText(this, "connect success", Toast.LENGTH_SHORT).show()
+                        adapter.setList(null)
+                        adapter.notifyDataSetChanged()
+                    }
                 }
             }
         //----------------------ap10/ap20/ap20wps---------------------------
@@ -477,55 +469,55 @@ class MainActivity : AppCompatActivity(), BleChangeObserver {
                     dialog.dismiss()
                 }
 //                val intent = Intent(this, Ap20Activity::class.java)
-//                intent.putExtra("model", it.model)
-//                startActivity(intent)
+                intent.putExtra("model", it.model)
+                startActivity(intent)
             }
-//        //----------------------pulsebit ex/hhm4/checkme---------------------------
-//        LiveEventBus.get<InterfaceEvent>(InterfaceEvent.Pulsebit.EventPulsebitSetTime)
-//            .observe(this) {
-//                if (this::dialog.isInitialized) {
-//                    dialog.dismiss()
-//                }
+        //----------------------pulsebit ex/hhm4/checkme---------------------------
+        LiveEventBus.get<InterfaceEvent>(InterfaceEvent.Pulsebit.EventPulsebitSetTime)
+            .observe(this) {
+                if (this::dialog.isInitialized) {
+                    dialog.dismiss()
+                }
 //                val intent = Intent(this, PulsebitExActivity::class.java)
-//                intent.putExtra("model", it.model)
-//                startActivity(intent)
-//            }
-//        //----------------------checkme le---------------------------
-//        LiveEventBus.get<InterfaceEvent>(InterfaceEvent.CheckmeLE.EventCheckmeLeSetTime)
-//            .observe(this) {
-//                if (this::dialog.isInitialized) {
-//                    dialog.dismiss()
-//                }
+                intent.putExtra("model", it.model)
+                startActivity(intent)
+            }
+        //----------------------checkme le---------------------------
+        LiveEventBus.get<InterfaceEvent>(InterfaceEvent.CheckmeLE.EventCheckmeLeSetTime)
+            .observe(this) {
+                if (this::dialog.isInitialized) {
+                    dialog.dismiss()
+                }
 //                startActivity(Intent(this, CheckmeLeActivity::class.java))
-//            }
+            }
         //----------------------checkme pod---------------------------
-//        LiveEventBus.get<InterfaceEvent>(InterfaceEvent.CheckmePod.EventCheckmePodSetTime)
-//            .observe(this) {
-//                if (this::dialog.isInitialized) {
-//                    dialog.dismiss()
-//                }
+        LiveEventBus.get<InterfaceEvent>(InterfaceEvent.CheckmePod.EventCheckmePodSetTime)
+            .observe(this) {
+                if (this::dialog.isInitialized) {
+                    dialog.dismiss()
+                }
 //                val intent = Intent(this, CheckmePodActivity::class.java)
-//                intent.putExtra("model", it.model)
-//                startActivity(intent)
-//            }
+                intent.putExtra("model", it.model)
+                startActivity(intent)
+            }
         //----------------------aoj20a---------------------------
-//        LiveEventBus.get<InterfaceEvent>(InterfaceEvent.AOJ20a.EventAOJ20aSetTime)
-//            .observe(this) {
-//                if (this::dialog.isInitialized) {
-//                    dialog.dismiss()
-//                }
+        LiveEventBus.get<InterfaceEvent>(InterfaceEvent.AOJ20a.EventAOJ20aSetTime)
+            .observe(this) {
+                if (this::dialog.isInitialized) {
+                    dialog.dismiss()
+                }
 //                startActivity(Intent(this, Aoj20aActivity::class.java))
-//            }
+            }
         //----------------------sp20/sp20wps---------------------------
-//        LiveEventBus.get<InterfaceEvent>(InterfaceEvent.SP20.EventSp20SetTime)
-//            .observe(this) {
-//                if (this::dialog.isInitialized) {
-//                    dialog.dismiss()
-//                }
+        LiveEventBus.get<InterfaceEvent>(InterfaceEvent.SP20.EventSp20SetTime)
+            .observe(this) {
+                if (this::dialog.isInitialized) {
+                    dialog.dismiss()
+                }
 //                val intent = Intent(this, Sp20Activity::class.java)
-//                intent.putExtra("model", it.model)
-//                startActivity(intent)
-//            }
+                intent.putExtra("model", it.model)
+                startActivity(intent)
+            }
         //----------------------oxy---------------------------
         LiveEventBus.get<InterfaceEvent>(InterfaceEvent.Oxy.EventOxySyncDeviceInfo)
             .observe(this) {
@@ -540,119 +532,87 @@ class MainActivity : AppCompatActivity(), BleChangeObserver {
                     startActivity(intent)
                 }
             }
-//        //----------------------bpm---------------------------
-//        LiveEventBus.get<InterfaceEvent>(InterfaceEvent.BPM.EventBpmSyncTime)
-//            .observe(this) {
-//                if (this::dialog.isInitialized) {
-//                    dialog.dismiss()
-//                }
+        //----------------------bpm---------------------------
+        LiveEventBus.get<InterfaceEvent>(InterfaceEvent.BPM.EventBpmSyncTime)
+            .observe(this) {
+                if (this::dialog.isInitialized) {
+                    dialog.dismiss()
+                }
 //                startActivity(Intent(this, BpmActivity::class.java))
-//            }
-//        //----------------------er1/vbeat/hhm1-------------------
-//        LiveEventBus.get<InterfaceEvent>(InterfaceEvent.ER1.EventEr1SetTime)
-//            .observe(this) {
-//                if (this::dialog.isInitialized) {
-//                    dialog.dismiss()
-//                }
+            }
+        //----------------------er1/vbeat/hhm1-------------------
+        LiveEventBus.get<InterfaceEvent>(InterfaceEvent.ER1.EventEr1SetTime)
+            .observe(this) {
+                if (this::dialog.isInitialized) {
+                    dialog.dismiss()
+                }
 //                val intent = Intent(this, Er1Activity::class.java)
-//                intent.putExtra("model", it.model)
-//                startActivity(intent)
-//            }
-//        //------------------er2/lp er2/duoek/hhm2/hhm3----------------
-//        LiveEventBus.get<InterfaceEvent>(InterfaceEvent.ER2.EventEr2SetTime)
-//            .observe(this) {
-//                BleServiceHelper.BleServiceHelper.er2GetInfo(it.model)
-//            }
-//        LiveEventBus.get<InterfaceEvent>(InterfaceEvent.ER2.EventEr2Info)
-//            .observe(this) {
-//                if (this::dialog.isInitialized) {
-//                    dialog.dismiss()
-//                }
-//                val data = it.data as com.lepu.blepro.ext.er2.DeviceInfo
-//                // ER2-S信心相联 定制版本
-//                if (data.branchCode.equals("40020000")) {
+                intent.putExtra("model", it.model)
+                startActivity(intent)
+            }
+        //------------------er2/lp er2/duoek/hhm2/hhm3----------------
+        LiveEventBus.get<InterfaceEvent>(InterfaceEvent.ER2.EventEr2SetTime)
+            .observe(this) {
+                BleServiceHelper.BleServiceHelper.er2GetInfo(it.model)
+            }
+        LiveEventBus.get<InterfaceEvent>(InterfaceEvent.ER2.EventEr2Info)
+            .observe(this) {
+                if (this::dialog.isInitialized) {
+                    dialog.dismiss()
+                }
+                val data = it.data as com.lepu.blepro.ext.er2.DeviceInfo
+                // ER2-S信心相联 定制版本
+                if (data.branchCode.equals("40020000")) {
 //                    val intent = Intent(this, Er2SActivity::class.java)
-//                    intent.putExtra("model", it.model)
-//                    startActivity(intent)
-//                } else {
+                    intent.putExtra("model", it.model)
+                    startActivity(intent)
+                } else {
 //                    val intent = Intent(this, Er2Activity::class.java)
-//                    intent.putExtra("model", it.model)
-//                    startActivity(intent)
-//                }
-//            }
-//        //------------------bp2/bp2a/bp2t----------------
-//        LiveEventBus.get<InterfaceEvent>(InterfaceEvent.BP2.EventBp2SyncTime)
-//            .observe(this) {
-//                if (this::dialog.isInitialized) {
-//                    dialog.dismiss()
-//                }
+                    intent.putExtra("model", it.model)
+                    startActivity(intent)
+                }
+            }
+        //------------------bp2/bp2a/bp2t----------------
+        LiveEventBus.get<InterfaceEvent>(InterfaceEvent.BP2.EventBp2SyncTime)
+            .observe(this) {
+                if (this::dialog.isInitialized) {
+                    dialog.dismiss()
+                }
 //                val intent = Intent(this, Bp2Activity::class.java)
-//                intent.putExtra("model", it.model)
-//                startActivity(intent)
-//            }
-//        //------------------bp2w----------------
-//        LiveEventBus.get<InterfaceEvent>(InterfaceEvent.BP2W.EventBp2wSyncTime)
-//            .observe(this) {
-//                if (this::dialog.isInitialized) {
-//                    dialog.dismiss()
-//                }
+                intent.putExtra("model", it.model)
+                startActivity(intent)
+            }
+        //------------------bp2w----------------
+        LiveEventBus.get<InterfaceEvent>(InterfaceEvent.BP2W.EventBp2wSyncTime)
+            .observe(this) {
+                if (this::dialog.isInitialized) {
+                    dialog.dismiss()
+                }
 //                startActivity(Intent(this, Bp2wActivity::class.java))
-//            }
-//        //------------------lp-bp2w----------------
-//        LiveEventBus.get<InterfaceEvent>(InterfaceEvent.LpBp2w.EventLpBp2wSyncUtcTime)
-//            .observe(this) {
-//                if (this::dialog.isInitialized) {
-//                    dialog.dismiss()
-//                }
+            }
+        //------------------lp-bp2w----------------
+        LiveEventBus.get<InterfaceEvent>(InterfaceEvent.LpBp2w.EventLpBp2wSyncUtcTime)
+            .observe(this) {
+                if (this::dialog.isInitialized) {
+                    dialog.dismiss()
+                }
 //                startActivity(Intent(this, LpBp2wActivity::class.java))
-//            }
-//        //------------------er3----------------
-//        LiveEventBus.get<InterfaceEvent>(InterfaceEvent.ER3.EventEr3SetTime)
-//            .observe(this) {
-//                if (this::dialog.isInitialized) {
-//                    dialog.dismiss()
-//                }
-//                val intent = Intent(this, Er3Activity::class.java)
-//                intent.putExtra("model", it.model)
-//                startActivity(intent)
-//            }
+            }
+        //------------------er3----------------
+        LiveEventBus.get<InterfaceEvent>(InterfaceEvent.ER3.EventEr3SetTime)
+            .observe(this) {
+                if (this::dialog.isInitialized) {
+                    dialog.dismiss()
+                }
+//                startActivity(Intent(this, Er3Activity::class.java))
+            }
         //------------------lepod----------------
-//        LiveEventBus.get<InterfaceEvent>(InterfaceEvent.Lepod.EventLepodSetTime)
-//            .observe(this) {
-//                if (this::dialog.isInitialized) {
-//                    dialog.dismiss()
-//                }
-//                val intent = Intent(this, LepodActivity::class.java)
-//                intent.putExtra("model", it.model)
-//                startActivity(intent)
-//            }
-//        //------------------airbp----------------
-//        LiveEventBus.get<InterfaceEvent>(InterfaceEvent.AirBP.EventAirBpSetTime)
-//            .observe(this) {
-//                if (this::dialog.isInitialized) {
-//                    dialog.dismiss()
-//                }
-//                startActivity(Intent(this, AirBpActivity::class.java))
-//            }
-        //------------------pf10aw1----------------
-//        LiveEventBus.get<InterfaceEvent>(InterfaceEvent.Pf10Aw1.EventPf10Aw1SetTime)
-//            .observe(this) {
-//                if (this::dialog.isInitialized) {
-//                    dialog.dismiss()
-//                }
-//                val intent = Intent(this, Pf10Aw1Activity::class.java)
-//                intent.putExtra("model", it.model)
-//                startActivity(intent)
-//            }
-//        //------------------O2Ring S----------------
-//        LiveEventBus.get<InterfaceEvent>(InterfaceEvent.OxyII.EventOxyIISetTime)
-//            .observe(this) {
-//                if (this::dialog.isInitialized) {
-//                    dialog.dismiss()
-//                }
-//                val intent = Intent(this, OxyIIActivity::class.java)
-//                intent.putExtra("model", it.model)
-//                startActivity(intent)
+        LiveEventBus.get<InterfaceEvent>(InterfaceEvent.Lepod.EventLepodSetTime)
+            .observe(this) {
+                if (this::dialog.isInitialized) {
+                    dialog.dismiss()
+                }
+//                startActivity(Intent(this, LepodActivity::class.java))
             }
     }
 
@@ -675,4 +635,6 @@ class MainActivity : AppCompatActivity(), BleChangeObserver {
         _bleState.value = state == Ble.State.CONNECTED
         Log.d(TAG, "bleState $bleState")
     }
+
+
 }
