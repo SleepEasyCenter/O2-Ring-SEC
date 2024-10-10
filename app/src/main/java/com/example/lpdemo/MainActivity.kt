@@ -51,72 +51,7 @@ class MainActivity : AppCompatActivity(), BleChangeObserver {
     private lateinit var dialog: ProgressDialog
     private lateinit var binding: ActivityMainBinding
 
-    private val models = intArrayOf(
-        Bluetooth.MODEL_PC60FW, Bluetooth.MODEL_PC_60NW, Bluetooth.MODEL_PC_60NW_1,
-        Bluetooth.MODEL_PC66B, Bluetooth.MODEL_PF_10, Bluetooth.MODEL_PF_20,
-        Bluetooth.MODEL_OXYSMART, Bluetooth.MODEL_POD2B,
-        Bluetooth.MODEL_POD_1W, Bluetooth.MODEL_S5W,
-        Bluetooth.MODEL_PF_10AW, Bluetooth.MODEL_PF_10AW1,
-        Bluetooth.MODEL_PF_10BW, Bluetooth.MODEL_PF_10BW1,
-        Bluetooth.MODEL_PF_20AW, Bluetooth.MODEL_PF_20B,
-        Bluetooth.MODEL_S7W, Bluetooth.MODEL_S7BW,
-        Bluetooth.MODEL_S6W, Bluetooth.MODEL_S6W1,
-        Bluetooth.MODEL_PC60NW_BLE, Bluetooth.MODEL_PC60NW_WPS,
-        Bluetooth.MODEL_PC_60NW_NO_SN, // Pc60fwActivity
-        Bluetooth.MODEL_O2RING, Bluetooth.MODEL_O2M,
-        Bluetooth.MODEL_BABYO2, Bluetooth.MODEL_BABYO2N,
-        Bluetooth.MODEL_CHECKO2, Bluetooth.MODEL_SLEEPO2,
-        Bluetooth.MODEL_SNOREO2, Bluetooth.MODEL_WEARO2,
-        Bluetooth.MODEL_SLEEPU, Bluetooth.MODEL_OXYLINK,
-        Bluetooth.MODEL_KIDSO2, Bluetooth.MODEL_OXYFIT,
-        Bluetooth.MODEL_OXYRING, Bluetooth.MODEL_BBSM_S1,
-        Bluetooth.MODEL_BBSM_S2, Bluetooth.MODEL_OXYU,
-        Bluetooth.MODEL_AI_S100, Bluetooth.MODEL_O2M_WPS,
-        Bluetooth.MODEL_CMRING, Bluetooth.MODEL_OXYFIT_WPS,
-        Bluetooth.MODEL_KIDSO2_WPS,  // OxyActivity
-        Bluetooth.MODEL_PC80B, Bluetooth.MODEL_PC80B_BLE,
-        Bluetooth.MODEL_PC80B_BLE2,  // Pc80bActivity
-        Bluetooth.MODEL_PC100,  // Pc102Activity
-        Bluetooth.MODEL_AP20, Bluetooth.MODEL_AP20_WPS,  // Ap20Activity
-        Bluetooth.MODEL_PC_68B,  // Pc68bActivity
-        Bluetooth.MODEL_PULSEBITEX, Bluetooth.MODEL_HHM4,  // PulsebitExActivity
-        Bluetooth.MODEL_CHECKME_LE,  // CheckmeLeActivity
-        Bluetooth.MODEL_PC300, Bluetooth.MODEL_PC300_BLE,
-        Bluetooth.MODEL_GM_300SNT, Bluetooth.MODEL_GM_300SNT_BLE,
-        Bluetooth.MODEL_CMI_PC303,  // Pc303Activity
-        Bluetooth.MODEL_CHECK_POD, Bluetooth.MODEL_CHECKME_POD_WPS,  // CheckmePodActivity
-        Bluetooth.MODEL_AOJ20A,  // Aoj20aActivity
-        Bluetooth.MODEL_SP20, Bluetooth.MODEL_SP20_BLE, Bluetooth.MODEL_SP20_WPS,  // Sp20Activity
-        Bluetooth.MODEL_VETCORDER, Bluetooth.MODEL_CHECK_ADV,  // CheckmeMonitorActivity
-        Bluetooth.MODEL_TV221U,  // Vtm20fActivity
-        Bluetooth.MODEL_BPM,  // BpmActivity
-        Bluetooth.MODEL_BIOLAND_BGM,  // BiolandBgmActivity
-        Bluetooth.MODEL_POCTOR_M3102,  // PoctorM3102Activity
-        Bluetooth.MODEL_LPM311,  // Lpm311Activity
-        Bluetooth.MODEL_LEM,  // LemActivity
-        Bluetooth.MODEL_ER1, Bluetooth.MODEL_ER1_N, Bluetooth.MODEL_HHM1,
-        Bluetooth.MODEL_ER1S, Bluetooth.MODEL_ER1_S, Bluetooth.MODEL_ER1_H,
-        Bluetooth.MODEL_ER1_W, Bluetooth.MODEL_ER1_L,  // Er1Activity
-        Bluetooth.MODEL_ER2, Bluetooth.MODEL_LP_ER2, Bluetooth.MODEL_DUOEK,
-        Bluetooth.MODEL_HHM2, Bluetooth.MODEL_HHM3, Bluetooth.MODEL_ER2_S,  // Er2Activity
-        Bluetooth.MODEL_BP2, Bluetooth.MODEL_BP2A, Bluetooth.MODEL_BP2T,  // Bp2Activity
-        Bluetooth.MODEL_BP2W,  // Bp2wActivity
-        Bluetooth.MODEL_LP_BP2W,  // LpBp2wActivity
-        Bluetooth.MODEL_ER3, Bluetooth.MODEL_M12,  // Er3Activity
-        Bluetooth.MODEL_LEPOD, Bluetooth.MODEL_LEPOD_PRO,  // LepodActivity
-        Bluetooth.MODEL_ECN,  // EcnActivity
-        Bluetooth.MODEL_R20, Bluetooth.MODEL_R21,
-        Bluetooth.MODEL_R10, Bluetooth.MODEL_R11,
-        Bluetooth.MODEL_LERES,  // VentilatorActivity
-        Bluetooth.MODEL_FHR,  // FhrActivity
-        Bluetooth.MODEL_VTM_AD5, Bluetooth.MODEL_FETAL,  // Ad5Activity
-        Bluetooth.MODEL_VCOMIN,   // VcominActivity
-        Bluetooth.MODEL_AIRBP,   // AirBpActivity
-        Bluetooth.MODEL_PF_10AW_1, Bluetooth.MODEL_PF_10BWS,
-        Bluetooth.MODEL_SA10AW_PU, Bluetooth.MODEL_PF10BW_VE,   // Pf10Aw1Activity
-        Bluetooth.MODEL_O2RING_S, Bluetooth.MODEL_S8_AW,   // OxyIIActivity
-        Bluetooth.MODEL_CHECKME,   // CheckmeActivity
-    )
+    private val models = intArrayOf(Bluetooth.MODEL_O2RING)
 
 
 
