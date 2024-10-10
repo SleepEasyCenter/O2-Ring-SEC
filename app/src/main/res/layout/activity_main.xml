@@ -10,8 +10,12 @@
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:layout_width="409dp"
         android:layout_height="60dp"
-        tools:layout_editor_absoluteX="1dp"
-        tools:layout_editor_absoluteY="670dp" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:menu="@menu/main_bottom_nav_menu"
+        />
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
