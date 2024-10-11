@@ -1,9 +1,12 @@
 package com.example.lpdemo
 
+import android.app.Activity
 import android.os.Bundle
 
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.setupWithNavController
 
 import com.example.lpdemo.databinding.ActivityMainBinding
 
@@ -16,6 +19,9 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
 
+        val navHostFragment = supportFragmentManager.findFragmentById(R.id.navhost) as NavHostFragment;
+        val navController = navHostFragment.navController;
+        binding.bottomNavigationView.setupWithNavController(navController);
     }
 
 }
