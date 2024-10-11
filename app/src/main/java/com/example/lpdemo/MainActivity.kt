@@ -1,14 +1,13 @@
 package com.example.lpdemo
 
-import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
-
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
-
 import com.example.lpdemo.databinding.ActivityMainBinding
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -24,8 +23,9 @@ class MainActivity : AppCompatActivity() {
         binding.bottomNavigationView.setupWithNavController(navController);
     }
 
-    fun needsPermission(){
-
+    public fun startScanActivity(){
+        val intent: Intent = Intent(this@MainActivity, DeviceScanActivity::class.java);
+        startActivity(intent)
     }
 
 }
