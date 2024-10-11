@@ -24,4 +24,8 @@ class MainActivity : AppCompatActivity() {
         binding.bottomNavigationView.setupWithNavController(navController);
     }
 
+    fun needsPermission(){
+
+    }
+
 }

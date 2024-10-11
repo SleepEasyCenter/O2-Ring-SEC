@@ -7,17 +7,17 @@
 
     <fragment
         android:id="@+id/home_dashboard"
-        android:name="com.example.lpdemo.HomeDashboard"
+        android:name="com.example.lpdemo.HomeDashboardFragment"
         android:label="fragment_home_dashboard"
         tools:layout="@layout/fragment_home_dashboard" />
     <fragment
         android:id="@+id/session_history"
-        android:name="com.example.lpdemo.session_history"
+        android:name="com.example.lpdemo.SessionHistoryFragment"
         android:label="fragment_session_history"
         tools:layout="@layout/fragment_session_history" />
     <fragment
         android:id="@+id/menu_settings"
-        android:name="com.example.lpdemo.settings"
+        android:name="com.example.lpdemo.SettingsFragment"
         android:label="fragment_settings"
         tools:layout="@layout/fragment_settings" />
 </navigation>
