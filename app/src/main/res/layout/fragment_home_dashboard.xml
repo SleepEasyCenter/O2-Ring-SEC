@@ -37,6 +37,12 @@
                 android:text="No device connected"
                 android:textAlignment="center"
                 android:textSize="24sp" />
+
+            <Button
+                android:id="@+id/btnScanDevice"
+                android:layout_width="138dp"
+                android:layout_height="63dp"
+                android:text="Scan" />
         </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
