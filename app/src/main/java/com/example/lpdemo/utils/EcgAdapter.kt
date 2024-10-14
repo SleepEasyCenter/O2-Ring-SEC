@@ -7,6 +7,6 @@ import com.example.lpdemo.R
 class EcgAdapter(layoutResId: Int, data: MutableList<EcgData>?) : BaseQuickAdapter<EcgData, BaseViewHolder>(layoutResId, data) {
 
     override fun convert(holder: BaseViewHolder, item: EcgData) {
-        holder.setText(R.id.name, "${item.fileName} duration : ${item.duration} s")
+        holder.setText(R.id.device_item_name, "${item.fileName} duration : ${item.duration} s")
     }
 }

@@ -2,7 +2,6 @@ package com.example.lpdemo
 
 import android.Manifest
 import android.app.Activity
-import android.app.AlertDialog
 import android.bluetooth.BluetoothAdapter
 import android.content.Context
 import android.content.Intent
@@ -10,7 +9,6 @@ import android.content.pm.PackageManager
 import android.location.LocationManager
 import android.os.Build
 import android.os.Bundle
-import android.provider.Settings
 import android.util.Log
 import android.util.SparseArray
 import android.widget.Toast
@@ -19,8 +17,11 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import androidx.recyclerview.widget.LinearLayoutManager
+
+import com.example.lpdemo.adapters.DeviceListViewAdapter
 import com.example.lpdemo.databinding.ActivityDeviceScanBinding
-import com.example.lpdemo.utils.DeviceAdapter
+
 import com.example.lpdemo.utils._bleState
 import com.example.lpdemo.utils.bleState
 import com.jeremyliao.liveeventbus.LiveEventBus
@@ -30,10 +31,6 @@ import com.lepu.blepro.ext.BleServiceHelper
 import com.lepu.blepro.objs.Bluetooth
 import com.lepu.blepro.objs.BluetoothController
 import com.lepu.blepro.observer.BleChangeObserver
-//import kotlinx.android.synthetic.main.activity_main.ble_split
-//import kotlinx.android.synthetic.main.activity_main.rcv
-//import kotlinx.android.synthetic.main.activity_main.scan
-//import kotlinx.android.synthetic.main.navigation.bottomNavigationView
 import no.nordicsemi.android.ble.observer.ConnectionObserver
 
 class DeviceScanActivity : AppCompatActivity(), BleChangeObserver {
@@ -50,8 +47,8 @@ class DeviceScanActivity : AppCompatActivity(), BleChangeObserver {
 
 
 
-    private var list = arrayListOf<Bluetooth>()
-    private var adapter = DeviceAdapter(R.layout.device_item, list)
+    private var devices_list = arrayListOf<Bluetooth>()
+    private var adapter = DeviceListViewAdapter(devices_list)
     
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -61,6 +58,16 @@ class DeviceScanActivity : AppCompatActivity(), BleChangeObserver {
         btRegisterForResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             bluetoothEnableCallback(result)
         }
+        setSupportActionBar(binding.actionbar)
+        supportActionBar?.setTitle("Scanning for devices...")
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+//        supportActionBar?.setHomeButtonEnabled(true)
+        supportActionBar?.show()
+
+        val recyclerView = binding.deviceList;
+        recyclerView.layoutManager =  LinearLayoutManager(this)
+        recyclerView.setAdapter(adapter);
+
         initEventBus()
         needPermission()
     }
@@ -146,10 +153,13 @@ class DeviceScanActivity : AppCompatActivity(), BleChangeObserver {
         LiveEventBus.get<Bluetooth>(EventMsgConst.Discovery.EventDeviceFound)
             .observe(this) {
                 // scan result
+                devices_list.clear()
                 Log.d(TAG, "EventDeviceFound")
                 for (b in BluetoothController.getDevices()) {
+                    devices_list.add(b)
                     Log.d(TAG, "- " + b.name)
                 }
+                adapter.notifyDataSetChanged()
             }
         LiveEventBus.get<Int>(EventMsgConst.Ble.EventBleDeviceDisconnectReason)
             .observe(this) {
@@ -178,5 +188,9 @@ class DeviceScanActivity : AppCompatActivity(), BleChangeObserver {
         Log.d(TAG, "bleState $bleState")
     }
 
-
+    override fun onSupportNavigateUp(): Boolean {
+        BleServiceHelper.BleServiceHelper.stopScan()
+        finish()
+        return false;
+    }
 }

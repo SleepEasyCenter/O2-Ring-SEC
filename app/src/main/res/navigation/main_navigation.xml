@@ -9,7 +9,11 @@
         android:id="@+id/home_dashboard"
         android:name="com.example.lpdemo.HomeDashboardFragment"
         android:label="fragment_home_dashboard"
-        tools:layout="@layout/fragment_home_dashboard" />
+        tools:layout="@layout/fragment_home_dashboard" >
+        <action
+            android:id="@+id/action_home_dashboard_to_deviceScanActivity"
+            app:destination="@id/deviceScanActivity" />
+    </fragment>
     <fragment
         android:id="@+id/session_history"
         android:name="com.example.lpdemo.SessionHistoryFragment"
@@ -20,4 +24,8 @@
         android:name="com.example.lpdemo.SettingsFragment"
         android:label="fragment_settings"
         tools:layout="@layout/fragment_settings" />
+    <activity
+        android:id="@+id/deviceScanActivity"
+        android:name="com.example.lpdemo.DeviceScanActivity"
+        android:label="DeviceScanActivity" />
 </navigation>
