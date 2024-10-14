@@ -21,9 +21,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 
 import com.example.lpdemo.adapters.DeviceListViewAdapter
 import com.example.lpdemo.databinding.ActivityDeviceScanBinding
-
 import com.example.lpdemo.utils._bleState
 import com.example.lpdemo.utils.bleState
+
 import com.jeremyliao.liveeventbus.LiveEventBus
 import com.lepu.blepro.constants.Ble
 import com.lepu.blepro.event.EventMsgConst
