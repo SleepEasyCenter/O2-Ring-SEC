@@ -7,9 +7,12 @@ import android.os.Parcelable
 import android.util.Log
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.net.toFile
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.lpdemo.databinding.ActivityShareReceiveAndUploadBinding
+import java.io.File
+
 
 class ShareReceiveAndUploadActivity : AppCompatActivity() {
 
@@ -23,7 +26,7 @@ class ShareReceiveAndUploadActivity : AppCompatActivity() {
         setContentView(binding.root)
         setSupportActionBar(binding.toolbar);
         actionBar?.setDisplayHomeAsUpEnabled(true)
-        when{
+        when {
             intent?.action == Intent.ACTION_SEND -> {
                 if ("text/csv" == intent.type) {
                     handleSendCSV(intent)
@@ -31,22 +34,27 @@ class ShareReceiveAndUploadActivity : AppCompatActivity() {
                     handleSendPdf(intent)
                 }
             }
+
             else -> {
 
             }
         }
 
     }
-    fun handleSendCSV(intent: Intent){
+
+    fun handleSendCSV(intent: Intent) {
         intent.getStringExtra(Intent.EXTRA_TEXT)?.let {
             // Update UI to reflect text being shared
         }
     }
-    fun handleSendPdf(intent: Intent){
-         (intent.getParcelableExtra<Parcelable>(Intent.EXTRA_STREAM) as? Uri).let { data ->
-             Log.d(TAG, "Received pdf:" + data.toString())
 
-         }
+    fun handleSendPdf(intent: Intent) {
+        (intent.getParcelableExtra<Parcelable>(Intent.EXTRA_STREAM) as? Uri)?.let { data ->
+            Log.d(TAG, "Received pdf:" + data.toString())
+            val file = data.toFile()
+            // todo upload to database -> need to figure out authentication
+            // file.readBytes()
+        }
 
     }
 
