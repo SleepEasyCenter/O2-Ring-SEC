@@ -1,20 +1,14 @@
-package com.example.lpdemo
+package com.example.lpdemo.dialogs
 
 import android.app.AlertDialog
 import android.app.Dialog
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
-import com.example.lpdemo.databinding.FragmentSettingsBinding
-import com.example.lpdemo.databinding.FragmentSettingsChangePatientIdDialogBinding
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
+import com.example.lpdemo.databinding.FragmentSettingsChangePatientIdDialogBinding
 
 /**
  * A simple [Fragment] subclass.
@@ -64,8 +58,7 @@ class DialogChangePatientIdAuthFragment : DialogFragment() {
         fun newInstance(param1: String, param2: String) =
             DialogChangePatientIdAuthFragment().apply {
                 arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+
                 }
             }
     }
