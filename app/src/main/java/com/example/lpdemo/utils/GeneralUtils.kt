@@ -22,3 +22,8 @@ public fun readPatientId(any_activity: Activity): String?{
     val patient_id = sharedPref.getString(SharedPref_PatientID_Key, null);
     return patient_id
 }
+
+public fun setPatientId(any_activity: Activity, patient_id: String?) {
+    var sharedPref = getAppSharedPref(any_activity as Activity);
+    sharedPref.edit().putString(SharedPref_PatientID_Key, patient_id).apply()
+}
