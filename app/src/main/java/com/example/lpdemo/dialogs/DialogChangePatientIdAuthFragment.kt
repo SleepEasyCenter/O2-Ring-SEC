@@ -3,32 +3,54 @@ package com.example.lpdemo.dialogs
 import android.app.AlertDialog
 import android.app.Dialog
 import android.os.Bundle
+import android.text.InputType
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import androidx.fragment.app.DialogFragment
-
 import com.example.lpdemo.databinding.FragmentSettingsChangePatientIdDialogBinding
+import com.example.lpdemo.utils.hashString
+
+
 
 /**
  * A simple [Fragment] subclass.
  * Use the [DialogChangePatientIdAuthFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class DialogChangePatientIdAuthFragment : DialogFragment() {
+class DialogChangePatientIdAuthFragment(private var listener: ((success: Boolean) -> Unit)?) :
+    DialogFragment() {
     private var binding: FragmentSettingsChangePatientIdDialogBinding? = null
+    private val secretCode = hashString("Psalms118:8")
 
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         return activity?.let {
             // Use the Builder class for convenient dialog construction.
+            val input = EditText(it)
+
+// Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
+            input.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
             val builder = AlertDialog.Builder(it)
-            builder.setMessage("Start game")
-                .setPositiveButton("Start") { dialog, id ->
-                    // START THE GAME!
+            builder
+                .setTitle("Configure Patient - Enter Code")
+                .setMessage("This function is for Sleep Easy Clinic staff only. Please do not use this if you are a patient.")
+                .setView(input)
+                .setPositiveButton("Enter") { dialog, id ->
+                    dialog.dismiss()
+                    val text = input.text.toString();
+                    var hashed = hashString(text);
+                    if (hashed == secretCode){
+                        listener?.invoke(true)
+                    }
+                    else{
+                        listener?.invoke(false)
+                    }
                 }
                 .setNegativeButton("Cancel") { dialog, id ->
                     // User cancelled the dialog.
+                    listener?.invoke(false)
                 }
             // Create the AlertDialog object and return it.
             builder.create()
@@ -45,21 +67,7 @@ class DialogChangePatientIdAuthFragment : DialogFragment() {
     }
 
     companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment SettingsChangePatientIdDialogFragment.
-         */
-        // TODO: Rename and change types and number of parameters
         @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            DialogChangePatientIdAuthFragment().apply {
-                arguments = Bundle().apply {
-
-                }
-            }
+        public val TAG: String = "DialogChangePatientIdAuthFragment"
     }
 }
