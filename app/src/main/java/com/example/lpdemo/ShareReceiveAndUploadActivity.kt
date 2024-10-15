@@ -19,6 +19,7 @@ class ShareReceiveAndUploadActivity : AppCompatActivity() {
     lateinit var binding: ActivityShareReceiveAndUploadBinding;
 
     val TAG: String = "ShareReceiveAndUploadActivity"
+    private var currentFile: File? = null;
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,6 +27,7 @@ class ShareReceiveAndUploadActivity : AppCompatActivity() {
         setContentView(binding.root)
         setSupportActionBar(binding.toolbar);
         actionBar?.setDisplayHomeAsUpEnabled(true)
+        binding.btnUploadDataFromShare.setOnClickListener { x-> btnUpload_callback() }
         when {
             intent?.action == Intent.ACTION_SEND -> {
                 if ("text/csv" == intent.type) {
@@ -52,9 +54,14 @@ class ShareReceiveAndUploadActivity : AppCompatActivity() {
         (intent.getParcelableExtra<Parcelable>(Intent.EXTRA_STREAM) as? Uri)?.let { data ->
             Log.d(TAG, "Received pdf:" + data.toString())
             val file = data.toFile()
+            binding.uploadTextOutput.setText("File: " + file.name);
+            currentFile = file;
             // todo upload to database -> need to figure out authentication
             // file.readBytes()
         }
+    }
+
+    fun btnUpload_callback(){
 
     }
 
