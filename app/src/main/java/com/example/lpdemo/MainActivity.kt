@@ -32,5 +32,8 @@ class MainActivity : AppCompatActivity() {
         val intent: Intent = Intent(this@MainActivity, DeviceScanActivity::class.java);
         startActivity(intent)
     }
-
+    public fun startPatientEditActivity(){
+        val intent: Intent = Intent(this@MainActivity, ConfigurePatientActivity::class.java);
+        startActivity(intent)
+    }
 }

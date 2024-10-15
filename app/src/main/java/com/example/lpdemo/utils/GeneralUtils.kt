@@ -16,3 +16,9 @@ public val SharedPref_PatientID_Key = "patient_id";
 public fun getAppSharedPref(activity: Activity): SharedPreferences{
     return activity.getSharedPreferences(SHARED_PREF_KEY, Context.MODE_PRIVATE)
 }
+
+public fun readPatientId(any_activity: Activity): String?{
+    var sharedPref = getAppSharedPref(any_activity as Activity);
+    val patient_id = sharedPref.getString(SharedPref_PatientID_Key, null);
+    return patient_id
+}

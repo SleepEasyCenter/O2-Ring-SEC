@@ -1,6 +1,7 @@
 package com.example.lpdemo.fragments
 
 import android.app.Activity
+import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,10 +10,13 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
+import com.example.lpdemo.DeviceScanActivity
+import com.example.lpdemo.MainActivity
 import com.example.lpdemo.databinding.FragmentSettingsBinding
 import com.example.lpdemo.dialogs.DialogChangePatientIdAuthFragment
 import com.example.lpdemo.utils.SharedPref_PatientID_Key
 import com.example.lpdemo.utils.getAppSharedPref
+import com.example.lpdemo.utils.readPatientId
 
 /**
  * A simple [Fragment] subclass.
@@ -36,9 +40,7 @@ class SettingsFragment : Fragment() {
         binding!!.btnPatientProfileEdit.setOnClickListener { x ->
             openEditPatientIdDialog()
         }
-        sharedPref = getAppSharedPref(activity as Activity);
-        val patient_id = sharedPref.getString(SharedPref_PatientID_Key, null);
-        binding!!.settingsTextView.text = "Patient Id: " + patient_id;
+        binding!!.settingsTextView.text = "Patient Id: " + readPatientId(activity as Activity);
         return binding?.root
     }
 
@@ -46,12 +48,15 @@ class SettingsFragment : Fragment() {
         DialogChangePatientIdAuthFragment({success ->
             if (success){
                 // open up new dialog to change patient id
+                (activity as MainActivity).startPatientEditActivity()
             }
             else{
                 Toast.makeText(context, "Error: Wrong Code.", Toast.LENGTH_SHORT).show()
             }
         }).show(parentFragmentManager, "AUTH_CHANGE_PATIENT_ID")
     }
+
+
 
     companion object {
         /**
