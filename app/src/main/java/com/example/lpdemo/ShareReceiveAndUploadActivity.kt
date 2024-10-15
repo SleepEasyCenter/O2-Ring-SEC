@@ -11,6 +11,7 @@ import androidx.core.net.toFile
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.lpdemo.databinding.ActivityShareReceiveAndUploadBinding
+import com.example.lpdemo.utils.fileFromContentUri
 import java.io.File
 
 
@@ -31,9 +32,9 @@ class ShareReceiveAndUploadActivity : AppCompatActivity() {
         when {
             intent?.action == Intent.ACTION_SEND -> {
                 if ("text/csv" == intent.type) {
-                    handleSendCSV(intent)
+                    handleSendFile(intent)
                 } else if (intent.type == "application/pdf") {
-                    handleSendPdf(intent)
+                    handleSendFile(intent)
                 }
             }
 
@@ -44,16 +45,11 @@ class ShareReceiveAndUploadActivity : AppCompatActivity() {
 
     }
 
-    fun handleSendCSV(intent: Intent) {
-        intent.getStringExtra(Intent.EXTRA_TEXT)?.let {
-            // Update UI to reflect text being shared
-        }
-    }
 
-    fun handleSendPdf(intent: Intent) {
+    fun handleSendFile(intent: Intent) {
         (intent.getParcelableExtra<Parcelable>(Intent.EXTRA_STREAM) as? Uri)?.let { data ->
             Log.d(TAG, "Received pdf:" + data.toString())
-            val file = data.toFile()
+            val file = fileFromContentUri(this, data)
             binding.uploadTextOutput.setText("File: " + file.name);
             currentFile = file;
             // todo upload to database -> need to figure out authentication
