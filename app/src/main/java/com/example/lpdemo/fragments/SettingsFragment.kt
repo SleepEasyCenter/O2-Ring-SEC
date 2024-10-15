@@ -1,5 +1,7 @@
 package com.example.lpdemo.fragments
 
+import android.app.Activity
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,6 +11,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
 import com.example.lpdemo.databinding.FragmentSettingsBinding
 import com.example.lpdemo.dialogs.DialogChangePatientIdAuthFragment
+import com.example.lpdemo.utils.SharedPref_PatientID_Key
+import com.example.lpdemo.utils.getAppSharedPref
 
 /**
  * A simple [Fragment] subclass.
@@ -17,6 +21,7 @@ import com.example.lpdemo.dialogs.DialogChangePatientIdAuthFragment
  */
 class SettingsFragment : Fragment() {
     private var binding: FragmentSettingsBinding? = null
+    private lateinit var sharedPref: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,6 +36,9 @@ class SettingsFragment : Fragment() {
         binding!!.btnPatientProfileEdit.setOnClickListener { x ->
             openEditPatientIdDialog()
         }
+        sharedPref = getAppSharedPref(activity as Activity);
+        val patient_id = sharedPref.getString(SharedPref_PatientID_Key, null);
+        binding!!.settingsTextView.text = "Patient Id: " + patient_id;
         return binding?.root
     }
 
