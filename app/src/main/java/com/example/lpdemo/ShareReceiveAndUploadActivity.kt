@@ -31,11 +31,8 @@ class ShareReceiveAndUploadActivity : AppCompatActivity() {
         binding.btnUploadDataFromShare.setOnClickListener { x-> btnUpload_callback() }
         when {
             intent?.action == Intent.ACTION_SEND -> {
-                if ("text/csv" == intent.type) {
-                    handleSendFile(intent)
-                } else if (intent.type == "application/pdf") {
-                    handleSendFile(intent)
-                }
+                Log.d(TAG, "Receiving mime type:" + intent.type);
+                handleSendFile(intent)
             }
 
             else -> {
@@ -48,7 +45,7 @@ class ShareReceiveAndUploadActivity : AppCompatActivity() {
 
     fun handleSendFile(intent: Intent) {
         (intent.getParcelableExtra<Parcelable>(Intent.EXTRA_STREAM) as? Uri)?.let { data ->
-            Log.d(TAG, "Received pdf:" + data.toString())
+            Log.d(TAG, "Received file:" + data.toString())
             val file = fileFromContentUri(this, data)
             binding.uploadTextOutput.setText("File: " + file.name);
             currentFile = file;

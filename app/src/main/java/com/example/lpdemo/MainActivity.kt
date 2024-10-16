@@ -1,12 +1,9 @@
 package com.example.lpdemo
 
-import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import android.os.Bundle
-import android.preference.PreferenceManager.getDefaultSharedPreferences
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.app.AppCompatDelegate
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
@@ -14,7 +11,7 @@ import com.example.lpdemo.databinding.ActivityMainBinding
 
 
 class MainActivity : AppCompatActivity() {
-
+    private val TAG: String = "MainActivity"
     private lateinit var binding: ActivityMainBinding
     lateinit var navController: NavController
 
@@ -26,6 +23,9 @@ class MainActivity : AppCompatActivity() {
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.navhost) as NavHostFragment;
          navController = navHostFragment.navController;
         binding.bottomNavigationView.setupWithNavController(navController);
+
+//        Log.d(TAG, "API USERNAME: " + BuildConfig.API_USERNAME)
+//        Log.d(TAG, "API KEY: " +  BuildConfig.API_PASSWORD)
     }
 
     public fun startScanActivity(){

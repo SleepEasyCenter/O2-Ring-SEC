@@ -38,7 +38,7 @@
 
                 <category android:name="android.intent.category.DEFAULT" />
 
-                <data android:mimeType="text/csv" />
+                <data android:mimeType="application/vnd.ms-excel" />
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
@@ -47,13 +47,20 @@
 
                 <data android:mimeType="application/pdf" />
             </intent-filter>
-            <intent-filter>
-                <action android:name="android.intent.action.SEND" />
+<!--            <intent-filter>-->
+<!--                <action android:name="android.intent.action.SEND" />-->
 
-                <category android:name="android.intent.category.DEFAULT" />
+<!--                <category android:name="android.intent.category.DEFAULT" />-->
 
-                <data android:mimeType="image/*" />
-            </intent-filter>
+<!--                <data android:mimeType="application/pdf" />-->
+<!--            </intent-filter>-->
+<!--            <intent-filter>-->
+<!--                <action android:name="android.intent.action.SEND" />-->
+
+<!--                <category android:name="android.intent.category.DEFAULT" />-->
+
+<!--                <data android:mimeType="image/*" />-->
+<!--            </intent-filter>-->
         </activity>
         <activity
             android:name=".DeviceScanActivity"
