@@ -24,8 +24,6 @@ class MainActivity : AppCompatActivity() {
          navController = navHostFragment.navController;
         binding.bottomNavigationView.setupWithNavController(navController);
 
-//        Log.d(TAG, "API USERNAME: " + BuildConfig.API_USERNAME)
-//        Log.d(TAG, "API KEY: " +  BuildConfig.API_PASSWORD)
     }
 
     public fun startScanActivity(){
