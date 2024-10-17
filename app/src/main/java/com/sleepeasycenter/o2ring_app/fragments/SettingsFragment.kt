@@ -2,12 +2,14 @@ package com.sleepeasycenter.o2ring_app.fragments
 
 import android.app.Activity
 import android.content.SharedPreferences
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import com.sleepeasycenter.o2ring_app.BuildConfig
 import com.sleepeasycenter.o2ring_app.MainActivity
 import com.sleepeasycenter.o2ring_app.databinding.FragmentSettingsBinding
 import com.sleepeasycenter.o2ring_app.dialogs.DialogChangePatientIdAuthFragment
@@ -19,7 +21,7 @@ import com.sleepeasycenter.o2ring_app.utils.readPatientId
  * create an instance of this fragment.
  */
 class SettingsFragment : Fragment() {
-    private var binding: FragmentSettingsBinding? = null
+    private lateinit var binding: FragmentSettingsBinding
     private lateinit var sharedPref: SharedPreferences
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,28 +31,32 @@ class SettingsFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
         binding = FragmentSettingsBinding.inflate(inflater, container, false);
-        binding!!.btnPatientProfileEdit.setOnClickListener { x ->
+        binding.btnPatientProfileEdit.setOnClickListener { x ->
             openEditPatientIdDialog()
         }
-        binding!!.settingsTextView.text = "Patient Id: " + readPatientId(activity as Activity);
-        return binding?.root
+        updateText()
+        return binding.root
     }
 
-    fun openEditPatientIdDialog(){
-        DialogChangePatientIdAuthFragment({success ->
-            if (success){
+    fun updateText() {
+        binding.settingsTextView.text = "Patient Id: " + readPatientId(activity as Activity) + "\n" +
+                "App Version: " + BuildConfig.VERSION_NAME + " - " + BuildConfig.VERSION_CODE + "\n"
+
+    }
+
+    fun openEditPatientIdDialog() {
+        DialogChangePatientIdAuthFragment({ success ->
+            if (success) {
                 // open up new dialog to change patient id
                 (activity as MainActivity).startPatientEditActivity()
-            }
-            else{
+            } else {
                 Toast.makeText(context, "Error: Wrong Code.", Toast.LENGTH_SHORT).show()
             }
         }).show(parentFragmentManager, "AUTH_CHANGE_PATIENT_ID")
     }
-
 
 
     companion object {
