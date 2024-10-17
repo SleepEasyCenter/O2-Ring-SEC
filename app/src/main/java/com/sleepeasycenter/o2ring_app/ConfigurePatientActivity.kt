@@ -25,10 +25,10 @@ class ConfigurePatientActivity : AppCompatActivity() {
         binding.inputConfigPatientId.setText(readPatientId(this));
     }
 
-    fun btnSaveDetails_callback(){
+    fun btnSaveDetails_callback() {
         val inputPatientId = binding.inputConfigPatientId.text;
 //        val inputPatientName = binding.inputConfigPatientId.text;
-        if (inputPatientId.isBlank()){
+        if (inputPatientId.isBlank()) {
             Toast.makeText(this, "Patient Id cannot be blank!", Toast.LENGTH_SHORT).show()
             return;
         }
@@ -38,7 +38,11 @@ class ConfigurePatientActivity : AppCompatActivity() {
 
     override fun onSupportNavigateUp(): Boolean {
 
-        DialogUnsavedChangesWarning({ x -> if (x){finish()} }).show(supportFragmentManager,"UNSAVED_CHANGES_DIALOG")
+        DialogUnsavedChangesWarning({ x ->
+            if (x) {
+                finish()
+            }
+        }).show(supportFragmentManager, "UNSAVED_CHANGES_DIALOG")
 
         return false
     }

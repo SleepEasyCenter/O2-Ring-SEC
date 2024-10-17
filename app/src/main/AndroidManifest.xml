@@ -27,7 +27,7 @@
         android:label="SleepEasy O2 Ring"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.LepuDemo">
+        android:theme="@style/AppTheme">
         <activity
             android:name=".ConfigurePatientActivity"
             android:exported="false" />

@@ -20,7 +20,7 @@ import retrofit2.Callback
 import retrofit2.Response
 import java.io.File
 
-class CurrentUploadableFile(var filetype: String, var file: File) {
+private class CurrentUploadableFile(var filetype: String, var file: File) {
     fun mimetype(): String {
         if (filetype == "csv") {
             return "text/csv";
