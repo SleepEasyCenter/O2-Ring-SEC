@@ -65,11 +65,11 @@ class ShareReceiveAndUploadActivity : AppCompatActivity() {
 
     fun handleSendFile(intent: Intent) {
 
-        (IntentCompat.getParcelableExtra(
+        IntentCompat.getParcelableExtra(
             intent,
             Intent.EXTRA_STREAM,
-            Parcelable::class.java
-        ) as? Uri)?.let { data ->
+            Uri::class.java
+        )?.let { data ->
             Log.d(TAG, "Received file:" + data.toString())
             val file = fileFromContentUri(this, data)
             binding.uploadTextOutput.setText("File: " + file.name);
