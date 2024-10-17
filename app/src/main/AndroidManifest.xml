@@ -24,7 +24,7 @@
     <application
         android:allowBackup="true"
         android:icon="@mipmap/sleepeasylogo"
-        android:label="SleepEasy O2 Dx Tx"
+        android:label="SleepEasy O2 Ring"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.LepuDemo">
@@ -76,7 +76,7 @@
 
         <provider
             android:name="androidx.core.content.FileProvider"
-            android:authorities="com.example.lpdemo.fileprovider"
+            android:authorities="com.sleepeasycenter.o2ring_app.fileprovider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data

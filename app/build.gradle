@@ -14,7 +14,7 @@ android {
     buildToolsVersion "33.0.0"
 
     defaultConfig {
-        applicationId "com.example.lpdemo"
+        applicationId 'com.sleepeasycenter.o2ring_app'
         minSdkVersion 28
         targetSdkVersion 33
         versionCode 5
@@ -51,7 +51,7 @@ android {
         viewBinding = true
         compose true
     }
-    namespace 'com.example.lpdemo'
+    namespace 'com.sleepeasycenter.o2ring_app'
     composeOptions {
         kotlinCompilerExtensionVersion '1.5.1'
     }
