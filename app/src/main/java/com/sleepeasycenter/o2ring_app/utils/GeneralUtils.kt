@@ -39,7 +39,7 @@ public fun fileFromContentUri(context: Context, contentUri: Uri): File {
 
     val fileExtension = getFileExtension(context, contentUri)
 
-    val fileName = contentUri.lastPathSegment
+    val fileName = contentUri.lastPathSegment!!
 
     val tempFile = File(context.cacheDir, fileName)
     tempFile.createNewFile()

@@ -7,6 +7,7 @@ import android.os.Parcelable
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.IntentCompat
 import com.sleepeasycenter.o2ring_app.api.SleepEasyAPI
 import com.sleepeasycenter.o2ring_app.databinding.ActivityShareReceiveAndUploadBinding
 import com.sleepeasycenter.o2ring_app.utils.fileFromContentUri
@@ -14,6 +15,7 @@ import com.sleepeasycenter.o2ring_app.utils.readPatientId
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
@@ -62,7 +64,12 @@ class ShareReceiveAndUploadActivity : AppCompatActivity() {
 
 
     fun handleSendFile(intent: Intent) {
-        (intent.getParcelableExtra<Parcelable>(Intent.EXTRA_STREAM) as? Uri)?.let { data ->
+
+        (IntentCompat.getParcelableExtra(
+            intent,
+            Intent.EXTRA_STREAM,
+            Parcelable::class.java
+        ) as? Uri)?.let { data ->
             Log.d(TAG, "Received file:" + data.toString())
             val file = fileFromContentUri(this, data)
             binding.uploadTextOutput.setText("File: " + file.name);
@@ -77,32 +84,40 @@ class ShareReceiveAndUploadActivity : AppCompatActivity() {
         // Upload file using Retrofit
         // todo upload to database -> need to figure out authentication
         if (currentFile == null) {
-            Log.d(TAG,"Tried to upload empty file!");
+            Log.d(TAG, "Tried to upload empty file!");
             return;
         }
 
 
         readPatientId(this)?.let { patient_id ->
-            var filePart = MultipartBody.Part.createFormData(
-                currentFile!!.filetype, currentFile!!.file.name, RequestBody.create(
-                    currentFile!!.mimetype().toMediaTypeOrNull(), currentFile!!.file
-                )
+            val filePart = MultipartBody.Part.createFormData(
+                currentFile!!.filetype,
+                currentFile!!.file.name,
+                currentFile!!.file.asRequestBody(currentFile!!.mimetype().toMediaTypeOrNull())
             )
-            var patientIdPart = MultipartBody.Part.createFormData("patient_id", patient_id);
-            var call = SleepEasyAPI.getService().uploadO2RingData(filePart, patientIdPart)
-            var context = this;
-            call.enqueue( object : Callback<ResponseBody> {
+            val patientIdPart = MultipartBody.Part.createFormData("patient_id", patient_id);
+            val call = SleepEasyAPI.getService().uploadO2RingData(filePart, patientIdPart)
+            val context = this;
+            call.enqueue(object : Callback<ResponseBody> {
                 override fun onResponse(call: Call<ResponseBody>, res: Response<ResponseBody>) {
                     res.errorBody()?.let { errBody ->
                         val s = errBody.string();
                         Log.d(TAG, "Upload Error Response:\n" + s)
-                        Toast.makeText(context, "Error while uploading data:\n" + s, Toast.LENGTH_LONG).show()
+                        Toast.makeText(
+                            context,
+                            "Error while uploading data:\n" + s,
+                            Toast.LENGTH_LONG
+                        ).show()
                     }
                     finish()
                 }
 
                 override fun onFailure(call: Call<ResponseBody>, err: Throwable) {
-                    Toast.makeText(context, "Unexpected error while uploading data:\n" + err.toString(), Toast.LENGTH_LONG).show()
+                    Toast.makeText(
+                        context,
+                        "Unexpected error while uploading data:\n" + err.toString(),
+                        Toast.LENGTH_LONG
+                    ).show()
                     finish()
                     throw err
                 }

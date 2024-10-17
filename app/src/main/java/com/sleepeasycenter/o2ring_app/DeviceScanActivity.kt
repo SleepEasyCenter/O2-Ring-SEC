@@ -3,6 +3,7 @@ package com.sleepeasycenter.o2ring_app
 import android.Manifest
 import android.app.Activity
 import android.bluetooth.BluetoothAdapter
+import android.bluetooth.BluetoothManager
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -102,7 +103,7 @@ class DeviceScanActivity : AppCompatActivity(), BleChangeObserver {
     }
 
     private fun checkBt() {
-        val adapter = BluetoothAdapter.getDefaultAdapter()
+        val adapter: BluetoothAdapter? = (getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager).adapter
         if (adapter == null) {
             Toast.makeText(this, "Bluetooth is not supported", Toast.LENGTH_SHORT).show()
             return
