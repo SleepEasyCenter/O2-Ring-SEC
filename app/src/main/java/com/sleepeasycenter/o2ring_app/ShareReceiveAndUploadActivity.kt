@@ -22,16 +22,8 @@ import retrofit2.Callback
 import retrofit2.Response
 import java.io.File
 
-private class CurrentUploadableFile(var filetype: String, var file: File) {
-    fun mimetype(): String {
-        if (filetype == "csv") {
-            return "text/csv";
-        }
-        if (filetype == "pdf") {
-            return "application/pdf";
-        }
-        return "unknown/" + filetype
-    }
+private class CurrentUploadableFile(var filetype: String, var mimetype: String, var file: File) {
+
 }
 
 class ShareReceiveAndUploadActivity : AppCompatActivity() {
@@ -73,7 +65,21 @@ class ShareReceiveAndUploadActivity : AppCompatActivity() {
             Log.d(TAG, "Received file:" + data.toString())
             val file = fileFromContentUri(this, data)
             binding.uploadTextOutput.setText("File: " + file.name);
-            currentFile = CurrentUploadableFile(file.extension, file);
+
+            var filetype = "unknown"
+            var mimetype = "unknown"
+            if (intent.type == "application/vnd.ms-excel") {
+                filetype = "csv"
+                mimetype = "text/csv"
+            } else if (intent.type == "application/pdf") {
+                filetype = "pdf"
+                mimetype = "application/pdf"
+            } else if (intent.type?.contains("image") == true) {
+                filetype = "image"
+                mimetype = intent.type!!
+            }
+
+            currentFile = CurrentUploadableFile(filetype, mimetype, file);
 
 
             // file.readBytes()
@@ -90,10 +96,11 @@ class ShareReceiveAndUploadActivity : AppCompatActivity() {
 
 
         readPatientId(this)?.let { patient_id ->
+
             val filePart = MultipartBody.Part.createFormData(
                 currentFile!!.filetype,
                 currentFile!!.file.name,
-                currentFile!!.file.asRequestBody(currentFile!!.mimetype().toMediaTypeOrNull())
+                currentFile!!.file.asRequestBody(currentFile!!.mimetype.toMediaTypeOrNull())
             )
             val patientIdPart = MultipartBody.Part.createFormData("patient_id", patient_id);
             val call = SleepEasyAPI.getService().uploadO2RingData(filePart, patientIdPart)
@@ -102,14 +109,28 @@ class ShareReceiveAndUploadActivity : AppCompatActivity() {
                 override fun onResponse(call: Call<ResponseBody>, res: Response<ResponseBody>) {
                     res.errorBody()?.let { errBody ->
                         val s = errBody.string();
-                        Log.d(TAG, "Upload Error Response:\n" + s)
-                        Toast.makeText(
-                            context,
-                            "Error while uploading data:\n" + s,
-                            Toast.LENGTH_LONG
-                        ).show()
+                        if (res.code() == 409){
+                            Toast.makeText(
+                                context,
+                                "Data upload rejected! (File already uploaded!)",
+                                Toast.LENGTH_LONG
+                            ).show()
+                        }
+                        else{
+                            Log.d(TAG, "Upload Error Response:\n" + s)
+                            Toast.makeText(
+                                context,
+                                "Error while uploading data:\n" + s,
+                                Toast.LENGTH_LONG
+                            ).show()
+                        }
                     }
                     finish()
+                    Toast.makeText(
+                        context,
+                        "File / data uploaded successfully!",
+                        Toast.LENGTH_LONG
+                    ).show()
                 }
 
                 override fun onFailure(call: Call<ResponseBody>, err: Throwable) {
