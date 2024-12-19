@@ -1,12 +1,18 @@
 package com.sleepeasycenter.o2ring_app
 
+import android.Manifest
+import android.bluetooth.BluetoothAdapter
 import android.content.Intent
+
 import android.os.Bundle
+import android.widget.Toast
+
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
+import com.permissionx.guolindev.PermissionX
 import com.sleepeasycenter.o2ring_app.databinding.ActivityMainBinding
 
 
@@ -24,6 +30,15 @@ class MainActivity : AppCompatActivity() {
          navController = navHostFragment.navController;
         binding.bottomNavigationView.setupWithNavController(navController);
 
+        PermissionX.init(this)
+            .permissions(Manifest.permission.BLUETOOTH_CONNECT, Manifest.permission.BLUETOOTH_SCAN, Manifest.permission.BLUETOOTH, Manifest.permission.BLUETOOTH_ADMIN)
+            .request { allGranted, grantedList, deniedList ->
+                if (allGranted) {
+                    Toast.makeText(this, "All permissions are granted", Toast.LENGTH_LONG).show()
+                } else {
+                    Toast.makeText(this, "These permissions are denied: $deniedList", Toast.LENGTH_LONG).show()
+                }
+            }
     }
 
     public fun startScanActivity(){
