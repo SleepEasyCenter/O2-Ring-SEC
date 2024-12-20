@@ -59,13 +59,25 @@ class DeviceScanActivity : AppCompatActivity(), BleChangeObserver {
 //        supportActionBar?.setHomeButtonEnabled(true)
         supportActionBar?.show()
 
-        val recyclerView = binding.deviceList;
-        recyclerView.layoutManager = LinearLayoutManager(this)
-        recyclerView.setAdapter(adapter);
 
+        initView()
         initEventBus()
         needPermission()
     }
+
+    private fun initView(){
+        val recyclerView = binding.deviceList;
+        recyclerView.layoutManager = LinearLayoutManager(this)
+        recyclerView.setAdapter(adapter);
+        adapter.listener = DeviceListViewAdapter.OnItemClickListener { item ->
+            Toast.makeText(this, "Connecting to O2 Ring..." + item.device.name , Toast.LENGTH_SHORT).show()
+            // Begin connection to O2 Ring here...
+            // TODO
+        }
+
+    }
+
+
 
     private fun onPermissionGranted() {
         if (!openBluetooth()) {
