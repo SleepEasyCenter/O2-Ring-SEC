@@ -26,26 +26,19 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val navHostFragment = supportFragmentManager.findFragmentById(R.id.navhost) as NavHostFragment;
-         navController = navHostFragment.navController;
+        val navHostFragment =
+            supportFragmentManager.findFragmentById(R.id.navhost) as NavHostFragment;
+        navController = navHostFragment.navController;
         binding.bottomNavigationView.setupWithNavController(navController);
 
-        PermissionX.init(this)
-            .permissions(Manifest.permission.BLUETOOTH_CONNECT, Manifest.permission.BLUETOOTH_SCAN, Manifest.permission.BLUETOOTH, Manifest.permission.BLUETOOTH_ADMIN)
-            .request { allGranted, grantedList, deniedList ->
-                if (allGranted) {
-                    Toast.makeText(this, "All permissions are granted", Toast.LENGTH_LONG).show()
-                } else {
-                    Toast.makeText(this, "These permissions are denied: $deniedList", Toast.LENGTH_LONG).show()
-                }
-            }
     }
 
-    public fun startScanActivity(){
+    public fun startScanActivity() {
         val intent: Intent = Intent(this@MainActivity, DeviceScanActivity::class.java);
         startActivity(intent)
     }
-    public fun startPatientEditActivity(){
+
+    public fun startPatientEditActivity() {
         val intent: Intent = Intent(this@MainActivity, ConfigurePatientActivity::class.java);
         startActivity(intent)
     }
