@@ -44,6 +44,7 @@ public class DeviceListViewAdapter extends RecyclerView.Adapter<DeviceListViewAd
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Bluetooth device = devices_list.get(position);
+//        holder.getTextView().setText(device.getName() + " | " + device.getMacAddr());
         holder.getTextView().setText(device.getName() + " | " + device.getMacAddr());
     }
 
