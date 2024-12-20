@@ -56,9 +56,7 @@ class DeviceScanActivity : AppCompatActivity(), BleChangeObserver {
         super.onCreate(savedInstanceState)
         binding = ActivityDeviceScanBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        btRegisterForResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            bluetoothEnableCallback(result)
-        }
+
         setSupportActionBar(binding.actionbar)
         supportActionBar?.setTitle("Scanning for devices...")
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -70,60 +68,10 @@ class DeviceScanActivity : AppCompatActivity(), BleChangeObserver {
         recyclerView.setAdapter(adapter);
 
         initEventBus()
-        needPermission()
-    }
-
-    private fun needService() {
-        var networkEnabled = false
-        val lm = getSystemService(Context.LOCATION_SERVICE) as LocationManager
-        try {
-            networkEnabled = lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
-        } catch (ex: Exception) {
-            ex.printStackTrace()
-        }
         initService()
     }
 
-    private fun bluetoothEnableCallback(result: ActivityResult){
-        if (result.resultCode == Activity.RESULT_OK){
-            needService()
-            Toast.makeText(this, "Bluetooth open successfully", Toast.LENGTH_SHORT).show()
-        }
-        else{
-            Toast.makeText(this, "Bluetooth open failed", Toast.LENGTH_SHORT).show()
-        }
-    }
-
-    private fun startBluetooth(){
-        val enableBtIntent = Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE)
-        btRegisterForResult.launch(enableBtIntent)
-    }
-    private fun needPermission() {
-        checkBt()
-    }
-
-    private fun checkBt() {
-        val adapter: BluetoothAdapter? = (getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager).adapter
-        if (adapter == null) {
-            Toast.makeText(this, "Bluetooth is not supported", Toast.LENGTH_SHORT).show()
-            return
-        }
-
-        if (!adapter.isEnabled) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                if (ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED) {
-                    startBluetooth()
-                } else {
-                    Toast.makeText(this, "Bluetooth open failed. (Permission not granted!)", Toast.LENGTH_SHORT).show()
-                }
-            } else {
-                startBluetooth()
-            }
-        } else {
-            needService()
-        }
-    }
-
+    /// Start scanning for models
     private fun initService() {
         if (BleServiceHelper.BleServiceHelper.checkService()) {
             // BleService already init
