@@ -68,8 +68,8 @@ class DeviceScanActivity : AppCompatActivity(), BleChangeObserver {
     }
 
     private fun onPermissionGranted() {
-        if (!openBluetooth()){
-            Toast.makeText(this, "Failed to turn on bluetooth!", Toast.LENGTH_SHORT).show()
+        if (!openBluetooth()) {
+            Toast.makeText(this, "Failed to turn on bluetooth! Check permissions?", Toast.LENGTH_SHORT).show()
             return
         }
         needService()
@@ -163,9 +163,7 @@ class DeviceScanActivity : AppCompatActivity(), BleChangeObserver {
                 Manifest.permission.BLUETOOTH_CONNECT
             ) == PackageManager.PERMISSION_GRANTED;
 
-            if (hasConnectPerms) {
-                return adapter.enable();
-            } else {
+            if (!hasConnectPerms) {
                 return false
             }
         }
