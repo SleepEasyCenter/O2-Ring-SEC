@@ -3,6 +3,7 @@ package com.sleepeasycenter.o2ring_app
 import android.Manifest
 import android.app.AlertDialog
 import android.bluetooth.BluetoothAdapter
+import android.bluetooth.BluetoothDevice
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -17,23 +18,26 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.jeremyliao.liveeventbus.LiveEventBus
-import com.lepu.blepro.constants.Ble
 import com.lepu.blepro.event.EventMsgConst
 import com.lepu.blepro.ext.BleServiceHelper
 import com.lepu.blepro.objs.Bluetooth
 import com.lepu.blepro.objs.BluetoothController
-import com.lepu.blepro.observer.BleChangeObserver
 import com.permissionx.guolindev.PermissionX
 import com.sleepeasycenter.o2ring_app.adapters.DeviceListViewAdapter
 import com.sleepeasycenter.o2ring_app.databinding.ActivityDeviceScanBinding
-import com.sleepeasycenter.o2ring_app.utils._bleState
-import com.sleepeasycenter.o2ring_app.utils.bleState
 import no.nordicsemi.android.ble.observer.ConnectionObserver
 import android.provider.Settings
 
-class DeviceScanActivity : AppCompatActivity(), BleChangeObserver {
+interface DeviceSelectCallback {
+    fun onDeviceSelect(device: Bluetooth)
+}
+class DeviceScanActivity : AppCompatActivity() {
 
-    private lateinit var btRegisterForResult: ActivityResultLauncher<Intent>
+
+    companion object {
+        var resultCallback: DeviceSelectCallback? = null
+    }
+
     private val TAG = "DeviceScanActivity"
     private lateinit var binding: ActivityDeviceScanBinding
 
@@ -70,9 +74,11 @@ class DeviceScanActivity : AppCompatActivity(), BleChangeObserver {
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.setAdapter(adapter);
         adapter.listener = DeviceListViewAdapter.OnItemClickListener { item ->
-            Toast.makeText(this, "Connecting to O2 Ring..." + item.device.name , Toast.LENGTH_SHORT).show()
-            // Begin connection to O2 Ring here...
-            // TODO
+            val device = item.device;
+            BleServiceHelper.BleServiceHelper.stopScan()
+            resultCallback?.onDeviceSelect(device)
+            BluetoothController.clear()
+            finish()
         }
 
     }
@@ -267,12 +273,6 @@ class DeviceScanActivity : AppCompatActivity(), BleChangeObserver {
     }
 
 
-    override fun onBleStateChanged(model: Int, state: Int) {
-        // Ble.State
-        Log.d(TAG, "model $model, state: $state")
-        _bleState.value = state == Ble.State.CONNECTED
-        Log.d(TAG, "bleState $bleState")
-    }
 
     override fun onSupportNavigateUp(): Boolean {
         BleServiceHelper.BleServiceHelper.stopScan()

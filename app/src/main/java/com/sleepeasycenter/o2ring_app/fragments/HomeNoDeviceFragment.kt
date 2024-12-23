@@ -5,24 +5,26 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 
 import com.sleepeasycenter.o2ring_app.MainActivity
-import com.sleepeasycenter.o2ring_app.databinding.FragmentHomeDashboardBinding
+import com.sleepeasycenter.o2ring_app.OximetryDeviceManager
+import com.sleepeasycenter.o2ring_app.databinding.FragmentHomeNodeviceBinding
 
 /**
  * A simple [Fragment] subclass.
- * Use the [HomeDashboardFragment.newInstance] factory method to
+ * Use the [HomeNoDeviceFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
-class HomeDashboardFragment : Fragment() {
+class HomeNoDeviceFragment : Fragment() {
 
-
-    public val TAG: String = "HomeDashboardFragment"
-    private var _binding: FragmentHomeDashboardBinding? = null;
+    public val TAG: String = "HomeNoDeviceFragment"
+    private var _binding: FragmentHomeNodeviceBinding? = null;
     private val binding get() = _binding!!;
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
 
     }
 
@@ -30,7 +32,7 @@ class HomeDashboardFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        _binding = FragmentHomeDashboardBinding.inflate(inflater, container, false);
+        _binding = FragmentHomeNodeviceBinding.inflate(inflater, container, false);
         // Inflate the layout for this fragment
         val view = binding.root;
 
@@ -63,7 +65,7 @@ class HomeDashboardFragment : Fragment() {
         // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstance(param1: String, param2: String) =
-            HomeDashboardFragment().apply {
+            HomeNoDeviceFragment().apply {
                 arguments = Bundle().apply {
                 }
             }

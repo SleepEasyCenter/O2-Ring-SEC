@@ -1,6 +1,6 @@
 package com.sleepeasycenter.o2ring_app.utils
 
-import androidx.lifecycle.LiveData
+import  androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 
 val _bleState = MutableLiveData<Boolean>().apply {

@@ -1,22 +1,18 @@
 package com.sleepeasycenter.o2ring_app
 
-import android.Manifest
-import android.bluetooth.BluetoothAdapter
 import android.content.Intent
-
 import android.os.Bundle
 import android.widget.Toast
-
 import androidx.appcompat.app.AppCompatActivity
-
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
-import com.permissionx.guolindev.PermissionX
+import com.lepu.blepro.ext.BleServiceHelper
+import com.lepu.blepro.objs.Bluetooth
 import com.sleepeasycenter.o2ring_app.databinding.ActivityMainBinding
 
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), DeviceSelectCallback {
     private val TAG: String = "MainActivity"
     private lateinit var binding: ActivityMainBinding
     lateinit var navController: NavController
@@ -30,16 +26,33 @@ class MainActivity : AppCompatActivity() {
             supportFragmentManager.findFragmentById(R.id.navhost) as NavHostFragment;
         navController = navHostFragment.navController;
         binding.bottomNavigationView.setupWithNavController(navController);
-
+        OximetryDeviceManager.getInstance().connected.observe(this, { value ->
+            if (value) {
+                navController.navigate(R.id.action_home_nodevice_to_home_dashboard)
+            }
+        })
     }
 
     public fun startScanActivity() {
         val intent: Intent = Intent(this@MainActivity, DeviceScanActivity::class.java);
         startActivity(intent)
+        DeviceScanActivity.resultCallback = this
     }
 
     public fun startPatientEditActivity() {
         val intent: Intent = Intent(this@MainActivity, ConfigurePatientActivity::class.java);
         startActivity(intent)
+    }
+
+    override fun onDeviceSelect(device: Bluetooth) {
+        // connect
+        Toast.makeText(this, "Connecting to O2 Ring..." + device.name, Toast.LENGTH_SHORT).show()
+        OximetryDeviceManager.getInstance().connectDevice(
+            device,
+            BleServiceHelper.BleServiceHelper,
+            applicationContext,
+            lifecycle
+        );
+
     }
 }
