@@ -254,22 +254,6 @@ class DeviceScanActivity : AppCompatActivity() {
             }
             adapter.notifyDataSetChanged()
         }
-        LiveEventBus.get<Int>(EventMsgConst.Ble.EventBleDeviceDisconnectReason).observe(this) {
-            // ConnectionObserver.REASON_NOT_SUPPORTED: SDK will not auto reconnect device, services error, try to reboot device
-            val reason = when (it) {
-                ConnectionObserver.REASON_UNKNOWN -> "The reason of disconnection is unknown."
-                ConnectionObserver.REASON_SUCCESS -> "The disconnection was initiated by the user."
-                ConnectionObserver.REASON_TERMINATE_LOCAL_HOST -> "The local device initiated disconnection."
-                ConnectionObserver.REASON_TERMINATE_PEER_USER -> "The remote device initiated graceful disconnection."
-                ConnectionObserver.REASON_LINK_LOSS -> "This reason will only be reported when ConnectRequest.shouldAutoConnect() was called and connection to the device was lost. Android will try to connect automatically."
-                ConnectionObserver.REASON_NOT_SUPPORTED -> "The device does not hav required services."
-                ConnectionObserver.REASON_TIMEOUT -> "The connection timed out. The device might have reboot, is out of range, turned off or doesn't respond for another reason."
-                else -> "disconnect"
-            }
-
-            Toast.makeText(this, reason, Toast.LENGTH_SHORT).show()
-        }
-
     }
 
 

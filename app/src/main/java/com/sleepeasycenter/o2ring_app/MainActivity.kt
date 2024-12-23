@@ -26,7 +26,10 @@ class MainActivity : AppCompatActivity(), DeviceSelectCallback {
             supportFragmentManager.findFragmentById(R.id.navhost) as NavHostFragment;
         navController = navHostFragment.navController;
         binding.bottomNavigationView.setupWithNavController(navController);
-        OximetryDeviceManager.getInstance().connected.observe(this, { value ->
+
+        OximetryDeviceController.instance.initEventBus(this);
+
+        OximetryDeviceController.instance.connected.observe(this, { value ->
             if (value) {
                 navController.navigate(R.id.action_home_nodevice_to_home_dashboard)
             }
@@ -47,7 +50,7 @@ class MainActivity : AppCompatActivity(), DeviceSelectCallback {
     override fun onDeviceSelect(device: Bluetooth) {
         // connect
         Toast.makeText(this, "Connecting to O2 Ring..." + device.name, Toast.LENGTH_SHORT).show()
-        OximetryDeviceManager.getInstance().connectDevice(
+        OximetryDeviceController.instance.connectDevice(
             device,
             BleServiceHelper.BleServiceHelper,
             applicationContext,

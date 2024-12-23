@@ -5,10 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 
 import com.sleepeasycenter.o2ring_app.MainActivity
-import com.sleepeasycenter.o2ring_app.OximetryDeviceManager
 import com.sleepeasycenter.o2ring_app.databinding.FragmentHomeNodeviceBinding
 
 /**
