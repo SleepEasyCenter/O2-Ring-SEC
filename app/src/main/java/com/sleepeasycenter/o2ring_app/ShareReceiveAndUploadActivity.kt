@@ -134,7 +134,7 @@ class ShareReceiveAndUploadActivity : AppCompatActivity() {
                 }
 
                 override fun onFailure(call: Call<ResponseBody>, err: Throwable) {
-                    Log.e(TAG, "Unexpected error while uploading data:\n" + err.toString());
+                    Log.e(TAG, "Unexpected error while uploading data:\n" + err.toString(), err);
                     Toast.makeText(
                         context,
                         "Unexpected error while uploading data:\n" + err.toString(),
@@ -142,7 +142,6 @@ class ShareReceiveAndUploadActivity : AppCompatActivity() {
                     ).show()
 
                     finish()
-                    throw err
                 }
 
             })
