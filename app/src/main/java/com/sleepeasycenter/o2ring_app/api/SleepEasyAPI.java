@@ -29,7 +29,7 @@ public class SleepEasyAPI{
             }).build();
 
             Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl("https://internalservices.sleepeasysingapore.com/")
+                    .baseUrl("https://api.sleepeasysingapore.com/")
                     .client(client)
                     .build();
             _service = retrofit.create(SleepEasyAPIService.class);

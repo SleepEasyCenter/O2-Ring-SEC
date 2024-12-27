@@ -9,7 +9,7 @@ import retrofit2.http.Part;
 
 public interface SleepEasyAPIService {
     @Multipart
-    @POST("/PHPScripts/o2ring-data/upload.php")
+    @POST("/staff/o2ring-data/upload.php")
     Call<ResponseBody> uploadO2RingData(@Part MultipartBody.Part filePart, @Part MultipartBody.Part patient_id);
 }
 
