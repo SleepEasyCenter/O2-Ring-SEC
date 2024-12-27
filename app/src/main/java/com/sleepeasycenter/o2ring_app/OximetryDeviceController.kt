@@ -12,6 +12,7 @@ import com.lepu.blepro.event.EventMsgConst
 import com.lepu.blepro.event.InterfaceEvent
 import com.lepu.blepro.ext.BleServiceHelper
 import com.lepu.blepro.ext.oxy.DeviceInfo
+import com.lepu.blepro.ext.oxy.OxyFile
 import com.lepu.blepro.objs.Bluetooth
 import com.lepu.blepro.observer.BIOL
 import com.lepu.blepro.observer.BleChangeObserver
@@ -31,6 +32,9 @@ private constructor() : BleChangeObserver {
 
     var _filenames: MutableLiveData<Array<String>> = MutableLiveData(arrayOf())
     var filenames: LiveData<Array<String>> = _filenames
+    var _oxyfiles: MutableLiveData<Array<OxyFile>> = MutableLiveData(arrayOf())
+    var oxyfiles: LiveData<Array<OxyFile>> = _oxyfiles
+    private var currentFileIndex: Int = 0;
 
     // Initialises the event bus for this class
     fun initEventBus(mainActivity: MainActivity) {
@@ -46,9 +50,30 @@ private constructor() : BleChangeObserver {
         LiveEventBus.get<InterfaceEvent>(InterfaceEvent.Oxy.EventOxyInfo).observe(mainActivity) {
             val data = it.data as DeviceInfo
             val list = data.fileList.split(",")
-            val filtered = list.filter { file -> return@filter file != ""; }.toTypedArray()
+            val filtered = list.filter { it != ""; }.toTypedArray()
+
             _filenames.postValue(filtered)
+            Log.d(TAG, "Found files: " + (filtered.joinToString(",") ?:"" ))
+
+            // Start reading files
+            currentFileIndex = 0;
+            BleServiceHelper.BleServiceHelper.oxyReadFile(connected_device!!.model, filtered[currentFileIndex] )
         }
+
+        LiveEventBus.get<InterfaceEvent>(InterfaceEvent.Oxy.EventOxyReadFileComplete)
+            .observe(mainActivity) {
+                val data = it.data as OxyFile;
+                val array: Array<OxyFile> =_oxyfiles.value ?: arrayOf();
+               _oxyfiles.postValue(array.plusElement(data))
+                val totalFiles =(filenames.value?.size?:0)
+                Log.d(TAG, "Read files " + (currentFileIndex+1) + " of " + totalFiles)
+                if (currentFileIndex < totalFiles - 1 && connected.value!!){
+                    currentFileIndex++
+                    val nextFile =  _filenames.value?.get(currentFileIndex)
+                    if (nextFile.isNullOrBlank()) return@observe
+                    BleServiceHelper.BleServiceHelper.oxyReadFile(connected_device!!.model, nextFile)
+                }
+            }
 
         LiveEventBus.get<Int>(EventMsgConst.Ble.EventBleDeviceDisconnectReason)
             .observe(mainActivity) {
@@ -64,6 +89,8 @@ private constructor() : BleChangeObserver {
                     else -> "disconnect"
                 }
                 Toast.makeText(mainActivity, reason, Toast.LENGTH_SHORT).show()
+                connected_device = null;
+                _connected.postValue(false);
             }
     }
 
@@ -89,6 +116,8 @@ private constructor() : BleChangeObserver {
     }
 
 
+
+
     companion object {
         var TAG: String = "OximetryDeviceManager(Singleton)"
         private var _instance: OximetryDeviceController? = null
@@ -99,7 +128,6 @@ private constructor() : BleChangeObserver {
                 }
                 return field
             }
-            private set
         val instance: OximetryDeviceController get() = _instance!!;
     }
 }
