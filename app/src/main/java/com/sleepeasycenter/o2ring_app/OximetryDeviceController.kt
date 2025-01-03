@@ -3,6 +3,7 @@ package com.sleepeasycenter.o2ring_app
 import android.content.Context
 import android.util.Log
 import android.widget.Toast
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -16,7 +17,28 @@ import com.lepu.blepro.ext.oxy.OxyFile
 import com.lepu.blepro.objs.Bluetooth
 import com.lepu.blepro.observer.BIOL
 import com.lepu.blepro.observer.BleChangeObserver
+import com.sleepeasycenter.o2ring_app.api.SleepEasyAPI
+import com.sleepeasycenter.o2ring_app.dialogs.DialogChangePatientIdAuthFragment.Companion.TAG
+import com.sleepeasycenter.o2ring_app.utils.convertToCsv
+import com.sleepeasycenter.o2ring_app.utils.readPatientId
+import kotlinx.coroutines.yield
 import no.nordicsemi.android.ble.observer.ConnectionObserver
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody.Companion.asRequestBody
+import okhttp3.ResponseBody
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import java.io.File
+import java.time.Instant
+import java.time.LocalDateTime
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
+
+enum class Status {
+    NEUTRAL, DOWNLOADING, CONVERTING, UPLOADING
+}
 
 class OximetryDeviceController// Private constructor prevents instantiation
 private constructor() : BleChangeObserver {
@@ -35,8 +57,11 @@ private constructor() : BleChangeObserver {
     var _oxyfiles: MutableLiveData<Array<OxyFile>> = MutableLiveData(arrayOf())
     var oxyfiles: LiveData<Array<OxyFile>> = _oxyfiles
 
-    var onFinishedReadingFiles: ((Array<OxyFile>) -> Unit)? = null
-    var onReadFileProgress: ((Int, Int) -> Unit)? = null
+    var status: MutableLiveData<Status> = MutableLiveData(Status.NEUTRAL)
+
+    var progress: MutableLiveData<Int> = MutableLiveData(0)
+    var progress_min: MutableLiveData<Int> = MutableLiveData(0)
+    var progress_max: MutableLiveData<Int> = MutableLiveData(0)
 
     private var currentFileIndex: Int = 0;
 
@@ -61,6 +86,7 @@ private constructor() : BleChangeObserver {
 
             // Start reading files
             currentFileIndex = 0;
+            status.postValue(Status.DOWNLOADING)
             BleServiceHelper.BleServiceHelper.oxyReadFile(
                 connected_device!!.model,
                 filtered[currentFileIndex]
@@ -69,6 +95,7 @@ private constructor() : BleChangeObserver {
 
         LiveEventBus.get<InterfaceEvent>(InterfaceEvent.Oxy.EventOxyReadFileComplete)
             .observe(mainActivity) {
+
                 val data = it.data as OxyFile;
 
                 val array: Array<OxyFile> = _oxyfiles.value ?: arrayOf();
@@ -82,14 +109,19 @@ private constructor() : BleChangeObserver {
                         val nextFile = _filenames.value?.get(currentFileIndex)
                         if (nextFile.isNullOrBlank()) return@observe
                         // Read next file
+                        status.postValue(Status.DOWNLOADING)
                         BleServiceHelper.BleServiceHelper.oxyReadFile(
                             connected_device!!.model,
                             nextFile
                         )
-                        onReadFileProgress?.invoke(currentFileIndex, totalFiles)
+                        progress.postValue(currentFileIndex)
+                        progress_min.postValue(0)
+                        progress_max.postValue(totalFiles + 1)
+
                     } else {
+                        status.postValue(Status.NEUTRAL)
                         // Finished reading files
-                        onFinishedReadingFiles?.invoke(newArray)
+                        progress.postValue(totalFiles + 1)
                     }
                 }
 
@@ -135,6 +167,104 @@ private constructor() : BleChangeObserver {
         BleServiceHelper.BleServiceHelper.oxyGetInfo(model)
     }
 
+    private fun uploadFile(
+        file: File,
+        activity: FragmentActivity,
+        onError: (() -> Unit)?,
+        onSuccess: (() -> Unit)?
+    ) {
+        val filePart = MultipartBody.Part.createFormData(
+            "csv",
+            file.name,
+            file.asRequestBody("text/csv".toMediaTypeOrNull())
+        )
+
+        readPatientId(activity)?.let { patient_id ->
+
+            val patientIdPart = MultipartBody.Part.createFormData("patient_id", patient_id);
+            val call = SleepEasyAPI.getService().uploadO2RingData(filePart, patientIdPart)
+            val context = this;
+            call.enqueue(object : Callback<ResponseBody> {
+                override fun onResponse(call: Call<ResponseBody>, res: Response<ResponseBody>) {
+                    res.errorBody()?.let { errBody ->
+                        val s = errBody.string();
+                        if (res.code() == 409) {
+                            Toast.makeText(
+                                activity,
+                                "Data upload rejected! (File already uploaded!)",
+                                Toast.LENGTH_LONG
+                            ).show()
+                        } else {
+                            Log.d(TAG, "Upload Error Response:\n" + s)
+                            Toast.makeText(
+                                activity,
+                                "Error while uploading data:\n" + s,
+                                Toast.LENGTH_LONG
+                            ).show()
+                        }
+                    }
+                    onSuccess?.invoke()
+                    Toast.makeText(
+                        activity,
+                        "File / data uploaded successfully!",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+
+                override fun onFailure(call: Call<ResponseBody>, err: Throwable) {
+                    Log.e(TAG, "Unexpected error while uploading data:\n" + err.toString(), err);
+                    Toast.makeText(
+                        activity,
+                        "Unexpected error while uploading data:\n" + err.toString(),
+                        Toast.LENGTH_LONG
+                    ).show()
+                    onError?.invoke()
+                }
+
+            })
+
+            return
+        }
+
+
+    }
+
+    suspend fun uploadToServer(activity: FragmentActivity) {
+        Log.d(TAG, "Converting to csv...")
+        val oxyfiles = _oxyfiles.value!!;
+        var csvFiles: ArrayList<File> = arrayListOf();
+        status.postValue(Status.CONVERTING)
+        progress.postValue(0)
+        progress_min.postValue(0)
+        progress_max.postValue(oxyfiles.size)
+        Thread.sleep(1000)
+        for ((index, oxyFile) in oxyfiles.withIndex()) {
+            Log.d(TAG, "Converting to csv... ${index} / ${oxyfiles.size}")
+            progress.postValue(index)
+            val contents = convertToCsv(oxyFile)
+            val date = Instant.ofEpochSecond(oxyFile.startTime);
+            LocalDateTime.now()
+            val formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss")
+            val date_s = formatter.format(LocalDateTime.ofInstant(date, ZoneId.systemDefault()));
+
+            val externalDir = activity.getExternalFilesDir(null)
+            var file = File(externalDir, "O2 Ring_${date_s}.csv")
+            file.createNewFile()
+            file.writeText(contents)
+            csvFiles += file;
+            progress.postValue(index + 1)
+        }
+        status.postValue(Status.UPLOADING)
+        var remaining = csvFiles.size;
+        for (csvFile in csvFiles) {
+            uploadFile(csvFile,activity, {remaining--}, {remaining--});
+        }
+        while (remaining > 0){
+            yield()
+        }
+        status.postValue(Status.NEUTRAL)
+
+    }
 
     companion object {
         var TAG: String = "OximetryDeviceManager(Singleton)"
