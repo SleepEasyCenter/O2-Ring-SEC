@@ -189,11 +189,7 @@ private constructor() : BleChangeObserver {
                     res.errorBody()?.let { errBody ->
                         val s = errBody.string();
                         if (res.code() == 409) {
-                            Toast.makeText(
-                                activity,
-                                "Data upload rejected! (File already uploaded!)",
-                                Toast.LENGTH_LONG
-                            ).show()
+
                         } else {
                             Log.d(TAG, "Upload Error Response:\n" + s)
                             Toast.makeText(
@@ -204,11 +200,7 @@ private constructor() : BleChangeObserver {
                         }
                     }
                     onSuccess?.invoke()
-                    Toast.makeText(
-                        activity,
-                        "File / data uploaded successfully!",
-                        Toast.LENGTH_LONG
-                    ).show()
+
                 }
 
                 override fun onFailure(call: Call<ResponseBody>, err: Throwable) {
@@ -257,13 +249,14 @@ private constructor() : BleChangeObserver {
         status.postValue(Status.UPLOADING)
         var remaining = csvFiles.size;
         for (csvFile in csvFiles) {
+            Log.d(TAG, "Uploading file ${csvFile.name}")
             uploadFile(csvFile,activity, {remaining--}, {remaining--});
         }
         while (remaining > 0){
             yield()
         }
         status.postValue(Status.NEUTRAL)
-
+        Toast.makeText(activity, "Upload completed successfully!", Toast.LENGTH_LONG).show()
     }
 
     companion object {
