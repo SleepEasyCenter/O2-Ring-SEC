@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.sleepeasycenter.o2ring_app.adapters.DeviceFileListViewAdapter
 import com.sleepeasycenter.o2ring_app.databinding.FragmentHomeDashboardBinding
+import com.sleepeasycenter.o2ring_app.utils.convertToCsv
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -32,11 +33,6 @@ class HomeDashboard : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        OximetryDeviceController.instance.filenames.observe(this, { newValue ->
-            Log.d(TAG, "NEW VALUE: FILE COUNT: " + newValue.count())
-            adapter.items = newValue.toCollection(ArrayList());
-            adapter.notifyDataSetChanged()
-        })
     }
 
     override fun onCreateView(
@@ -50,6 +46,39 @@ class HomeDashboard : Fragment() {
         recyclerView.setAdapter(adapter);
         // Inflate the layout for this fragment
         val view = binding.root;
+        init()
         return view;
+    }
+
+
+    fun init() {
+
+        binding.btnUpload.isEnabled = false;
+
+        OximetryDeviceController.instance.filenames.observe(this, { newValue ->
+            Log.d(TAG, "NEW VALUE: FILE COUNT: " + newValue.count())
+            adapter.items = newValue.toCollection(ArrayList());
+            adapter.notifyDataSetChanged()
+        })
+
+
+        OximetryDeviceController.instance.onReadFileProgress = { index, total ->
+            binding.txtStatusText.setText("Downloading files " + (index+1) + "/$total...")
+            binding.barStatusProgress.min = 0;
+            binding.barStatusProgress.max = total;
+            binding.barStatusProgress.progress = index + 1;
+            // Don't allow file uploads when downloading files from ring.
+            binding.btnUpload.isEnabled = false;
+        }
+
+        OximetryDeviceController.instance.onFinishedReadingFiles = { oxyfiles ->
+            var fileCount = oxyfiles.size;
+            binding.btnUpload.isEnabled = true;
+            binding.txtStatusText.setText("Finished downloading $fileCount files.")
+            val oxyfile = oxyfiles[0]
+
+            Log.d(TAG, "CSV CONVERTED:\n${convertToCsv(oxyfile)}")
+//            oxyfiles[0].data[1].vector
+        }
     }
 }

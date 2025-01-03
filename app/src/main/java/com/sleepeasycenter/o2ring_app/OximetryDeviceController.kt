@@ -34,6 +34,10 @@ private constructor() : BleChangeObserver {
     var filenames: LiveData<Array<String>> = _filenames
     var _oxyfiles: MutableLiveData<Array<OxyFile>> = MutableLiveData(arrayOf())
     var oxyfiles: LiveData<Array<OxyFile>> = _oxyfiles
+
+    var onFinishedReadingFiles: ((Array<OxyFile>) -> Unit)? = null
+    var onReadFileProgress: ((Int, Int) -> Unit)? = null
+
     private var currentFileIndex: Int = 0;
 
     // Initialises the event bus for this class
@@ -53,26 +57,42 @@ private constructor() : BleChangeObserver {
             val filtered = list.filter { it != ""; }.toTypedArray()
 
             _filenames.postValue(filtered)
-            Log.d(TAG, "Found files: " + (filtered.joinToString(",") ?:"" ))
+            Log.d(TAG, "Found files: " + (filtered.joinToString(",") ?: ""))
 
             // Start reading files
             currentFileIndex = 0;
-            BleServiceHelper.BleServiceHelper.oxyReadFile(connected_device!!.model, filtered[currentFileIndex] )
+            BleServiceHelper.BleServiceHelper.oxyReadFile(
+                connected_device!!.model,
+                filtered[currentFileIndex]
+            )
         }
 
         LiveEventBus.get<InterfaceEvent>(InterfaceEvent.Oxy.EventOxyReadFileComplete)
             .observe(mainActivity) {
                 val data = it.data as OxyFile;
-                val array: Array<OxyFile> =_oxyfiles.value ?: arrayOf();
-               _oxyfiles.postValue(array.plusElement(data))
-                val totalFiles =(filenames.value?.size?:0)
-                Log.d(TAG, "Read files " + (currentFileIndex+1) + " of " + totalFiles)
-                if (currentFileIndex < totalFiles - 1 && connected.value!!){
-                    currentFileIndex++
-                    val nextFile =  _filenames.value?.get(currentFileIndex)
-                    if (nextFile.isNullOrBlank()) return@observe
-                    BleServiceHelper.BleServiceHelper.oxyReadFile(connected_device!!.model, nextFile)
+
+                val array: Array<OxyFile> = _oxyfiles.value ?: arrayOf();
+                val newArray = array.plusElement(data);
+                _oxyfiles.postValue(newArray)
+                val totalFiles = (filenames.value?.size ?: 0)
+                Log.d(TAG, "Read files " + (currentFileIndex + 1) + " of " + totalFiles)
+                if (connected.value!!) {
+                    if (currentFileIndex < totalFiles - 1) {
+                        currentFileIndex++
+                        val nextFile = _filenames.value?.get(currentFileIndex)
+                        if (nextFile.isNullOrBlank()) return@observe
+                        // Read next file
+                        BleServiceHelper.BleServiceHelper.oxyReadFile(
+                            connected_device!!.model,
+                            nextFile
+                        )
+                        onReadFileProgress?.invoke(currentFileIndex, totalFiles)
+                    } else {
+                        // Finished reading files
+                        onFinishedReadingFiles?.invoke(newArray)
+                    }
                 }
+
             }
 
         LiveEventBus.get<Int>(EventMsgConst.Ble.EventBleDeviceDisconnectReason)
@@ -114,8 +134,6 @@ private constructor() : BleChangeObserver {
         Log.d(TAG, "Connected? " + connected.value)
         BleServiceHelper.BleServiceHelper.oxyGetInfo(model)
     }
-
-
 
 
     companion object {
