@@ -42,3 +42,7 @@ public fun convertToCsv(oxyfile: OxyFile): String{
 
     return rows.joinToString("\n");
 }
+
+data class OxyCsvData(val csv: String, val startTime: Long){
+
+}

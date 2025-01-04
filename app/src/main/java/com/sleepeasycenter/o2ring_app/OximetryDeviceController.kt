@@ -18,7 +18,7 @@ import com.lepu.blepro.objs.Bluetooth
 import com.lepu.blepro.observer.BIOL
 import com.lepu.blepro.observer.BleChangeObserver
 import com.sleepeasycenter.o2ring_app.api.SleepEasyAPI
-import com.sleepeasycenter.o2ring_app.dialogs.DialogChangePatientIdAuthFragment.Companion.TAG
+import com.sleepeasycenter.o2ring_app.utils.OxyCsvData
 import com.sleepeasycenter.o2ring_app.utils.convertToCsv
 import com.sleepeasycenter.o2ring_app.utils.readPatientId
 import kotlinx.coroutines.yield
@@ -54,8 +54,7 @@ private constructor() : BleChangeObserver {
 
     var _filenames: MutableLiveData<Array<String>> = MutableLiveData(arrayOf())
     var filenames: LiveData<Array<String>> = _filenames
-    var _oxyfiles: MutableLiveData<Array<OxyFile>> = MutableLiveData(arrayOf())
-    var oxyfiles: LiveData<Array<OxyFile>> = _oxyfiles
+    var _csvfiles: MutableLiveData<Array<OxyCsvData>> = MutableLiveData(arrayOf())
 
     var status: MutableLiveData<Status> = MutableLiveData(Status.NEUTRAL)
 
@@ -98,16 +97,16 @@ private constructor() : BleChangeObserver {
 
                 val data = it.data as OxyFile;
 
-                val array: Array<OxyFile> = _oxyfiles.value ?: arrayOf();
-                val newArray = array.plusElement(data);
-                _oxyfiles.postValue(newArray)
+                val array: Array<OxyCsvData> = _csvfiles.value ?: arrayOf();
+                val newArray = array.plusElement(OxyCsvData(convertToCsv(data), data.startTime));
+                _csvfiles.postValue(newArray)
                 val totalFiles = (filenames.value?.size ?: 0)
                 Log.d(TAG, "Read files " + (currentFileIndex + 1) + " of " + totalFiles)
                 if (connected.value!!) {
                     if (currentFileIndex < totalFiles - 1) {
                         currentFileIndex++
-                        val nextFile = _filenames.value?.get(currentFileIndex)
-                        if (nextFile.isNullOrBlank()) return@observe
+                        val nextFile = _filenames.value!![currentFileIndex]
+                        Log.d(TAG, "Start Reading file: $nextFile...");
                         // Read next file
                         status.postValue(Status.DOWNLOADING)
                         BleServiceHelper.BleServiceHelper.oxyReadFile(
@@ -223,18 +222,18 @@ private constructor() : BleChangeObserver {
 
     suspend fun uploadToServer(activity: FragmentActivity) {
         Log.d(TAG, "Converting to csv...")
-        val oxyfiles = _oxyfiles.value!!;
+        val csvfile_data = _csvfiles.value!!;
         var csvFiles: ArrayList<File> = arrayListOf();
         status.postValue(Status.CONVERTING)
         progress.postValue(0)
         progress_min.postValue(0)
-        progress_max.postValue(oxyfiles.size)
+        progress_max.postValue(csvfile_data.size)
         Thread.sleep(1000)
-        for ((index, oxyFile) in oxyfiles.withIndex()) {
-            Log.d(TAG, "Converting to csv... ${index} / ${oxyfiles.size}")
+        for ((index, oxyCsvData) in csvfile_data.withIndex()) {
+            Log.d(TAG, "Converting to csv... ${index} / ${csvfile_data.size}")
             progress.postValue(index)
-            val contents = convertToCsv(oxyFile)
-            val date = Instant.ofEpochSecond(oxyFile.startTime);
+            val contents = oxyCsvData.csv
+            val date = Instant.ofEpochSecond(oxyCsvData.startTime);
             LocalDateTime.now()
             val formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss")
             val date_s = formatter.format(LocalDateTime.ofInstant(date, ZoneId.systemDefault()));
