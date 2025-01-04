@@ -17,8 +17,8 @@ android {
         applicationId 'com.sleepeasycenter.o2ring_app'
         minSdkVersion 28
         targetSdkVersion 33
-        versionCode 5
-        versionName "2.0.0"
+        versionCode 6
+        versionName '2.1.0'
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -26,6 +26,7 @@ android {
         }
         buildConfigField("String", "API_USERNAME", apikeyProperties['API_USERNAME'])
         buildConfigField("String", "API_PASSWORD", apikeyProperties['API_PASSWORD'])
+        versionNameSuffix 'alpha'
     }
 
     buildTypes {
