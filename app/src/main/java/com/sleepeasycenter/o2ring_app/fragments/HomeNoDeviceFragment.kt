@@ -5,8 +5,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 
 import com.sleepeasycenter.o2ring_app.MainActivity
+import com.sleepeasycenter.o2ring_app.OximetryDeviceController
+import com.sleepeasycenter.o2ring_app.R
 import com.sleepeasycenter.o2ring_app.databinding.FragmentHomeNodeviceBinding
 
 /**
@@ -23,6 +26,11 @@ class HomeNoDeviceFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        OximetryDeviceController.instance.connected.observe(this, { value ->
+            if (value) {
+                findNavController().navigate(R.id.action_home_nodevice_to_home_dashboard)
+            }
+        })
 
     }
 

@@ -141,7 +141,7 @@ private constructor() : BleChangeObserver {
                 }
                 Toast.makeText(mainActivity, reason, Toast.LENGTH_SHORT).show()
                 connected_device = null;
-                _connected.postValue(false);
+                _connected.value = false;
             }
     }
 
@@ -161,7 +161,7 @@ private constructor() : BleChangeObserver {
 
     override fun onBleStateChanged(model: Int, state: Int) {
         Log.d(TAG, "model $model, state: $state")
-        _connected.setValue(state == Ble.State.CONNECTED)
+        _connected.postValue(state == Ble.State.CONNECTED)
         Log.d(TAG, "Connected? " + connected.value)
         BleServiceHelper.BleServiceHelper.oxyGetInfo(model)
     }
@@ -249,9 +249,9 @@ private constructor() : BleChangeObserver {
         var remaining = csvFiles.size;
         for (csvFile in csvFiles) {
             Log.d(TAG, "Uploading file ${csvFile.name}")
-            uploadFile(csvFile,activity, {remaining--}, {remaining--});
+            uploadFile(csvFile, activity, { remaining-- }, { remaining-- });
         }
-        while (remaining > 0){
+        while (remaining > 0) {
             yield()
         }
         status.postValue(Status.NEUTRAL)

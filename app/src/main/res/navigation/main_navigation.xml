@@ -33,7 +33,7 @@
         android:label="DeviceScanActivity" />
     <fragment
         android:id="@+id/home_dashboard"
-        android:name="com.sleepeasycenter.o2ring_app.HomeDashboard"
+        android:name="com.sleepeasycenter.o2ring_app.fragments.HomeDeviceDashboard"
         android:label="fragment_home_dashboard"
         tools:layout="@layout/fragment_home_dashboard" >
         <action

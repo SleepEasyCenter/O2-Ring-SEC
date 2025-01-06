@@ -1,4 +1,4 @@
-package com.sleepeasycenter.o2ring_app
+package com.sleepeasycenter.o2ring_app.fragments
 
 import android.os.Bundle
 import android.util.Log
@@ -7,23 +7,21 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.sleepeasycenter.o2ring_app.OximetryDeviceController
+import com.sleepeasycenter.o2ring_app.R
+import com.sleepeasycenter.o2ring_app.Status
 import com.sleepeasycenter.o2ring_app.adapters.DeviceFileListViewAdapter
 import com.sleepeasycenter.o2ring_app.databinding.FragmentHomeDashboardBinding
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
 
 /**
  * A simple [Fragment] subclass.
- * Use the [HomeDashboard.newInstance] factory method to
+ * Use the [HomeDeviceDashboard.newInstance] factory method to
  * create an instance of this fragment.
  */
-class HomeDashboard : Fragment() {
+class HomeDeviceDashboard : Fragment() {
 
     public val TAG: String = "HomeDashboard"
     private var _binding: FragmentHomeDashboardBinding? = null;
@@ -35,6 +33,11 @@ class HomeDashboard : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        OximetryDeviceController.instance.connected.observe(this, { value ->
+            if (!value){
+                findNavController().navigate(R.id.action_home_dashboard_to_home_nodevice)
+            }
+        })
     }
 
     override fun onCreateView(
@@ -56,6 +59,9 @@ class HomeDashboard : Fragment() {
                 OximetryDeviceController.instance.uploadToServer(requireActivity())
             }
         }
+
+
+
         init()
         return view;
     }

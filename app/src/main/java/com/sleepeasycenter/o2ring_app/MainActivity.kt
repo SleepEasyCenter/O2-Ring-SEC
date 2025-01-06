@@ -29,11 +29,6 @@ class MainActivity : AppCompatActivity(), DeviceSelectCallback {
 
         OximetryDeviceController.instance.initEventBus(this);
 
-        OximetryDeviceController.instance.connected.observe(this, { value ->
-            if (value) {
-                navController.navigate(R.id.action_home_nodevice_to_home_dashboard)
-            }
-        })
     }
 
     public fun startScanActivity() {
