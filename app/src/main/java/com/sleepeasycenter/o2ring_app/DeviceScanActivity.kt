@@ -101,20 +101,18 @@ class DeviceScanActivity : AppCompatActivity() {
                 Manifest.permission.BLUETOOTH_ADVERTISE,
                 Manifest.permission.ACCESS_FINE_LOCATION,
                 Manifest.permission.ACCESS_COARSE_LOCATION,
-                Manifest.permission.READ_MEDIA_IMAGES,
-                Manifest.permission.READ_MEDIA_VIDEO,
-                Manifest.permission.READ_MEDIA_AUDIO,
+
             ).onExplainRequestReason { scope, deniedList ->
                 scope.showRequestReasonDialog(
-                    deniedList, "location permission", "ok", "ignore"
+                    deniedList, "We require these permissions", "ok", "ignore"
                 )
             }.onForwardToSettings { scope, deniedList ->
                 scope.showForwardToSettingsDialog(
-                    deniedList, "location setting", "ok", "ignore"
+                    deniedList, "Permissions Required", "ok", "ignore"
                 )
             }.request { allGranted, grantedList, deniedList ->
-                Log.d(TAG, "permission : $allGranted, $grantedList, $deniedList")
-
+                Log.d(TAG, "permission (Above Version 'Tiramisu') : $allGranted, $grantedList, $deniedList")
+                
                 //permission OK, check Bluetooth status
                 if (allGranted) onPermissionGranted()
             }
@@ -136,8 +134,7 @@ class DeviceScanActivity : AppCompatActivity() {
                     deniedList, "location setting", "ok", "ignore"
                 )
             }.request { allGranted, grantedList, deniedList ->
-                Log.d(TAG, "permission : $allGranted, $grantedList, $deniedList")
-
+                Log.d(TAG, "permission (Above Version 'S'): $allGranted, $grantedList, $deniedList")
                 //permission OK, check Bluetooth status
                 if (allGranted) onPermissionGranted()
             }
@@ -158,7 +155,7 @@ class DeviceScanActivity : AppCompatActivity() {
                     deniedList, "location setting", "ok", "ignore"
                 )
             }.request { allGranted, grantedList, deniedList ->
-                Log.d(TAG, "permission : $allGranted, $grantedList, $deniedList")
+                Log.d(TAG, "permission (Below Version 'S') : $allGranted, $grantedList, $deniedList")
 
                 //permission OK, check Bluetooth status
                 if (allGranted) onPermissionGranted()
@@ -202,8 +199,8 @@ class DeviceScanActivity : AppCompatActivity() {
             val dialog: AlertDialog.Builder = AlertDialog.Builder(this)
             dialog.setMessage("open location service")
             dialog.setPositiveButton("ok") { _, _ ->
-                val myIntent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
-                startActivityForResult(myIntent, 888)
+//                val myIntent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
+//                startActivityForResult(myIntent, 888)
             }
             dialog.setNegativeButton("cancel") { _, _ ->
                 finish()
