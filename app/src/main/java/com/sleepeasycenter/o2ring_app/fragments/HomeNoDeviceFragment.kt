@@ -26,12 +26,6 @@ class HomeNoDeviceFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        OximetryDeviceController.instance.connected.observe(this, { value ->
-            if (value) {
-                findNavController().navigate(R.id.action_home_nodevice_to_home_dashboard)
-            }
-        })
-
     }
 
     override fun onCreateView(
@@ -45,6 +39,8 @@ class HomeNoDeviceFragment : Fragment() {
         binding.btnScanDevice.setOnClickListener(View.OnClickListener { v ->
                 this.btnStartScan_callback(v)
         });
+
+
 
         return view;
     }

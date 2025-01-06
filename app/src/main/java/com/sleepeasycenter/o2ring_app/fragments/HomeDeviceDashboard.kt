@@ -32,12 +32,6 @@ class HomeDeviceDashboard : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        OximetryDeviceController.instance.connected.observe(this, { value ->
-            if (!value){
-                findNavController().navigate(R.id.action_home_dashboard_to_home_nodevice)
-            }
-        })
     }
 
     override fun onCreateView(
