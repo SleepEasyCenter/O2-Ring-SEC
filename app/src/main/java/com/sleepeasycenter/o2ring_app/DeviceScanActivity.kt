@@ -199,8 +199,8 @@ class DeviceScanActivity : AppCompatActivity() {
             val dialog: AlertDialog.Builder = AlertDialog.Builder(this)
             dialog.setMessage("open location service")
             dialog.setPositiveButton("ok") { _, _ ->
-//                val myIntent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
-//                startActivityForResult(myIntent, 888)
+                val myIntent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
+                startActivityForResult(myIntent, 888)
             }
             dialog.setNegativeButton("cancel") { _, _ ->
                 finish()
