@@ -235,6 +235,7 @@ class DeviceScanActivity : AppCompatActivity() {
     }
 
     private fun initEventBus() {
+        Log.d(TAG,"Initialising event bus subscribers...")
         LiveEventBus.get<Boolean>(EventMsgConst.Ble.EventServiceConnectedAndInterfaceInit)
             .observe(this) {
                 // BleService init success
