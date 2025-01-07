@@ -98,6 +98,7 @@ private constructor() : BleChangeObserver {
                 val data = it.data as OxyFile;
 
                 val array: Array<OxyCsvData> = _csvfiles.value ?: arrayOf();
+                // Immediately convert to CSV. the it.data instance is reused by the LiveEventBUs
                 val newArray = array.plusElement(OxyCsvData(convertToCsv(data), data.startTime));
                 _csvfiles.postValue(newArray)
                 val totalFiles = (filenames.value?.size ?: 0)
