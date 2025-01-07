@@ -99,7 +99,7 @@ dependencies {
     implementation 'com.opencsv:opencsv:5.5.2'
 
     implementation 'no.nordicsemi.android:ble:2.2.4'
-    implementation(name: 'lepu-blepro-1.0.7', ext: 'aar')
+    implementation(name: 'lepu-blepro-1.0.5', ext: 'aar')
     implementation 'io.github.jeremyliao:live-event-bus-x:1.8.0'
     implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:3.0.4'
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.8.6'
@@ -115,5 +115,8 @@ dependencies {
     androidTestImplementation 'androidx.compose.ui:ui-test-junit4'
     debugImplementation 'androidx.compose.ui:ui-tooling'
     debugImplementation 'androidx.compose.ui:ui-test-manifest'
+
+    api 'io.getstream:stream-log-android:1.1.4'
+    api 'io.getstream:stream-log-android-file:1.1.4'
 
 }
