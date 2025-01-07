@@ -14,6 +14,7 @@ LepuBle Overview(Focusing only on OxyRing)
 needPermission(kicks start the whole bluetooth process)
 initEventBus(switches to the corresponding activity script for the product detected
 
+
 	Oxy Activity
 oxyGetInfo
 batteryState : 0 (no charge), 1 (charging), 2 (charging complete)
