@@ -180,7 +180,7 @@ private constructor() : BleChangeObserver {
         )
 
         readPatientId(activity)?.let { patient_id ->
-
+            Log.d(TAG, "Read patient id!")
             val patientIdPart = MultipartBody.Part.createFormData("patient_id", patient_id);
             val call = SleepEasyAPI.getService().uploadO2RingData(filePart, patientIdPart)
             val context = this;
@@ -216,6 +216,9 @@ private constructor() : BleChangeObserver {
             })
 
             return
+        } ?: run {
+            onError?.invoke();
+            Toast.makeText(activity, "No patient id set!", Toast.LENGTH_LONG).show();
         }
 
 
@@ -247,16 +250,19 @@ private constructor() : BleChangeObserver {
             progress.postValue(index + 1)
         }
         status.postValue(Status.UPLOADING)
-        var remaining = csvFiles.size;
+        var remaining = csvFiles.size
+        var failed = 0;
         for (csvFile in csvFiles) {
             Log.d(TAG, "Uploading file ${csvFile.name}")
-            uploadFile(csvFile, activity, { remaining-- }, { remaining-- });
+            uploadFile(csvFile, activity, { remaining--; Log.d(TAG,"Upload failed! Remaining: $remaining"); failed++; }, { remaining-- ; Log.d(TAG,"Upload success! Remaining: $remaining")});
         }
         while (remaining > 0) {
             yield()
         }
         status.postValue(Status.NEUTRAL)
-        Toast.makeText(activity, "Upload completed successfully!", Toast.LENGTH_LONG).show()
+        if (failed == 0){
+            Toast.makeText(activity, "Upload completed successfully!", Toast.LENGTH_LONG).show()
+        }
     }
 
     companion object {
