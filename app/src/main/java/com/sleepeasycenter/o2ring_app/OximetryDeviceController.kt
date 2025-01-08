@@ -156,16 +156,20 @@ private constructor() : BleChangeObserver {
         // add observer(ble state)
         lifecycle.addObserver(BIOL(this, intArrayOf(device.model)))
         serviceHelper.stopScan()
-        serviceHelper.connect(appCtx, device.model, device.device)
+        serviceHelper.connect(appCtx, device.model, device.device, false)
 
         this.connected_device = device
     }
 
     override fun onBleStateChanged(model: Int, state: Int) {
         Log.d(TAG, "model $model, state: $state")
-        _connected.postValue(state == Ble.State.CONNECTED)
-        Log.d(TAG, "Connected? " + connected.value)
-        BleServiceHelper.BleServiceHelper.oxyGetInfo(model)
+
+        val connected =state == Ble.State.CONNECTED;
+        _connected.value = connected
+        Log.d(TAG, "Connected? " + connected)
+        if (connected){
+            BleServiceHelper.BleServiceHelper.oxyGetInfo(model);
+        }
     }
 
     private fun uploadFile(
