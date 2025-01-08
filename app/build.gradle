@@ -31,11 +31,11 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled true
+
             signingConfig signingConfigs.debug
 //            useProguard false
-//            minifyEnabled false
-//            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
     compileOptions {
@@ -99,7 +99,7 @@ dependencies {
     implementation 'com.opencsv:opencsv:5.5.2'
 
     implementation 'no.nordicsemi.android:ble:2.2.4'
-    implementation(name: 'lepu-blepro-1.0.5', ext: 'aar')
+    implementation(name: 'lepu-blepro-1.0.7', ext: 'aar')
     implementation 'io.github.jeremyliao:live-event-bus-x:1.8.0'
     implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:3.0.4'
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.8.6'
