@@ -75,7 +75,7 @@ class DeviceScanActivity : AppCompatActivity() {
         recyclerView.setAdapter(adapter);
         adapter.listener = DeviceListViewAdapter.OnItemClickListener { item ->
             val device = item.device;
-            BleServiceHelper.BleServiceHelper.stopScan()
+
             resultCallback?.onDeviceSelect(device)
             BluetoothController.clear()
             finish()
@@ -227,10 +227,10 @@ class DeviceScanActivity : AppCompatActivity() {
             rawFolders.set(Bluetooth.MODEL_ER1_H, "${getExternalFilesDir(null)?.absolutePath}/er1")
             rawFolders.set(Bluetooth.MODEL_ER1_W, "${getExternalFilesDir(null)?.absolutePath}/er1")
             rawFolders.set(Bluetooth.MODEL_ER1_L, "${getExternalFilesDir(null)?.absolutePath}/er1")
-
+            Log.d(TAG, "Initialising BleService!")
             // initRawFolder必须在initService之前调用
             BleServiceHelper.BleServiceHelper.initRawFolder(rawFolders).initService(application)
-                .initLog(true)
+                .initLog(false)
         }
     }
 

@@ -155,6 +155,7 @@ private constructor() : BleChangeObserver {
         serviceHelper.setInterfaces(device.model)
         // add observer(ble state)
         lifecycle.addObserver(BIOL(this, intArrayOf(device.model)))
+        serviceHelper.stopScan()
         serviceHelper.connect(appCtx, device.model, device.device)
 
         this.connected_device = device
