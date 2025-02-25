@@ -3,6 +3,7 @@ package com.sleepeasycenter.o2ring_app
 import android.content.Context
 import android.util.Log
 import android.widget.Toast
+import android.os.Handler
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LiveData
@@ -22,6 +23,7 @@ import com.sleepeasycenter.o2ring_app.api.SleepEasyAPI
 import com.sleepeasycenter.o2ring_app.utils.OxyCsvData
 import com.sleepeasycenter.o2ring_app.utils.convertToCsv
 import com.sleepeasycenter.o2ring_app.utils.readPatientId
+import kotlinx.coroutines.Runnable
 import kotlinx.coroutines.yield
 import no.nordicsemi.android.ble.observer.ConnectionObserver
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -70,6 +72,16 @@ private constructor() : BleChangeObserver {
     val TAG: String = "OxiController"
 
     private var currentFileIndex: Int = 0;
+    private var model = Bluetooth.MODEL_O2RING
+    private var rtHandler = Handler()
+    public var rtTask = RtTask()
+
+    inner class RtTask: Runnable {
+        override fun run() {
+            rtHandler.post(rtTask)
+            BleServiceHelper.BleServiceHelper.oxyGetRtParam(model)
+        }
+    }
     
 
     // Initialises the event bus for this class
