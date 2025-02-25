@@ -6,11 +6,13 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.findNavController
+import com.jeremyliao.liveeventbus.LiveEventBus
+import com.lepu.blepro.event.InterfaceEvent
+import com.lepu.blepro.ext.oxy.*
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.sleepeasycenter.o2ring_app.OximetryDeviceController
-import com.sleepeasycenter.o2ring_app.R
 import com.sleepeasycenter.o2ring_app.Status
 import com.sleepeasycenter.o2ring_app.adapters.DeviceFileListViewAdapter
 import com.sleepeasycenter.o2ring_app.databinding.FragmentHomeDashboardBinding
@@ -32,6 +34,7 @@ class HomeDeviceDashboard : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
     }
 
     override fun onCreateView(
@@ -55,11 +58,35 @@ class HomeDeviceDashboard : Fragment() {
         }
 
 
-
         init()
+
+
         return view;
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        initEventBus()
+    }
+
+
+    private fun initEventBus() {
+
+        OximetryDeviceController.instance.oxyLevel.observe(viewLifecycleOwner,
+            {binding.tvOxy.text = it})
+
+
+        OximetryDeviceController.instance.pulseRate.observe(viewLifecycleOwner) { value ->
+            binding.tvPr.text = value ?: "N/A"
+            Log.d(TAG, "Pulse Rate: ${binding.tvPr.text}")
+        }
+
+        OximetryDeviceController.instance.oxyPi.observe(viewLifecycleOwner) { value ->
+            binding.tvPi.text = value ?: "N/A"
+            Log.d(TAG, "Oxygen Perfusion Index: ${binding.tvPi.text}")
+        }
+
+    }
 
     fun init() {
         OximetryDeviceController.instance.status.observe(
@@ -88,6 +115,7 @@ class HomeDeviceDashboard : Fragment() {
         OximetryDeviceController.instance.progress_max.observe(
             viewLifecycleOwner,
             { binding.barStatusProgress.max = it })
+
 
 
 //        OximetryDeviceController.instance.onReadFileProgress = { index, total ->

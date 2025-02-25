@@ -14,6 +14,7 @@ import com.lepu.blepro.event.InterfaceEvent
 import com.lepu.blepro.ext.BleServiceHelper
 import com.lepu.blepro.ext.oxy.DeviceInfo
 import com.lepu.blepro.ext.oxy.OxyFile
+import com.lepu.blepro.ext.oxy.RtParam
 import com.lepu.blepro.objs.Bluetooth
 import com.lepu.blepro.observer.BIOL
 import com.lepu.blepro.observer.BleChangeObserver
@@ -62,10 +63,33 @@ private constructor() : BleChangeObserver {
     var progress_min: MutableLiveData<Int> = MutableLiveData(0)
     var progress_max: MutableLiveData<Int> = MutableLiveData(0)
 
+    var oxyLevel: MutableLiveData<String> = MutableLiveData("")
+    var pulseRate: MutableLiveData<String> = MutableLiveData("")
+    var oxyPi: MutableLiveData<String> = MutableLiveData("")
+
+    val TAG: String = "OxiController"
+
     private var currentFileIndex: Int = 0;
+    
 
     // Initialises the event bus for this class
     fun initEventBus(mainActivity: MainActivity) {
+
+        LiveEventBus.get<InterfaceEvent>(InterfaceEvent.Oxy.EventOxyRtParamData)
+            .observe(mainActivity) { event ->
+                Log.d(TAG, "Event received in observer!")
+
+                val data = event.data as? RtParam
+                if (data == null) {
+                    Log.w(TAG, "Received null data!")
+                } else {
+                    Log.d(TAG, "Received Data: SpO2=${data.spo2}, PR=${data.pr}, PI=${data.pi}")
+                    oxyLevel.value = data.spo2.toString()
+                    pulseRate.value = data.pr.toString()
+                    oxyPi.value = data.pi.toString()
+                }
+            }
+
         LiveEventBus.get<InterfaceEvent>(InterfaceEvent.Oxy.EventOxySyncDeviceInfo)
             .observe(mainActivity) {
 
@@ -144,6 +168,10 @@ private constructor() : BleChangeObserver {
                 connected_device = null;
                 _connected.value = false;
             }
+
+
+
+
     }
 
     fun connectDevice(
