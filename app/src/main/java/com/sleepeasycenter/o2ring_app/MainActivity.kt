@@ -44,7 +44,7 @@ class MainActivity : AppCompatActivity(), DeviceSelectCallback {
 
     override fun onDeviceSelect(device: Bluetooth) {
         // connect
-        Toast.makeText(this, "Connecting to O2 Ring..." + device.name, Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, "Connecting to ..." + device.name, Toast.LENGTH_SHORT).show()
         OximetryDeviceController.instance.connectDevice(
             device,
             BleServiceHelper.BleServiceHelper,

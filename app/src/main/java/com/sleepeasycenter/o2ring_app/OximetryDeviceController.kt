@@ -72,10 +72,13 @@ private constructor() : BleChangeObserver {
     val TAG: String = "OxiController"
 
     private var currentFileIndex: Int = 0;
+
+    // vars to do real-time data collection
     private var model = Bluetooth.MODEL_O2RING
     private var rtHandler = Handler()
     public var rtTask = RtTask()
 
+    // call this to get real-time data
     inner class RtTask: Runnable {
         override fun run() {
             rtHandler.post(rtTask)

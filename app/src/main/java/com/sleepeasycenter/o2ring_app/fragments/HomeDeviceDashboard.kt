@@ -48,6 +48,7 @@ class HomeDeviceDashboard : Fragment(), BleChangeObserver {
     private var timeIndex = 0f
 
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -79,8 +80,8 @@ class HomeDeviceDashboard : Fragment(), BleChangeObserver {
         spo2Chart = binding.spo2Chart
         prChart = binding.prChart
 
-        setupChart(spo2Chart)
-        setupChart(prChart)
+        setupChart(spo2Chart,50f, 100f)
+        setupChart(prChart, 40f, 170f)
 
         init()
         initEventBus()
@@ -88,7 +89,7 @@ class HomeDeviceDashboard : Fragment(), BleChangeObserver {
         return view;
     }
 
-    private fun setupChart(chart: LineChart) {
+    private fun setupChart(chart: LineChart, minY: Float? = null, maxY: Float? = null) {
         chart.description.isEnabled = false
         chart.setTouchEnabled(false)
         chart.isDragEnabled = false
@@ -99,7 +100,12 @@ class HomeDeviceDashboard : Fragment(), BleChangeObserver {
         xAxis.position = XAxis.XAxisPosition.BOTTOM
         xAxis.setDrawGridLines(true)
 
-        chart.axisLeft.setDrawGridLines(false)
+        val yAxis = chart.axisLeft
+        yAxis.setDrawGridLines(false)
+
+        minY?.let { yAxis.axisMinimum = it }
+        maxY?.let { yAxis.axisMaximum = it }
+
         chart.axisRight.isEnabled = false
     }
 
