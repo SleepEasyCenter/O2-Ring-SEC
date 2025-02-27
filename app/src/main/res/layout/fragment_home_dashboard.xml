@@ -10,16 +10,30 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+
+        <ImageView
+            android:id="@+id/SECLogo"
+            android:layout_width="245dp"
+            android:layout_height="60dp"
+            android:src="@drawable/logowithshadow"
+            app:layout_constraintBottom_toTopOf="@+id/linearLayout"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
         <LinearLayout
             android:id="@+id/linearLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="72dp"
             android:orientation="vertical"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
             <!-- OXY -->
+
             <androidx.cardview.widget.CardView
                 android:id="@+id/oxy_layout"
                 style="@style/common_card"
@@ -37,8 +51,9 @@
                         android:id="@+id/oxy_info"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="20dp"
+                        android:layout_marginTop="12dp"
                         app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="1.0"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent">
 
@@ -159,77 +174,26 @@
 
         </LinearLayout>
 
-
         <com.github.mikephil.charting.charts.LineChart
             android:id="@+id/spo2Chart"
             android:layout_width="375dp"
-            android:layout_height="165dp"
+            android:layout_height="195dp"
 
             app:layout_constraintBottom_toTopOf="@+id/prChart"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout"
+            app:layout_constraintVertical_bias="0.514" />
 
         <com.github.mikephil.charting.charts.LineChart
             android:id="@+id/prChart"
             android:layout_width="375dp"
-            android:layout_height="165dp"
+            android:layout_height="195dp"
 
-            android:layout_marginBottom="16dp"
-            app:layout_constraintBottom_toTopOf="@+id/btnUpload"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
-
-        <TextView
-            android:id="@+id/txt_statusText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintBottom_toTopOf="@+id/bar_StatusProgress"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
-
-        <Button
-            android:id="@+id/btnUpload"
-            android:layout_width="225dp"
-            android:layout_height="60dp"
-            android:layout_marginStart="64dp"
-            android:layout_marginEnd="64dp"
-            android:text="Upload"
+            android:layout_marginBottom="80dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.716" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/file_list_recycler_view"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_marginStart="24dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="24dp"
-            android:layout_marginBottom="32dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/bar_StatusProgress"
-            app:layout_constraintVertical_bias="1.0">
-
-        </androidx.recyclerview.widget.RecyclerView>
-
-        <ProgressBar
-            android:id="@+id/bar_StatusProgress"
-            style="?android:attr/progressBarStyleHorizontal"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="32dp"
-            android:layout_marginTop="35dp"
-            android:layout_marginEnd="32dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btnUpload" />
+            app:layout_constraintStart_toStartOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>

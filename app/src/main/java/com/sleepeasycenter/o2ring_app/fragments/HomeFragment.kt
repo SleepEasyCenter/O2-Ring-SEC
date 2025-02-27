@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import com.sleepeasycenter.o2ring_app.OximetryDeviceController
 import com.sleepeasycenter.o2ring_app.R
 import com.sleepeasycenter.o2ring_app.databinding.FragmentHomeBinding
-import com.sleepeasycenter.o2ring_app.databinding.FragmentHomeNodeviceBinding
 
 /**
  * A simple [Fragment] subclass.

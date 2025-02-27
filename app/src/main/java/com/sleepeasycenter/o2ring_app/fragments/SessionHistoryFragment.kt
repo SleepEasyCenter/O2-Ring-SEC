@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import com.sleepeasycenter.o2ring_app.OximetryDeviceController
 import com.sleepeasycenter.o2ring_app.R
 import com.sleepeasycenter.o2ring_app.databinding.FragmentHomeNodeviceBinding
 import com.sleepeasycenter.o2ring_app.databinding.FragmentSessionHistoryBinding
@@ -15,7 +16,7 @@ import com.sleepeasycenter.o2ring_app.databinding.FragmentSessionHistoryBinding
  * create an instance of this fragment.
  */
 class SessionHistoryFragment : Fragment() {
-    public val TAG: String = "SessionHistoryFragment"
+    public val TAG: String = "SessionHistory"
     private var _binding: FragmentSessionHistoryBinding? = null;
     private val binding get() = _binding!!;
 
@@ -30,6 +31,17 @@ class SessionHistoryFragment : Fragment() {
         _binding = FragmentSessionHistoryBinding.inflate(inflater);
         // Inflate the layout for this fragment
         val view = binding.root;
+
+        OximetryDeviceController.instance.connected.observe(viewLifecycleOwner, { value ->
+            val childFragment = when (value) {
+                true -> DeviceSessionHistory()
+                false -> HomeNoDeviceFragment()
+            }
+
+            childFragmentManager.beginTransaction()
+                .replace(R.id.fragmentContainerView2, childFragment).commit()
+        })
+
         return view;
     }
 

@@ -60,22 +60,12 @@ class HomeDeviceDashboard : Fragment(), BleChangeObserver {
     ): View? {
         // Inflate the layout for this fragment
         _binding = FragmentHomeDashboardBinding.inflate(inflater, container, false);
-        val recyclerView = binding.fileListRecyclerView;
-        recyclerView.layoutManager = LinearLayoutManager(context)
-        recyclerView.setAdapter(adapter);
+
         // Inflate the layout for this fragment
         val view = binding.root;
 
 
         OximetryDeviceController.instance.rtTask.run()
-
-        binding.btnUpload.isEnabled = false;
-        binding.btnUpload.setOnClickListener {
-            binding.btnUpload.isEnabled = false;
-            requireActivity().lifecycleScope.launch {
-                OximetryDeviceController.instance.uploadToServer(requireActivity())
-            }
-        }
 
         spo2Chart = binding.spo2Chart
         prChart = binding.prChart
@@ -83,7 +73,6 @@ class HomeDeviceDashboard : Fragment(), BleChangeObserver {
         setupChart(spo2Chart,50f, 100f)
         setupChart(prChart, 40f, 170f)
 
-        init()
         initEventBus()
 
         return view;
@@ -144,55 +133,6 @@ class HomeDeviceDashboard : Fragment(), BleChangeObserver {
         }
     }
 
-    private fun init() {
-        OximetryDeviceController.instance.status.observe(
-            viewLifecycleOwner,
-            {
-                when (it) {
-                    Status.NEUTRAL -> binding.txtStatusText.setText("")
-                    Status.DOWNLOADING -> binding.txtStatusText.setText("Downloading ${OximetryDeviceController.instance.filenames.value!!.size} files...")
-                    Status.CONVERTING -> binding.txtStatusText.setText("Converting to CSV...")
-                    Status.UPLOADING -> binding.txtStatusText.setText("Uploading...")
-                }
-                binding.btnUpload.isEnabled = it == Status.NEUTRAL;
-            })
-        OximetryDeviceController.instance.filenames.observe(viewLifecycleOwner, { newValue ->
-            Log.d(TAG, "NEW VALUE: FILE COUNT: " + newValue.count())
-            adapter.items = newValue.toCollection(ArrayList());
-            adapter.notifyDataSetChanged()
-        })
-
-        OximetryDeviceController.instance.progress.observe(
-            viewLifecycleOwner,
-            { binding.barStatusProgress.progress = it })
-        OximetryDeviceController.instance.progress_min.observe(
-            viewLifecycleOwner,
-            { binding.barStatusProgress.min = it })
-        OximetryDeviceController.instance.progress_max.observe(
-            viewLifecycleOwner,
-            { binding.barStatusProgress.max = it })
-
-
-
-//        OximetryDeviceController.instance.onReadFileProgress = { index, total ->
-//            binding.txtStatusText.setText("Downloading files " + (index + 1) + "/$total...")
-//            binding.barStatusProgress.min = 0;
-//            binding.barStatusProgress.max = total;
-//            binding.barStatusProgress.progress = index ;
-//            // Don't allow file uploads when downloading files from ring.
-//            binding.btnUpload.isEnabled = false;
-//        }
-//
-//        OximetryDeviceController.instance.onFinishedReadingFiles = { oxyfiles ->
-//            var fileCount = oxyfiles.size;
-//            binding.btnUpload.isEnabled = true;
-//
-//            binding.txtStatusText.setText("Finished downloading $fileCount files.")
-//            binding.barStatusProgress.progress =        binding.barStatusProgress.max ;
-////            Log.d(TAG, "CSV CONVERTED:\n${convertToCsv(oxyfile)}")
-////            oxyfiles[0].data[1].vector
-//        }
-    }
 
 
 
