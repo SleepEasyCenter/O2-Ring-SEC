@@ -8,6 +8,7 @@ import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.github.mikephil.charting.data.Entry
 import com.jeremyliao.liveeventbus.LiveEventBus
 import com.lepu.blepro.constants.Ble
 import com.lepu.blepro.event.EventMsgConst
@@ -21,6 +22,7 @@ import com.lepu.blepro.observer.BIOL
 import com.lepu.blepro.observer.BleChangeObserver
 import com.sleepeasycenter.o2ring_app.api.SleepEasyAPI
 import com.sleepeasycenter.o2ring_app.utils.OxyCsvData
+import com.sleepeasycenter.o2ring_app.utils.bleState
 import com.sleepeasycenter.o2ring_app.utils.convertToCsv
 import com.sleepeasycenter.o2ring_app.utils.readPatientId
 import kotlinx.coroutines.Runnable
@@ -69,9 +71,15 @@ private constructor() : BleChangeObserver {
     var pulseRate: MutableLiveData<String> = MutableLiveData("")
     var oxyPi: MutableLiveData<String> = MutableLiveData("")
 
+    var deviceName: String = Bluetooth.BT_NAME_O2
+
     val TAG: String = "OxiController"
 
+    val oxyEntries = ArrayList<Entry>()
+    val pulseEntries = ArrayList<Entry>()
+
     private var currentFileIndex: Int = 0;
+    var timeIndex = 0f
 
     // vars to do real-time data collection
     private var model = Bluetooth.MODEL_O2RING
@@ -85,7 +93,7 @@ private constructor() : BleChangeObserver {
             BleServiceHelper.BleServiceHelper.oxyGetRtParam(model)
         }
     }
-    
+
 
     // Initialises the event bus for this class
     fun initEventBus(mainActivity: MainActivity) {
@@ -188,6 +196,19 @@ private constructor() : BleChangeObserver {
 
 
     }
+
+    fun addOxyEntry(value: Float) {
+        value?.let {
+            oxyEntries.add(Entry(timeIndex, it))
+        }
+    }
+
+    fun addPulseEntry(value: Float) {
+        value?.let {
+            pulseEntries.add(Entry(timeIndex, it))
+        }
+    }
+
 
     fun connectDevice(
         device: Bluetooth,

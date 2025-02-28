@@ -1,5 +1,6 @@
 package com.sleepeasycenter.o2ring_app.fragments
 
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -7,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import com.jeremyliao.liveeventbus.LiveEventBus
 import com.lepu.blepro.event.InterfaceEvent
@@ -17,12 +19,14 @@ import com.sleepeasycenter.o2ring_app.OximetryDeviceController
 import com.sleepeasycenter.o2ring_app.Status
 import com.sleepeasycenter.o2ring_app.adapters.DeviceFileListViewAdapter
 import com.sleepeasycenter.o2ring_app.databinding.FragmentHomeDashboardBinding
+import com.sleepeasycenter.o2ring_app.R
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.utils.ColorTemplate
+import com.sleepeasycenter.o2ring_app.utils.bleState
 import kotlinx.coroutines.launch
 
 /**
@@ -39,11 +43,10 @@ class HomeDeviceDashboard : Fragment(), BleChangeObserver {
     private lateinit var spo2Chart: LineChart
     private lateinit var prChart: LineChart
     private lateinit var piChart: LineChart
-    private val oxyEntries = ArrayList<Entry>()
+/*    private val oxyEntries = ArrayList<Entry>()
     private val pulseEntries = ArrayList<Entry>()
-    private val piEntries = ArrayList<Entry>()
+    private val piEntries = ArrayList<Entry>()*/
 
-    private var adapter = DeviceFileListViewAdapter(arrayListOf())
 
     private var timeIndex = 0f
 
@@ -64,15 +67,15 @@ class HomeDeviceDashboard : Fragment(), BleChangeObserver {
         // Inflate the layout for this fragment
         val view = binding.root;
 
-
         OximetryDeviceController.instance.rtTask.run()
 
         spo2Chart = binding.spo2Chart
         prChart = binding.prChart
 
-        setupChart(spo2Chart,50f, 100f)
-        setupChart(prChart, 40f, 170f)
+        setupChart(spo2Chart,60f, 100f)
+        setupChart(prChart, 40f, 160f)
 
+        initView()
         initEventBus()
 
         return view;
@@ -87,10 +90,11 @@ class HomeDeviceDashboard : Fragment(), BleChangeObserver {
 
         val xAxis = chart.xAxis
         xAxis.position = XAxis.XAxisPosition.BOTTOM
-        xAxis.setDrawGridLines(true)
+        xAxis.setDrawGridLines(false)
+        xAxis.setDrawLabels(false)
 
         val yAxis = chart.axisLeft
-        yAxis.setDrawGridLines(false)
+        yAxis.setDrawGridLines(true)
 
         minY?.let { yAxis.axisMinimum = it }
         maxY?.let { yAxis.axisMaximum = it }
@@ -98,34 +102,63 @@ class HomeDeviceDashboard : Fragment(), BleChangeObserver {
         chart.axisRight.isEnabled = false
     }
 
-    private fun addEntry(chart: LineChart, value: Float?, entries: ArrayList<Entry>, label: String, color: Int) {
+    private fun addEntry(chart: LineChart, value: Float?, entries: ArrayList<Entry>, label: String, color: Int, gradient: Int ) {
         value?.let {
+            val entry = Entry(timeIndex, it)
             entries.add(Entry(timeIndex, it))
-            timeIndex += 1  // Increment time index
+            timeIndex += 1
 
-            val dataSet = LineDataSet(entries, label)
-            dataSet.color = color
-            dataSet.valueTextSize = 10f
-            dataSet.setDrawCircles(false)
-            dataSet.setDrawValues(false)
+            val data = chart.data
+            if (data == null) {
+                val dataSet = LineDataSet(entries, label).apply {
+                    this.color = color
+                    lineWidth = 2.5f
+                    valueTextSize = 10f
+                    setDrawCircles(false)
+                    setDrawValues(false)
+                    setDrawFilled(true)
+                    fillDrawable = ContextCompat.getDrawable(requireContext(), gradient)
+                }
 
-            val lineData = LineData(dataSet)
-            chart.data = lineData
-            chart.notifyDataSetChanged()
+                chart.data = LineData(dataSet)
+            } else {
+                val dataSet = data.getDataSetByIndex(0) as LineDataSet
+                dataSet.addEntry(entry)
+
+                data.notifyDataChanged()
+                chart.notifyDataSetChanged()
+            }
+
+            val visibleRange = 1000f
+
+            chart.setVisibleXRangeMaximum(visibleRange)
+
+            chart.moveViewToX(timeIndex + (visibleRange / 2))
+
             chart.invalidate()
         }
     }
 
+    fun initView() {
+        binding.bleName.text = OximetryDeviceController.instance.deviceName
+        bleState.observe(viewLifecycleOwner) {
+            if (it) {
+                binding.oxyBleState.setImageResource(R.mipmap.bluetooth_ok)
+            } else {
+                binding.oxyBleState.setImageResource(R.mipmap.bluetooth_error)
+            }
+        }
+    }
 
     private fun initEventBus() {
         OximetryDeviceController.instance.oxyLevel.observe(viewLifecycleOwner) { value ->
             binding.tvOxy.text = value ?: "N/A"
-            addEntry(spo2Chart, value.toFloatOrNull(), oxyEntries, "Oxygen Level", ColorTemplate.COLORFUL_COLORS[0])
+            addEntry(spo2Chart, value.toFloatOrNull(), OximetryDeviceController.instance.oxyEntries,"Oxygen Level", Color.BLUE, R.drawable.gradient_fill_spo2)
         }
 
         OximetryDeviceController.instance.pulseRate.observe(viewLifecycleOwner) { value ->
             binding.tvPr.text = value ?: "N/A"
-            addEntry(prChart, value.toFloatOrNull(), pulseEntries, "Pulse Rate", ColorTemplate.COLORFUL_COLORS[1])
+            addEntry(prChart, value.toFloatOrNull(), OximetryDeviceController.instance.pulseEntries, "Pulse Rate", Color.RED, R.drawable.gradient_fill_pr)
         }
 
         OximetryDeviceController.instance.oxyPi.observe(viewLifecycleOwner) { value ->
@@ -135,26 +168,9 @@ class HomeDeviceDashboard : Fragment(), BleChangeObserver {
 
 
 
-
     override fun onBleStateChanged(model: Int, state: Int) {
         TODO("Not yet implemented")
     }
 
-//     fun processAndUploadCsvFiles(){
-//         CoroutineScope(MainScope()).launch {
-//             var oxyfiles = OximetryDeviceController.instance.oxyfiles.value
-//
-//             var csvFiles: ArrayList<String> = arrayListOf();
-//
-//             for ((index, oxyFile) in oxyfiles!!.withIndex()) {
-//                 binding.txtStatusText.setText("Converting to csv... (${index + 1} / ${oxyfiles.size})")
-//                 binding.barStatusProgress.min = index;
-//                 binding.barStatusProgress.max = oxyfiles.size;
-//                 binding.barStatusProgress.progress = index;
-//
-//                 csvFiles += convertToCsv(oxyFile)
-//                 binding.barStatusProgress.progress = index + 1;
-//             }
-//         }
-//    }
+
 }
