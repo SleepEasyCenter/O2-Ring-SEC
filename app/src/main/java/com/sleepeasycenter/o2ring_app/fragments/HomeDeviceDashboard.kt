@@ -153,6 +153,7 @@ class HomeDeviceDashboard : Fragment(), BleChangeObserver {
     private fun initEventBus() {
         OximetryDeviceController.instance.oxyLevel.observe(viewLifecycleOwner) { value ->
             binding.tvOxy.text = value ?: "N/A"
+            determineTextColor(value)
             addEntry(spo2Chart, value.toFloatOrNull(), OximetryDeviceController.instance.oxyEntries,"Oxygen Level", Color.BLUE, R.drawable.gradient_fill_spo2)
         }
 
@@ -166,7 +167,20 @@ class HomeDeviceDashboard : Fragment(), BleChangeObserver {
         }
     }
 
-
+    private fun determineTextColor(dataVal: String) {
+        val value = dataVal.toFloatOrNull()
+        if (value != null) {
+            if (value < 90) { // Adjust threshold as needed
+                binding.tvOxy.setTextColor(Color.RED) // Critical low
+            } else if (value in 90f..94f) {
+                binding.tvOxy.setTextColor(Color.YELLOW) // Warning
+            } else {
+                binding.tvOxy.setTextColor(Color.GREEN) // Normal
+            }
+        } else {
+            binding.tvOxy.setTextColor(Color.GRAY) // Default color if null
+        }
+    }
 
     override fun onBleStateChanged(model: Int, state: Int) {
         TODO("Not yet implemented")

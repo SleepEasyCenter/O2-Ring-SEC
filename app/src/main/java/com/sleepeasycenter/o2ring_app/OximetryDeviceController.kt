@@ -197,18 +197,6 @@ private constructor() : BleChangeObserver {
 
     }
 
-    fun addOxyEntry(value: Float) {
-        value?.let {
-            oxyEntries.add(Entry(timeIndex, it))
-        }
-    }
-
-    fun addPulseEntry(value: Float) {
-        value?.let {
-            pulseEntries.add(Entry(timeIndex, it))
-        }
-    }
-
 
     fun connectDevice(
         device: Bluetooth,
