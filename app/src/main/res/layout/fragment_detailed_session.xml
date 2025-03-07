@@ -1,14 +1,69 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:padding="16dp">
 
     <TextView
-        android:id="@+id/csv_text_view"
+        android:id="@+id/detailedSessionHeader"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:text="CSV content will appear here..."
         android:textSize="16sp"
-        android:text="CSV content will appear here..." />
-</LinearLayout>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <!-- Oxygen Level Label -->
+
+    <!-- Oxygen Level Chart -->
+
+    <!-- Pulse Rate Label -->
+
+    <!-- Pulse Rate Chart -->
+
+    <TextView
+        android:id="@+id/oxygenLevelLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:padding="8dp"
+        android:text="Oxygen Level"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="@+id/detailedSessionHeader"
+        app:layout_constraintTop_toBottomOf="@+id/detailedSessionHeader" />
+
+    <com.github.mikephil.charting.charts.LineChart
+        android:id="@+id/oxygenLevelChart"
+        android:layout_width="379dp"
+        android:layout_height="200dp"
+        android:layout_marginTop="24dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/oxygenLevelLabel" />
+
+    <TextView
+        android:id="@+id/pulseRateLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:padding="8dp"
+        android:text="Pulse Rate"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="@+id/oxygenLevelLabel"
+        app:layout_constraintTop_toBottomOf="@+id/oxygenLevelChart" />
+
+    <com.github.mikephil.charting.charts.LineChart
+        android:id="@+id/pulseRateChart"
+        android:layout_width="379dp"
+        android:layout_height="200dp"
+        android:layout_marginTop="32dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/pulseRateLabel" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
