@@ -9,7 +9,12 @@
         android:id="@+id/session_history"
         android:name="com.sleepeasycenter.o2ring_app.fragments.SessionHistoryFragment"
         android:label="fragment_session_history"
-        tools:layout="@layout/fragment_session_history" />
+        tools:layout="@layout/fragment_session_history">
+
+        <action
+            android:id="@+id/action_sessionHistory_to_detailedSessionFragment"
+            app:destination="@id/detailedSessionFragment" />
+    </fragment>
     <fragment
         android:id="@+id/menu_settings"
         android:name="com.sleepeasycenter.o2ring_app.fragments.SettingsFragment"
@@ -24,4 +29,23 @@
         android:name="com.sleepeasycenter.o2ring_app.fragments.HomeFragment"
         android:label="fragment_home"
         tools:layout="@layout/fragment_home" />
+
+    <fragment
+        android:id="@+id/deviceSessionHistoryFragment"
+        android:name="com.sleepeasycenter.o2ring_app.fragments.DeviceSessionHistory"
+        android:label="Device Session History">
+
+        <action
+            android:id="@+id/action_deviceSessionHistory_to_detailedSessionFragment"
+            app:destination="@id/detailedSessionFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/detailedSessionFragment"
+        android:name="com.sleepeasycenter.o2ring_app.fragments.DetailedSessionFragment"
+        android:label="CSV Detail">
+        <argument
+            android:name="csv_filename"
+            app:argType="string" />
+    </fragment>
 </navigation>

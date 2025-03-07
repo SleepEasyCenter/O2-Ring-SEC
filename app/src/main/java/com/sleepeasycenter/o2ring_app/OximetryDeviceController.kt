@@ -60,6 +60,8 @@ private constructor() : BleChangeObserver {
     var _filenames: MutableLiveData<Array<String>> = MutableLiveData(arrayOf())
     var filenames: LiveData<Array<String>> = _filenames
     var _csvfiles: MutableLiveData<Array<OxyCsvData>> = MutableLiveData(arrayOf())
+    val csvfiles: LiveData<Array<OxyCsvData>> get() = _csvfiles
+
 
     var status: MutableLiveData<Status> = MutableLiveData(Status.NEUTRAL)
 

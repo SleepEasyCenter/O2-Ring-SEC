@@ -8,24 +8,28 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.Navigation
+import androidx.navigation.fragment.findNavController
 import com.jeremyliao.liveeventbus.LiveEventBus
 import com.lepu.blepro.event.InterfaceEvent
 import com.lepu.blepro.ext.oxy.*
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.lepu.blepro.observer.BleChangeObserver
+import com.sleepeasycenter.o2ring_app.MainActivity
 import com.sleepeasycenter.o2ring_app.OximetryDeviceController
+import com.sleepeasycenter.o2ring_app.R
 import com.sleepeasycenter.o2ring_app.Status
 import com.sleepeasycenter.o2ring_app.adapters.DeviceFileListViewAdapter
 import com.sleepeasycenter.o2ring_app.databinding.FragmentDeviceSessionHistoryBinding
 import kotlinx.coroutines.launch
 
-class DeviceSessionHistory: Fragment(), BleChangeObserver {
+class DeviceSessionHistory: Fragment(), BleChangeObserver, DeviceFileListViewAdapter.OnItemClickListener {
 
-    public val TAG: String = "HomeDashboard"
+    public val TAG: String = "DeviceSessionHistory"
     private var _binding: FragmentDeviceSessionHistoryBinding? = null;
     private val binding get() = _binding!!;
 
-    private var adapter = DeviceFileListViewAdapter(arrayListOf())
+    private var adapter = DeviceFileListViewAdapter(arrayListOf(), this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -95,5 +99,14 @@ class DeviceSessionHistory: Fragment(), BleChangeObserver {
 
     override fun onBleStateChanged(model: Int, state: Int) {
         TODO("Not yet implemented")
+    }
+
+    override fun onItemClick(filename: String) {
+        Toast.makeText(requireContext(), "Clicked: $filename", Toast.LENGTH_SHORT).show()
+
+        val action = SessionHistoryFragmentDirections
+            .actionSessionHistoryToDetailedSessionFragment(filename)
+
+        findNavController()?.navigate(action)
     }
 }

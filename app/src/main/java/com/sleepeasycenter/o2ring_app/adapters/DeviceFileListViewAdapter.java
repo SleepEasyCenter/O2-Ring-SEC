@@ -31,14 +31,15 @@ public class DeviceFileListViewAdapter extends RecyclerView.Adapter<DeviceFileLi
     }
 
     public interface OnItemClickListener {
-        void onItemClick(DeviceFileListViewAdapter.ViewHolder item);
+        void onItemClick(String filename);
     }
 
     public ArrayList<String> items;
     public OnItemClickListener listener = null;
 
-    public DeviceFileListViewAdapter(ArrayList<String> items) {
+    public DeviceFileListViewAdapter(ArrayList<String> items, OnItemClickListener listener) {
         this.items = items;
+        this.listener = listener;
     }
 
     @NonNull
@@ -57,11 +58,11 @@ public class DeviceFileListViewAdapter extends RecyclerView.Adapter<DeviceFileLi
         holder.item =item;
         TextView textView = holder.getTextView();
         textView.setText(item);
-        textView.setOnClickListener(view -> this.onItemClick(holder));
+        textView.setOnClickListener(view -> this.onItemClick(item));
     }
 
-    public void onItemClick(final DeviceFileListViewAdapter.ViewHolder item) {
-        if (listener != null) listener.onItemClick(item);
+    public void onItemClick(final String filename) {
+        if (listener != null) listener.onItemClick(filename);
     }
 
     @Override

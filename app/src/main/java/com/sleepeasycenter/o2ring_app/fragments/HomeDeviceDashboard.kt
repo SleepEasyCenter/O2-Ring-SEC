@@ -43,9 +43,9 @@ class HomeDeviceDashboard : Fragment(), BleChangeObserver {
     private lateinit var spo2Chart: LineChart
     private lateinit var prChart: LineChart
     private lateinit var piChart: LineChart
-/*    private val oxyEntries = ArrayList<Entry>()
+    private val oxyEntries = ArrayList<Entry>()
     private val pulseEntries = ArrayList<Entry>()
-    private val piEntries = ArrayList<Entry>()*/
+    private val piEntries = ArrayList<Entry>()
 
 
     private var timeIndex = 0f
@@ -154,12 +154,12 @@ class HomeDeviceDashboard : Fragment(), BleChangeObserver {
         OximetryDeviceController.instance.oxyLevel.observe(viewLifecycleOwner) { value ->
             binding.tvOxy.text = value ?: "N/A"
             determineTextColor(value)
-            addEntry(spo2Chart, value.toFloatOrNull(), OximetryDeviceController.instance.oxyEntries,"Oxygen Level", Color.BLUE, R.drawable.gradient_fill_spo2)
+            addEntry(spo2Chart, value.toFloatOrNull(), oxyEntries,"Oxygen Level", Color.BLUE, R.drawable.gradient_fill_spo2)
         }
 
         OximetryDeviceController.instance.pulseRate.observe(viewLifecycleOwner) { value ->
             binding.tvPr.text = value ?: "N/A"
-            addEntry(prChart, value.toFloatOrNull(), OximetryDeviceController.instance.pulseEntries, "Pulse Rate", Color.RED, R.drawable.gradient_fill_pr)
+            addEntry(prChart, value.toFloatOrNull(), pulseEntries, "Pulse Rate", Color.RED, R.drawable.gradient_fill_pr)
         }
 
         OximetryDeviceController.instance.oxyPi.observe(viewLifecycleOwner) { value ->
