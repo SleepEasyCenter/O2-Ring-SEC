@@ -7,6 +7,7 @@ import com.sleepeasycenter.o2ring_app.databinding.ActivityConfigurePatientBindin
 import com.sleepeasycenter.o2ring_app.dialogs.DialogUnsavedChangesWarning
 import com.sleepeasycenter.o2ring_app.utils.readPatientId
 import com.sleepeasycenter.o2ring_app.utils.setPatientId
+import com.sleepeasycenter.o2ring_app.utils.setPatientO2Serial
 
 class ConfigurePatientActivity : AppCompatActivity() {
     public lateinit var binding: ActivityConfigurePatientBinding;
@@ -27,12 +28,13 @@ class ConfigurePatientActivity : AppCompatActivity() {
 
     fun btnSaveDetails_callback() {
         val inputPatientId = binding.inputConfigPatientId.text;
-//        val inputPatientName = binding.inputConfigPatientId.text;
-        if (inputPatientId.isBlank()) {
+        val inputO2Serial = binding.inputConfigO2serial.text;
+        if (inputPatientId.isBlank() || inputO2Serial.isBlank()) {
             Toast.makeText(this, "Patient Id cannot be blank!", Toast.LENGTH_SHORT).show()
             return;
         }
         setPatientId(this, inputPatientId.toString());
+        setPatientO2Serial(this, inputO2Serial.toString())
         finish()
     }
 

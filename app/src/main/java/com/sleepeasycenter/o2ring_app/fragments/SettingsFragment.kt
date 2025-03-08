@@ -14,6 +14,7 @@ import com.sleepeasycenter.o2ring_app.MainActivity
 import com.sleepeasycenter.o2ring_app.databinding.FragmentSettingsBinding
 import com.sleepeasycenter.o2ring_app.dialogs.DialogChangePatientIdAuthFragment
 import com.sleepeasycenter.o2ring_app.utils.readPatientId
+import com.sleepeasycenter.o2ring_app.utils.readPatientO2Serial
 
 /**
  * A simple [Fragment] subclass.
@@ -42,8 +43,9 @@ class SettingsFragment : Fragment() {
     }
 
     fun updateText() {
-        binding.settingsTextView.text = "Patient Id: " + readPatientId(activity as Activity) + "\n" +
-                "App Version: " + BuildConfig.VERSION_NAME + " - " + BuildConfig.VERSION_CODE + "\n"
+        binding.settingsTextView.text = "Patient Id: " + readPatientId(activity as Activity)
+        binding.settingsO2Serial.text = "Ring S/N: " + readPatientO2Serial(activity as Activity)
+        binding.settingsAppVersion.text = "App Version: " + BuildConfig.VERSION_NAME + " - " + BuildConfig.VERSION_CODE
 
     }
 

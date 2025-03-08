@@ -20,19 +20,32 @@ public fun hashString(str: String): String {
 }
 
 public val SharedPref_PatientID_Key = "patient_id";
+
+public val SharedPref_PatientO2Serial_Key = "o2_sn"
 public fun getAppSharedPref(activity: Activity): SharedPreferences{
     return activity.getSharedPreferences(SHARED_PREF_KEY, Context.MODE_PRIVATE)
 }
 
 public fun readPatientId(any_activity: Activity): String?{
     var sharedPref = getAppSharedPref(any_activity as Activity);
-    val patient_id = sharedPref.getString(SharedPref_PatientID_Key, null);
+    val patient_id = sharedPref.getString(SharedPref_PatientID_Key, "-");
     return patient_id
+}
+
+public fun readPatientO2Serial(any_activity: Activity): String? {
+    var sharedPref = getAppSharedPref(any_activity as Activity)
+    val o2_serial = sharedPref.getString(SharedPref_PatientO2Serial_Key, "-")
+    return o2_serial
 }
 
 public fun setPatientId(any_activity: Activity, patient_id: String?) {
     var sharedPref = getAppSharedPref(any_activity as Activity);
     sharedPref.edit().putString(SharedPref_PatientID_Key, patient_id).apply()
+}
+
+public fun setPatientO2Serial(any_activity: Activity, o2_serial: String?) {
+    var sharedPref = getAppSharedPref(any_activity as Activity)
+    sharedPref.edit().putString(SharedPref_PatientO2Serial_Key, o2_serial).apply()
 }
 
 public fun fileFromContentUri(context: Context, contentUri: Uri): File {
