@@ -177,8 +177,8 @@
 
         <com.github.mikephil.charting.charts.LineChart
             android:id="@+id/spo2Chart"
-            android:layout_width="375dp"
-            android:layout_height="195dp"
+            android:layout_width="400dp"
+            android:layout_height="210dp"
 
             app:layout_constraintBottom_toTopOf="@+id/prChart"
             app:layout_constraintEnd_toEndOf="parent"
@@ -188,8 +188,8 @@
 
         <com.github.mikephil.charting.charts.LineChart
             android:id="@+id/prChart"
-            android:layout_width="375dp"
-            android:layout_height="195dp"
+            android:layout_width="400dp"
+            android:layout_height="210dp"
 
             android:layout_marginBottom="80dp"
             app:layout_constraintBottom_toBottomOf="parent"

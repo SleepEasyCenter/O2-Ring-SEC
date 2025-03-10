@@ -16,18 +16,15 @@ import com.lepu.blepro.ext.oxy.*
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.lepu.blepro.observer.BleChangeObserver
 import com.sleepeasycenter.o2ring_app.OximetryDeviceController
-import com.sleepeasycenter.o2ring_app.Status
-import com.sleepeasycenter.o2ring_app.adapters.DeviceFileListViewAdapter
 import com.sleepeasycenter.o2ring_app.databinding.FragmentHomeDashboardBinding
 import com.sleepeasycenter.o2ring_app.R
 import com.github.mikephil.charting.charts.LineChart
+import com.github.mikephil.charting.components.LimitLine
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
-import com.github.mikephil.charting.utils.ColorTemplate
 import com.sleepeasycenter.o2ring_app.utils.bleState
-import kotlinx.coroutines.launch
 
 /**
  * A simple [Fragment] subclass.
@@ -69,11 +66,12 @@ class HomeDeviceDashboard : Fragment(), BleChangeObserver {
 
         OximetryDeviceController.instance.rtTask.run()
 
+        // set up line charts
         spo2Chart = binding.spo2Chart
         prChart = binding.prChart
 
-        setupChart(spo2Chart,60f, 100f)
-        setupChart(prChart, 40f, 160f)
+        setupChart(spo2Chart,60f, 100f, 95f)
+        setupChart(prChart, 40f, 160f, 50f)
 
         initView()
         initEventBus()
@@ -81,7 +79,7 @@ class HomeDeviceDashboard : Fragment(), BleChangeObserver {
         return view;
     }
 
-    private fun setupChart(chart: LineChart, minY: Float? = null, maxY: Float? = null) {
+    private fun setupChart(chart: LineChart, minY: Float? = null, maxY: Float? = null, limitValue: Float? = null) {
         chart.description.isEnabled = false
         chart.setTouchEnabled(false)
         chart.isDragEnabled = false
@@ -98,6 +96,17 @@ class HomeDeviceDashboard : Fragment(), BleChangeObserver {
 
         minY?.let { yAxis.axisMinimum = it }
         maxY?.let { yAxis.axisMaximum = it }
+
+        limitValue?.let {
+            val limitLine = LimitLine(it, "").apply{
+                lineWidth = 1f
+                lineColor = Color.DKGRAY
+                enableDashedLine(10f,10f,0f)
+                textSize= 12f
+            }
+            yAxis.addLimitLine(limitLine)
+        }
+
 
         chart.axisRight.isEnabled = false
     }

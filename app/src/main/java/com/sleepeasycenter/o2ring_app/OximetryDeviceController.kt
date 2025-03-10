@@ -71,9 +71,10 @@ private constructor() : BleChangeObserver {
 
     var oxyLevel: MutableLiveData<String> = MutableLiveData("")
     var pulseRate: MutableLiveData<String> = MutableLiveData("")
+    var motion: MutableLiveData<String> = MutableLiveData("")
     var oxyPi: MutableLiveData<String> = MutableLiveData("")
 
-    var deviceName: String = Bluetooth.BT_NAME_O2
+    var deviceName: String = ""
 
     val TAG: String = "OxiController"
 
@@ -108,10 +109,11 @@ private constructor() : BleChangeObserver {
                 if (data == null) {
                     Log.w(TAG, "Received null data!")
                 } else {
-                    Log.d(TAG, "Received Data: SpO2=${data.spo2}, PR=${data.pr}, PI=${data.pi}")
+                    Log.d(TAG, "Received Data: SpO2=${data.spo2}, PR=${data.pr}, PI=${data.pi}, Motion=${data.vector}")
                     oxyLevel.value = data.spo2.toString()
                     pulseRate.value = data.pr.toString()
                     oxyPi.value = data.pi.toString()
+                    motion.value = data.vector.toString()
                 }
             }
 
@@ -213,6 +215,7 @@ private constructor() : BleChangeObserver {
         serviceHelper.connect(appCtx, device.model, device.device, false)
 
         this.connected_device = device
+        device.name = deviceName
     }
 
     override fun onBleStateChanged(model: Int, state: Int) {

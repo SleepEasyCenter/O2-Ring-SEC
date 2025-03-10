@@ -30,7 +30,7 @@ class ConfigurePatientActivity : AppCompatActivity() {
         val inputPatientId = binding.inputConfigPatientId.text;
         val inputO2Serial = binding.inputConfigO2serial.text;
         if (inputPatientId.isBlank() || inputO2Serial.isBlank()) {
-            Toast.makeText(this, "Patient Id cannot be blank!", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Registration fields cannot be blank!", Toast.LENGTH_SHORT).show()
             return;
         }
         setPatientId(this, inputPatientId.toString());
