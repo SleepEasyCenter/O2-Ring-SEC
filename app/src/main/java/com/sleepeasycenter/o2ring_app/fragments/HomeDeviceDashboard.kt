@@ -19,11 +19,17 @@ import com.sleepeasycenter.o2ring_app.OximetryDeviceController
 import com.sleepeasycenter.o2ring_app.databinding.FragmentHomeDashboardBinding
 import com.sleepeasycenter.o2ring_app.R
 import com.github.mikephil.charting.charts.LineChart
+import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.components.LimitLine
 import com.github.mikephil.charting.components.XAxis
+import com.github.mikephil.charting.data.BarData
+import com.github.mikephil.charting.data.BarDataSet
+import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
+import com.lepu.blepro.constants.Ble
+import com.lepu.blepro.ext.BleServiceHelper
 import com.sleepeasycenter.o2ring_app.utils.bleState
 
 /**
@@ -39,10 +45,10 @@ class HomeDeviceDashboard : Fragment(), BleChangeObserver {
 
     private lateinit var spo2Chart: LineChart
     private lateinit var prChart: LineChart
-    private lateinit var piChart: LineChart
+    private lateinit var motionChart: LineChart
     private val oxyEntries = ArrayList<Entry>()
     private val pulseEntries = ArrayList<Entry>()
-    private val piEntries = ArrayList<Entry>()
+    private val motionEntries = ArrayList<Entry>()
 
 
     private var timeIndex = 0f
@@ -66,12 +72,14 @@ class HomeDeviceDashboard : Fragment(), BleChangeObserver {
 
         OximetryDeviceController.instance.rtTask.run()
 
-        // set up line charts
+        // set up charts
         spo2Chart = binding.spo2Chart
         prChart = binding.prChart
+        motionChart = binding.motionChart
 
-        setupChart(spo2Chart,60f, 100f, 95f)
-        setupChart(prChart, 40f, 160f, 50f)
+        setupLineChart(spo2Chart,70f, 100f, 95f, false)
+        setupLineChart(prChart, 40f, 160f, 50f, false)
+        setupLineChart(motionChart, 0f, null, null, true)
 
         initView()
         initEventBus()
@@ -79,7 +87,7 @@ class HomeDeviceDashboard : Fragment(), BleChangeObserver {
         return view;
     }
 
-    private fun setupChart(chart: LineChart, minY: Float? = null, maxY: Float? = null, limitValue: Float? = null) {
+    private fun setupLineChart(chart: LineChart, minY: Float? = null, maxY: Float? = null, limitValue: Float? = null, hideGridLabels: Boolean) {
         chart.description.isEnabled = false
         chart.setTouchEnabled(false)
         chart.isDragEnabled = false
@@ -92,7 +100,9 @@ class HomeDeviceDashboard : Fragment(), BleChangeObserver {
         xAxis.setDrawLabels(false)
 
         val yAxis = chart.axisLeft
-        yAxis.setDrawGridLines(true)
+        yAxis.setDrawGridLines(!hideGridLabels)
+        yAxis.setDrawLabels(!hideGridLabels)
+
 
         minY?.let { yAxis.axisMinimum = it }
         maxY?.let { yAxis.axisMaximum = it }
@@ -101,7 +111,7 @@ class HomeDeviceDashboard : Fragment(), BleChangeObserver {
             val limitLine = LimitLine(it, "").apply{
                 lineWidth = 1f
                 lineColor = Color.DKGRAY
-                enableDashedLine(10f,10f,0f)
+                enableDashedLine(15f,15f,0f)
                 textSize= 12f
             }
             yAxis.addLimitLine(limitLine)
@@ -109,9 +119,12 @@ class HomeDeviceDashboard : Fragment(), BleChangeObserver {
 
 
         chart.axisRight.isEnabled = false
+        chart.legend.isEnabled = false
     }
 
-    private fun addEntry(chart: LineChart, value: Float?, entries: ArrayList<Entry>, label: String, color: Int, gradient: Int ) {
+
+
+    private fun addLineEntry(chart: LineChart, value: Float?, entries: ArrayList<Entry>, label: String, color: Int, gradient: Int ) {
         value?.let {
             val entry = Entry(timeIndex, it)
             entries.add(Entry(timeIndex, it))
@@ -148,43 +161,42 @@ class HomeDeviceDashboard : Fragment(), BleChangeObserver {
         }
     }
 
+
     fun initView() {
-        binding.bleName.text = OximetryDeviceController.instance.deviceName
-        bleState.observe(viewLifecycleOwner) {
-            if (it) {
-                binding.oxyBleState.setImageResource(R.mipmap.bluetooth_ok)
-            } else {
-                binding.oxyBleState.setImageResource(R.mipmap.bluetooth_error)
-            }
-        }
+
     }
 
     private fun initEventBus() {
         OximetryDeviceController.instance.oxyLevel.observe(viewLifecycleOwner) { value ->
-            binding.tvOxy.text = value ?: "N/A"
+            binding.tvOxy.text = value ?: "--"
             determineTextColor(value)
-            addEntry(spo2Chart, value.toFloatOrNull(), oxyEntries,"Oxygen Level", Color.BLUE, R.drawable.gradient_fill_spo2)
+            addLineEntry(spo2Chart, value.toFloatOrNull(), oxyEntries,"Oxygen Level", Color.parseColor("#07a4d9"), R.drawable.gradient_fill_spo2)
         }
 
         OximetryDeviceController.instance.pulseRate.observe(viewLifecycleOwner) { value ->
-            binding.tvPr.text = value ?: "N/A"
-            addEntry(prChart, value.toFloatOrNull(), pulseEntries, "Pulse Rate", Color.RED, R.drawable.gradient_fill_pr)
+            binding.tvPr.text = value ?: "--"
+            addLineEntry(prChart, value.toFloatOrNull(), pulseEntries, "Pulse Rate", Color.parseColor("#bf1728"), R.drawable.gradient_fill_pr)
         }
 
         OximetryDeviceController.instance.oxyPi.observe(viewLifecycleOwner) { value ->
-            binding.tvPi.text = value ?: "N/A"
+            binding.tvPi.text = ("PI: ${value?: "--"}")
         }
+
+        OximetryDeviceController.instance.motion.observe(viewLifecycleOwner) { value ->
+           addLineEntry(motionChart, value.toFloatOrNull(),motionEntries, "Motion", Color.parseColor("#ff8624"), R.drawable.gradient_fill_motion)
+        }
+
     }
 
     private fun determineTextColor(dataVal: String) {
         val value = dataVal.toFloatOrNull()
         if (value != null) {
             if (value < 90) { // Adjust threshold as needed
-                binding.tvOxy.setTextColor(Color.RED) // Critical low
+                binding.tvOxy.setTextColor(Color.parseColor("#ed2e11")) // Critical low
             } else if (value in 90f..94f) {
-                binding.tvOxy.setTextColor(Color.YELLOW) // Warning
+                binding.tvOxy.setTextColor(Color.parseColor("#f7d00c")) // Warning
             } else {
-                binding.tvOxy.setTextColor(Color.GREEN) // Normal
+                binding.tvOxy.setTextColor(Color.parseColor("#06d656")) // Normal
             }
         } else {
             binding.tvOxy.setTextColor(Color.GRAY) // Default color if null
@@ -192,7 +204,8 @@ class HomeDeviceDashboard : Fragment(), BleChangeObserver {
     }
 
     override fun onBleStateChanged(model: Int, state: Int) {
-        TODO("Not yet implemented")
+        Log.d(TAG, "model $model, state: $state")
+
     }
 
 

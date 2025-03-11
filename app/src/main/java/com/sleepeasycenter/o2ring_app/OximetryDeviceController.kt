@@ -69,10 +69,11 @@ private constructor() : BleChangeObserver {
     var progress_min: MutableLiveData<Int> = MutableLiveData(0)
     var progress_max: MutableLiveData<Int> = MutableLiveData(0)
 
-    var oxyLevel: MutableLiveData<String> = MutableLiveData("")
-    var pulseRate: MutableLiveData<String> = MutableLiveData("")
-    var motion: MutableLiveData<String> = MutableLiveData("")
-    var oxyPi: MutableLiveData<String> = MutableLiveData("")
+    var oxyLevel: MutableLiveData<String> = MutableLiveData()
+    var pulseRate: MutableLiveData<String> = MutableLiveData()
+    var motion: MutableLiveData<String> = MutableLiveData()
+    var oxyPi: MutableLiveData<String> = MutableLiveData()
+    var currentState: MutableLiveData<Int> = MutableLiveData(1)
 
     var deviceName: String = ""
 
@@ -93,7 +94,9 @@ private constructor() : BleChangeObserver {
     inner class RtTask: Runnable {
         override fun run() {
             rtHandler.post(rtTask)
+
             BleServiceHelper.BleServiceHelper.oxyGetRtParam(model)
+            BleServiceHelper.BleServiceHelper.oxyGetInfo(model)
         }
     }
 
@@ -102,19 +105,23 @@ private constructor() : BleChangeObserver {
     fun initEventBus(mainActivity: MainActivity) {
 
         LiveEventBus.get<InterfaceEvent>(InterfaceEvent.Oxy.EventOxyRtParamData)
-            .observe(mainActivity) { event ->
-                Log.d(TAG, "Event received in observer!")
+            .observe(mainActivity) {
+                val data = it.data as RtParam
+                Log.d("RTDATA", "Received Data: SpO2=${data.spo2}, PR=${data.pr}, PI=${data.pi}, Motion=${data.vector}")
 
-                val data = event.data as? RtParam
-                if (data == null) {
-                    Log.w(TAG, "Received null data!")
-                } else {
-                    Log.d(TAG, "Received Data: SpO2=${data.spo2}, PR=${data.pr}, PI=${data.pi}, Motion=${data.vector}")
+
+                if ((data.spo2 in 1..149) || (data.pr in 1..349)) {
                     oxyLevel.value = data.spo2.toString()
                     pulseRate.value = data.pr.toString()
                     oxyPi.value = data.pi.toString()
-                    motion.value = data.vector.toString()
                 }
+                else {
+                    oxyLevel.value = "--"
+                    pulseRate.value = "--"
+                    oxyPi.value = "--"
+                }
+
+                motion.value = data.vector.toString()
             }
 
         LiveEventBus.get<InterfaceEvent>(InterfaceEvent.Oxy.EventOxySyncDeviceInfo)
@@ -131,6 +138,8 @@ private constructor() : BleChangeObserver {
             val list = data.fileList.split(",")
             val filtered = list.filter { it != ""; }.toTypedArray()
 
+            Log.d(TAG, "Current state: ${data.curState}")
+            currentState.value = data.curState
             _filenames.postValue(filtered)
             Log.d(TAG, "Found files: " + (filtered.joinToString(",") ?: ""))
 
