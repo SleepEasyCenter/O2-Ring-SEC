@@ -42,6 +42,11 @@ class MainActivity : AppCompatActivity(), DeviceSelectCallback {
         startActivity(intent)
     }
 
+    public fun startBaselineEditActivity() {
+        val intent: Intent = Intent(this@MainActivity, ConfigureBaselineActivity::class.java)
+        startActivity(intent)
+    }
+
     override fun onDeviceSelect(device: Bluetooth) {
         // connect
         Toast.makeText(this, "Connecting to ..." + device.name, Toast.LENGTH_SHORT).show()

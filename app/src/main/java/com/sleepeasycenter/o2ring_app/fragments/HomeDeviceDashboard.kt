@@ -9,28 +9,20 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.lifecycleScope
-import com.jeremyliao.liveeventbus.LiveEventBus
-import com.lepu.blepro.event.InterfaceEvent
 import com.lepu.blepro.ext.oxy.*
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.lepu.blepro.observer.BleChangeObserver
 import com.sleepeasycenter.o2ring_app.OximetryDeviceController
 import com.sleepeasycenter.o2ring_app.databinding.FragmentHomeDashboardBinding
 import com.sleepeasycenter.o2ring_app.R
+import com.sleepeasycenter.o2ring_app.utils.readPatientOxyBaseline
+import com.sleepeasycenter.o2ring_app.utils.readPatientPRBaseline
 import com.github.mikephil.charting.charts.LineChart
-import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.components.LimitLine
 import com.github.mikephil.charting.components.XAxis
-import com.github.mikephil.charting.data.BarData
-import com.github.mikephil.charting.data.BarDataSet
-import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
-import com.lepu.blepro.constants.Ble
-import com.lepu.blepro.ext.BleServiceHelper
-import com.sleepeasycenter.o2ring_app.utils.bleState
+import com.sleepeasycenter.o2ring_app.MainActivity
 
 /**
  * A simple [Fragment] subclass.
@@ -54,7 +46,6 @@ class HomeDeviceDashboard : Fragment(), BleChangeObserver {
     private var timeIndex = 0f
 
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -72,13 +63,14 @@ class HomeDeviceDashboard : Fragment(), BleChangeObserver {
 
         OximetryDeviceController.instance.rtTask.run()
 
+
         // set up charts
         spo2Chart = binding.spo2Chart
         prChart = binding.prChart
         motionChart = binding.motionChart
 
-        setupLineChart(spo2Chart,70f, 100f, 95f, false)
-        setupLineChart(prChart, 40f, 160f, 50f, false)
+        setupLineChart(spo2Chart, 70f, 100f, readPatientPRBaseline(activity as MainActivity), false)
+        setupLineChart(prChart, 40f, 160f, readPatientOxyBaseline(activity as MainActivity), false)
         setupLineChart(motionChart, 0f, null, null, true)
 
         initView()
@@ -87,7 +79,13 @@ class HomeDeviceDashboard : Fragment(), BleChangeObserver {
         return view;
     }
 
-    private fun setupLineChart(chart: LineChart, minY: Float? = null, maxY: Float? = null, limitValue: Float? = null, hideGridLabels: Boolean) {
+    private fun setupLineChart(
+        chart: LineChart,
+        minY: Float? = null,
+        maxY: Float? = null,
+        limitValue: String? = null,
+        hideGridLabels: Boolean
+    ) {
         chart.description.isEnabled = false
         chart.setTouchEnabled(false)
         chart.isDragEnabled = false
@@ -108,11 +106,11 @@ class HomeDeviceDashboard : Fragment(), BleChangeObserver {
         maxY?.let { yAxis.axisMaximum = it }
 
         limitValue?.let {
-            val limitLine = LimitLine(it, "").apply{
+            val limitLine = LimitLine(it.toFloat(), "").apply {
                 lineWidth = 1f
                 lineColor = Color.DKGRAY
-                enableDashedLine(15f,15f,0f)
-                textSize= 12f
+                enableDashedLine(15f, 15f, 0f)
+                textSize = 12f
             }
             yAxis.addLimitLine(limitLine)
         }
@@ -123,8 +121,14 @@ class HomeDeviceDashboard : Fragment(), BleChangeObserver {
     }
 
 
-
-    private fun addLineEntry(chart: LineChart, value: Float?, entries: ArrayList<Entry>, label: String, color: Int, gradient: Int ) {
+    private fun addLineEntry(
+        chart: LineChart,
+        value: Float?,
+        entries: ArrayList<Entry>,
+        label: String,
+        color: Int,
+        gradient: Int
+    ) {
         value?.let {
             val entry = Entry(timeIndex, it)
             entries.add(Entry(timeIndex, it))
@@ -170,20 +174,41 @@ class HomeDeviceDashboard : Fragment(), BleChangeObserver {
         OximetryDeviceController.instance.oxyLevel.observe(viewLifecycleOwner) { value ->
             binding.tvOxy.text = value ?: "--"
             determineTextColor(value)
-            addLineEntry(spo2Chart, value.toFloatOrNull(), oxyEntries,"Oxygen Level", Color.parseColor("#07a4d9"), R.drawable.gradient_fill_spo2)
+            addLineEntry(
+                spo2Chart,
+                value.toFloatOrNull(),
+                oxyEntries,
+                "Oxygen Level",
+                Color.parseColor("#07a4d9"),
+                R.drawable.gradient_fill_spo2
+            )
         }
 
         OximetryDeviceController.instance.pulseRate.observe(viewLifecycleOwner) { value ->
             binding.tvPr.text = value ?: "--"
-            addLineEntry(prChart, value.toFloatOrNull(), pulseEntries, "Pulse Rate", Color.parseColor("#bf1728"), R.drawable.gradient_fill_pr)
+            addLineEntry(
+                prChart,
+                value.toFloatOrNull(),
+                pulseEntries,
+                "Pulse Rate",
+                Color.parseColor("#bf1728"),
+                R.drawable.gradient_fill_pr
+            )
         }
 
         OximetryDeviceController.instance.oxyPi.observe(viewLifecycleOwner) { value ->
-            binding.tvPi.text = ("PI: ${value?: "--"}")
+            binding.tvPi.text = ("PI: ${value ?: "--"}")
         }
 
         OximetryDeviceController.instance.motion.observe(viewLifecycleOwner) { value ->
-           addLineEntry(motionChart, value.toFloatOrNull(),motionEntries, "Motion", Color.parseColor("#ff8624"), R.drawable.gradient_fill_motion)
+            addLineEntry(
+                motionChart,
+                value.toFloatOrNull(),
+                motionEntries,
+                "Motion",
+                Color.parseColor("#ff8624"),
+                R.drawable.gradient_fill_motion
+            )
         }
 
     }

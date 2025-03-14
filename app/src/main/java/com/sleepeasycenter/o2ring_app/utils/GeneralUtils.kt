@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.SharedPreferences
 import android.net.Uri
+import android.service.voice.VoiceInteractionSession.ActivityId
 import android.webkit.MimeTypeMap
 import java.io.File
 import java.io.FileOutputStream
@@ -21,9 +22,26 @@ public fun hashString(str: String): String {
 
 public val SharedPref_PatientID_Key = "patient_id";
 
-public val SharedPref_PatientO2Serial_Key = "o2_sn"
+public val SharedPref_PatientO2Serial_Key = "patient_o2serial"
+
+public val SharedPref_PatientOxyBaseline_Key = "patient_oxybaseline"
+
+public val SharedPref_PatientPRBaseline_Key = "patient_prbaseline"
+
 public fun getAppSharedPref(activity: Activity): SharedPreferences{
     return activity.getSharedPreferences(SHARED_PREF_KEY, Context.MODE_PRIVATE)
+}
+
+public fun readPatientOxyBaseline(any_activity: Activity): String? {
+    var sharedPref = getAppSharedPref(any_activity as Activity)
+    val oxyBaseline = sharedPref.getString(SharedPref_PatientOxyBaseline_Key, "90")
+    return oxyBaseline
+}
+
+public fun readPatientPRBaseline(any_activity: Activity): String? {
+    var sharedPref = getAppSharedPref(any_activity as Activity)
+    val oxyBaseline = sharedPref.getString(SharedPref_PatientPRBaseline_Key, "50")
+    return oxyBaseline
 }
 
 public fun readPatientId(any_activity: Activity): String?{
@@ -34,8 +52,18 @@ public fun readPatientId(any_activity: Activity): String?{
 
 public fun readPatientO2Serial(any_activity: Activity): String? {
     var sharedPref = getAppSharedPref(any_activity as Activity)
-    val o2_serial = sharedPref.getString(SharedPref_PatientO2Serial_Key, "-")
-    return o2_serial
+    val patient_o2serial = sharedPref.getString(SharedPref_PatientO2Serial_Key, "-")
+    return patient_o2serial
+}
+
+public fun setPatientOxyBaseline(any_activity: Activity, patient_oxybaseline: String?) {
+    var sharedPref = getAppSharedPref(any_activity as Activity)
+    sharedPref.edit().putString(SharedPref_PatientOxyBaseline_Key, patient_oxybaseline).apply()
+}
+
+public fun setPatientPRBaseline(any_activity: Activity, patient_prbaseline: String?) {
+    var sharedPref = getAppSharedPref(any_activity as Activity)
+    sharedPref.edit().putString(SharedPref_PatientPRBaseline_Key, patient_prbaseline).apply()
 }
 
 public fun setPatientId(any_activity: Activity, patient_id: String?) {
@@ -43,9 +71,9 @@ public fun setPatientId(any_activity: Activity, patient_id: String?) {
     sharedPref.edit().putString(SharedPref_PatientID_Key, patient_id).apply()
 }
 
-public fun setPatientO2Serial(any_activity: Activity, o2_serial: String?) {
+public fun setPatientO2Serial(any_activity: Activity, patient_o2serial: String?) {
     var sharedPref = getAppSharedPref(any_activity as Activity)
-    sharedPref.edit().putString(SharedPref_PatientO2Serial_Key, o2_serial).apply()
+    sharedPref.edit().putString(SharedPref_PatientO2Serial_Key, patient_o2serial).apply()
 }
 
 public fun fileFromContentUri(context: Context, contentUri: Uri): File {

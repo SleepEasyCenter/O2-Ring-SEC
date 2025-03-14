@@ -35,9 +35,9 @@ class SettingsFragment : Fragment() {
     ): View {
         // Inflate the layout for this fragment
         binding = FragmentSettingsBinding.inflate(inflater, container, false);
-        binding.btnPatientProfileEdit.setOnClickListener { x ->
-            openEditPatientIdDialog()
-        }
+        binding.btnPatientProfileEdit.setOnClickListener { x -> openEditPatientIdDialog() }
+        binding.btnPatientBaselineEdit.setOnClickListener { x -> openEditBaselineDialog() }
+
         updateText()
         return binding.root
     }
@@ -55,9 +55,19 @@ class SettingsFragment : Fragment() {
                 // open up new dialog to change patient id
                 (activity as MainActivity).startPatientEditActivity()
             } else {
-                Toast.makeText(context, "Error: Wrong Code.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Error: Invalid password.", Toast.LENGTH_SHORT).show()
             }
         }).show(parentFragmentManager, "AUTH_CHANGE_PATIENT_ID")
+    }
+
+    fun openEditBaselineDialog() {
+        DialogChangePatientIdAuthFragment({ success ->
+            if (success) {
+                (activity as MainActivity).startBaselineEditActivity()
+            } else {
+                Toast.makeText(context, "Error: Invalid password.", Toast.LENGTH_SHORT).show()
+            }
+        }).show(parentFragmentManager, "AUTH_CHANGE_PATIENT_BASELINES")
     }
 
 
