@@ -159,6 +159,7 @@ private constructor() : BleChangeObserver {
             Log.d(TAG, "Current state: ${data.curState}")
             currentState.value = data.curState
             _filenames.postValue(filtered)
+            Log.d("FILENAMES", filtered.toString())
             Log.d(TAG, "Found files: " + (filtered.joinToString(",") ?: ""))
 
             // Start reading files
@@ -192,8 +193,8 @@ private constructor() : BleChangeObserver {
                             connected_device!!.model,
                             nextFile
                         )
-                        progress.postValue(currentFileIndex)
-                        progress_min.postValue(0)
+                                progress.postValue(currentFileIndex)
+                                progress_min.postValue(0)
                         progress_max.postValue(totalFiles + 1)
 
                     } else {
