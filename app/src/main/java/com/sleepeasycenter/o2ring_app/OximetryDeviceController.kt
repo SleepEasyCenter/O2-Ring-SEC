@@ -96,7 +96,6 @@ private constructor() : BleChangeObserver {
             rtHandler.post(rtTask)
 
             BleServiceHelper.BleServiceHelper.oxyGetRtParam(model)
-            BleServiceHelper.BleServiceHelper.oxyGetInfo(model)
         }
     }
 

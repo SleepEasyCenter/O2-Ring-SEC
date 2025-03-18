@@ -49,7 +49,7 @@ class DeviceSessionHistory: Fragment(), BleChangeObserver, DeviceFileListViewAda
         val view = binding.root;
 
 
-        OximetryDeviceController.instance.rtTask.run()
+        //OximetryDeviceController.instance.rtTask.run()
 
         binding.btnUpload.isEnabled = false;
         binding.btnUpload.setOnClickListener {

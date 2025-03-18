@@ -1,5 +1,6 @@
 package com.sleepeasycenter.o2ring_app.fragments
 
+import android.app.Activity
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
@@ -42,9 +43,7 @@ class HomeDeviceDashboard : Fragment(), BleChangeObserver {
     private val pulseEntries = ArrayList<Entry>()
     private val motionEntries = ArrayList<Entry>()
 
-
     private var timeIndex = 0f
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -69,11 +68,10 @@ class HomeDeviceDashboard : Fragment(), BleChangeObserver {
         prChart = binding.prChart
         motionChart = binding.motionChart
 
-        setupLineChart(spo2Chart, 70f, 100f, readPatientPRBaseline(activity as MainActivity), false)
-        setupLineChart(prChart, 40f, 160f, readPatientOxyBaseline(activity as MainActivity), false)
+        setupLineChart(spo2Chart, 70f, 100f, readPatientPRBaseline(activity as Activity), false)
+        setupLineChart(prChart, 40f, 160f, readPatientOxyBaseline(activity as Activity), false)
         setupLineChart(motionChart, 0f, null, null, true)
 
-        initView()
         initEventBus()
 
         return view;
@@ -101,7 +99,6 @@ class HomeDeviceDashboard : Fragment(), BleChangeObserver {
         yAxis.setDrawGridLines(!hideGridLabels)
         yAxis.setDrawLabels(!hideGridLabels)
 
-
         minY?.let { yAxis.axisMinimum = it }
         maxY?.let { yAxis.axisMaximum = it }
 
@@ -109,7 +106,7 @@ class HomeDeviceDashboard : Fragment(), BleChangeObserver {
             val limitLine = LimitLine(it.toFloat(), "").apply {
                 lineWidth = 1f
                 lineColor = Color.DKGRAY
-                enableDashedLine(15f, 15f, 0f)
+                enableDashedLine(20f, 20f, 0f)
                 textSize = 12f
             }
             yAxis.addLimitLine(limitLine)
@@ -120,7 +117,7 @@ class HomeDeviceDashboard : Fragment(), BleChangeObserver {
         chart.legend.isEnabled = false
     }
 
-
+    // adds real-time data values into dashboard linecharts
     private fun addLineEntry(
         chart: LineChart,
         value: Float?,
@@ -163,11 +160,6 @@ class HomeDeviceDashboard : Fragment(), BleChangeObserver {
 
             chart.invalidate()
         }
-    }
-
-
-    fun initView() {
-
     }
 
     private fun initEventBus() {
@@ -215,17 +207,37 @@ class HomeDeviceDashboard : Fragment(), BleChangeObserver {
 
     private fun determineTextColor(dataVal: String) {
         val value = dataVal.toFloatOrNull()
-        if (value != null) {
-            if (value < 90) { // Adjust threshold as needed
-                binding.tvOxy.setTextColor(Color.parseColor("#ed2e11")) // Critical low
-            } else if (value in 90f..94f) {
-                binding.tvOxy.setTextColor(Color.parseColor("#f7d00c")) // Warning
+        val baseline = readPatientOxyBaseline(requireActivity())?.toFloat()
+
+        if (value != null && baseline != null) {
+            if (value < (baseline - 4f)) {
+                binding.tvOxy.setTextColor(Color.parseColor("#ed2e11")) // critical low
+            } else if (value in ((baseline - 4f) .. (baseline + 4f))) {
+                binding.tvOxy.setTextColor(Color.parseColor("#f7d00c")) // warning
             } else {
-                binding.tvOxy.setTextColor(Color.parseColor("#06d656")) // Normal
+                binding.tvOxy.setTextColor(Color.parseColor("#06d656")) // normal
             }
         } else {
             binding.tvOxy.setTextColor(Color.GRAY) // Default color if null
         }
+    }
+
+    fun updateLimitLine(chart: LineChart,newBaseline: Float?) {
+
+        if (newBaseline == null) return
+
+        val yAxis = chart.axisLeft
+        yAxis.removeAllLimitLines()
+
+        val limitLine = LimitLine(newBaseline, "").apply {
+            lineWidth = 1f
+            lineColor = Color.DKGRAY
+            enableDashedLine(20f, 20f, 0f)
+            textSize = 12f
+        }
+
+        yAxis.addLimitLine(limitLine)
+        spo2Chart.invalidate()
     }
 
     override fun onBleStateChanged(model: Int, state: Int) {
@@ -233,5 +245,11 @@ class HomeDeviceDashboard : Fragment(), BleChangeObserver {
 
     }
 
+    override fun onResume() {
+        super.onResume()
+
+        updateLimitLine(spo2Chart, readPatientOxyBaseline(requireActivity())?.toFloat())
+        updateLimitLine(prChart, readPatientPRBaseline(requireActivity())?.toFloat())
+    }
 
 }
