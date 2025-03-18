@@ -132,6 +132,9 @@ dependencies {
     // pdf
     implementation 'com.github.mhiew:android-pdf-viewer:3.2.0-beta.1'
     implementation "androidx.core:core-splashscreen:1.0.1"
+
+    implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.2.0-alpha01")
+
     androidTestImplementation platform('androidx.compose:compose-bom:2024.10.00')
     androidTestImplementation 'androidx.compose.ui:ui-test-junit4'
     debugImplementation 'androidx.compose.ui:ui-tooling'

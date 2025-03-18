@@ -60,6 +60,7 @@ class HomeDeviceDashboard : Fragment(), BleChangeObserver {
         // Inflate the layout for this fragment
         val view = binding.root;
 
+        OximetryDeviceController.instance.rtTask.start()
         OximetryDeviceController.instance.rtTask.run()
 
 
@@ -245,11 +246,22 @@ class HomeDeviceDashboard : Fragment(), BleChangeObserver {
 
     }
 
+    // IMPORTANT: only 1 rtTask can run at all times, start/stop it as needed when leaving/returning to this fragment
     override fun onResume() {
         super.onResume()
 
+        // start oxy parameter tracking when returning to this fragment
+        OximetryDeviceController.instance.rtTask.start()
+
         updateLimitLine(spo2Chart, readPatientOxyBaseline(requireActivity())?.toFloat())
         updateLimitLine(prChart, readPatientPRBaseline(requireActivity())?.toFloat())
+    }
+
+    override fun onPause() {
+        super.onPause()
+
+        // stop any parameter tracking when leaving (pausing) this fragment
+        OximetryDeviceController.instance.rtTask.stop()
     }
 
 }

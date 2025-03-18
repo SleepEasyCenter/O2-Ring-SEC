@@ -14,6 +14,7 @@ import com.jeremyliao.liveeventbus.LiveEventBus
 import com.lepu.blepro.event.InterfaceEvent
 import com.lepu.blepro.ext.oxy.*
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.lepu.blepro.observer.BleChangeObserver
 import com.sleepeasycenter.o2ring_app.MainActivity
 import com.sleepeasycenter.o2ring_app.OximetryDeviceController
@@ -30,6 +31,8 @@ class DeviceSessionHistory: Fragment(), BleChangeObserver, DeviceFileListViewAda
     private val binding get() = _binding!!;
 
     private var adapter = DeviceFileListViewAdapter(arrayListOf(), this)
+
+    private lateinit var swipeRefreshLayout: SwipeRefreshLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,8 +51,14 @@ class DeviceSessionHistory: Fragment(), BleChangeObserver, DeviceFileListViewAda
         // Inflate the layout for this fragment
         val view = binding.root;
 
+        swipeRefreshLayout = binding.swipeRefreshLayout
 
-        //OximetryDeviceController.instance.rtTask.run()
+        swipeRefreshLayout.setOnRefreshListener {
+            OximetryDeviceController.instance.refreshFiles()
+            swipeRefreshLayout.isRefreshing = false
+        }
+
+        OximetryDeviceController.instance.refreshFiles()
 
         binding.btnUpload.isEnabled = false;
         binding.btnUpload.setOnClickListener {

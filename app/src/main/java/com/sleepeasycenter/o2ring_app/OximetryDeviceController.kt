@@ -92,10 +92,29 @@ private constructor() : BleChangeObserver {
 
     // call this to get real-time data
     inner class RtTask: Runnable {
-        override fun run() {
-            rtHandler.post(rtTask)
+        private var isRunning: Boolean = false
 
-            BleServiceHelper.BleServiceHelper.oxyGetRtParam(model)
+        override fun run() {
+            if (isRunning) {
+                rtHandler.post(this)
+                BleServiceHelper.BleServiceHelper.oxyGetRtParam(model)
+            }
+        }
+
+        fun start() {
+            if (!isRunning) {
+                isRunning = true
+                rtHandler.post(this)
+                Log.d(TAG, "rtTask started.")
+            }
+        }
+
+        fun stop() {
+            if (isRunning) {
+                isRunning = false
+                rtHandler.removeCallbacks(this)
+                Log.d(TAG, "rtTask stopped.")
+            }
         }
     }
 
@@ -209,7 +228,6 @@ private constructor() : BleChangeObserver {
 
     }
 
-
     fun connectDevice(
         device: Bluetooth,
         serviceHelper: BleServiceHelper,
@@ -224,6 +242,25 @@ private constructor() : BleChangeObserver {
 
         this.connected_device = device
         device.name = deviceName
+    }
+
+    fun refreshFiles() {
+        if (connected.value == true && connected_device != null) {
+            Log.d(TAG, "Refreshing files...")
+            status.postValue(Status.DOWNLOADING)
+
+            // Clear existing files and reset state
+            _filenames.value = emptyArray()
+            _csvfiles.value = emptyArray()
+            currentFileIndex = 0
+
+
+            // Trigger the file detection process
+            BleServiceHelper.BleServiceHelper.oxyGetInfo(connected_device!!.model)
+
+        } else {
+            Log.d(TAG, "Cannot refresh files: Device is not connected.")
+        }
     }
 
     override fun onBleStateChanged(model: Int, state: Int) {
