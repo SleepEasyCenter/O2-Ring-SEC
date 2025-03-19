@@ -61,10 +61,8 @@ public class DeviceFileListViewAdapter extends RecyclerView.Adapter<DeviceFileLi
         String item = items.get(position);
         holder.item =item;
 
-        String formattedFileName = formatFilename(item);
-
         TextView textView = holder.getTextView();
-        textView.setText(formattedFileName);
+        textView.setText(formatFilename(item));
         textView.setOnClickListener(view -> this.onItemClick(item));
     }
 
@@ -79,18 +77,16 @@ public class DeviceFileListViewAdapter extends RecyclerView.Adapter<DeviceFileLi
 
     private String formatFilename(String filename) {
         try {
-            // Parse the filename into a LocalDateTime object
+            // attempt to parse filename
             DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
             LocalDateTime dateTime = LocalDateTime.parse(filename, inputFormatter);
 
-            // Format the LocalDateTime into the desired output
+            // format parsed filename
             DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("d MMMM HH:mm:ss");
-            Log.d("FI", "successful formatting");
             return dateTime.format(outputFormatter);
         } catch (DateTimeParseException e) {
             Log.d("FI", "failed formatting");
-            // If parsing fails, return the original filename
-            e.printStackTrace();
+            // if parsing fails, return the original filename
             return filename;
         }
     }

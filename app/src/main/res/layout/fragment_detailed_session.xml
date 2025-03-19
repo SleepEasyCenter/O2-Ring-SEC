@@ -28,10 +28,11 @@
         android:id="@+id/oxygenLevelLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="16dp"
         android:padding="8dp"
         android:text="Oxygen Level"
         android:textSize="18sp"
+        android:textStyle="bold"
         app:layout_constraintStart_toStartOf="@+id/detailedSessionHeader"
         app:layout_constraintTop_toBottomOf="@+id/detailedSessionHeader" />
 
@@ -39,7 +40,6 @@
         android:id="@+id/oxygenLevelChart"
         android:layout_width="379dp"
         android:layout_height="200dp"
-        android:layout_marginTop="24dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
@@ -49,10 +49,11 @@
         android:id="@+id/pulseRateLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="8dp"
         android:padding="8dp"
         android:text="Pulse Rate"
         android:textSize="18sp"
+        android:textStyle="bold"
         app:layout_constraintStart_toStartOf="@+id/oxygenLevelLabel"
         app:layout_constraintTop_toBottomOf="@+id/oxygenLevelChart" />
 
@@ -60,7 +61,6 @@
         android:id="@+id/pulseRateChart"
         android:layout_width="379dp"
         android:layout_height="200dp"
-        android:layout_marginTop="32dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
