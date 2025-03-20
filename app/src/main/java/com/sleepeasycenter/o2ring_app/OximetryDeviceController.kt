@@ -86,7 +86,7 @@ private constructor() : BleChangeObserver {
     var timeIndex = 0f
 
     // vars to do real-time data collection
-    private var model = Bluetooth.MODEL_O2RING
+    private var model = 0
     private var rtHandler = Handler()
     public var rtTask = RtTask()
 
@@ -134,6 +134,7 @@ private constructor() : BleChangeObserver {
                     oxyPi.value = data.pi.toString()
                 }
                 else {
+                    rtTask.stop()
                     oxyLevel.value = "--"
                     pulseRate.value = "--"
                     oxyPi.value = "--"
@@ -243,12 +244,12 @@ private constructor() : BleChangeObserver {
 
         this.connected_device = device
         device.name = deviceName
+        model = device.model
     }
 
     fun refreshFiles() {
         if (connected.value == true && connected_device != null) {
             Log.d(TAG, "Refreshing files...")
-            status.postValue(Status.DOWNLOADING)
 
             // Clear existing files and reset state
             _filenames.value = emptyArray()

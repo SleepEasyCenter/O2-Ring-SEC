@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.lepu.blepro.objs.Bluetooth;
+import com.sleepeasycenter.o2ring_app.OximetryDeviceController;
 import com.sleepeasycenter.o2ring_app.R;
 
 import java.time.LocalDateTime;
@@ -23,6 +24,7 @@ public class DeviceFileListViewAdapter extends RecyclerView.Adapter<DeviceFileLi
     public static class ViewHolder extends RecyclerView.ViewHolder {
         private final TextView textView;
         public String item = null;
+        public OximetryDeviceController OximetryDeviceController;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);

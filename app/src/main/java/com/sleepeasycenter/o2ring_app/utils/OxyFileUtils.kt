@@ -37,7 +37,10 @@ public fun convertToCsv(oxyfile: OxyFile): String{
         val data = getDataAtPercent(percent, oxyfile);
         val time_epoch = oxyfile.startTime + target_time;
         val datetime = Instant.ofEpochSecond(time_epoch)
-        rows += "$datetime,${data.spo2},${data.pr},${data.vector},0,0";
+        if ((data.spo2 in 1..149) || (data.pr in 1..349)) {
+            rows += "$datetime,${data.spo2},${data.pr},${data.vector},0,0";
+        }
+
     }
 
     return rows.joinToString("\n");

@@ -63,7 +63,6 @@ class HomeDeviceDashboard : Fragment(), BleChangeObserver {
         OximetryDeviceController.instance.rtTask.start()
         OximetryDeviceController.instance.rtTask.run()
 
-
         // set up charts
         spo2Chart = binding.spo2Chart
         prChart = binding.prChart

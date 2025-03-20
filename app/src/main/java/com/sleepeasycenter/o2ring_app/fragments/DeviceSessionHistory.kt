@@ -58,8 +58,6 @@ class DeviceSessionHistory: Fragment(), BleChangeObserver, DeviceFileListViewAda
             swipeRefreshLayout.isRefreshing = false
         }
 
-        OximetryDeviceController.instance.refreshFiles()
-
         binding.btnUpload.isEnabled = false;
         binding.btnUpload.setOnClickListener {
             binding.btnUpload.isEnabled = false;
@@ -73,7 +71,6 @@ class DeviceSessionHistory: Fragment(), BleChangeObserver, DeviceFileListViewAda
 
         return view;
     }
-
 
     private fun init() {
 
@@ -108,6 +105,11 @@ class DeviceSessionHistory: Fragment(), BleChangeObserver, DeviceFileListViewAda
 
     override fun onBleStateChanged(model: Int, state: Int) {
         TODO("Not yet implemented")
+    }
+
+    override fun onResume() {
+        super.onResume()
+        OximetryDeviceController.instance.refreshFiles()
     }
 
     override fun onItemClick(filename: String) {
