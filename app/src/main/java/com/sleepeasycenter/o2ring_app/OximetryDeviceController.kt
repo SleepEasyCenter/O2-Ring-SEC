@@ -276,6 +276,7 @@ private constructor() : BleChangeObserver {
         }
     }
 
+    //upload file thru sleepeasy api
     private fun uploadFile(
         file: File,
         activity: FragmentActivity,

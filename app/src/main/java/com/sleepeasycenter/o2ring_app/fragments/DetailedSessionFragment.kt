@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.components.XAxis
@@ -15,7 +16,6 @@ import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.sleepeasycenter.o2ring_app.OximetryDeviceController
 import com.sleepeasycenter.o2ring_app.R
-import java.io.File
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
@@ -23,7 +23,7 @@ import java.time.format.DateTimeFormatter
 
 class DetailedSessionFragment : Fragment() {
 
-    private lateinit var textView: TextView
+    private lateinit var detailedSessionName: TextView
     private lateinit var oxygenLevelChart: LineChart
     private lateinit var pulseRateChart: LineChart
     private var filename: String? = null
@@ -34,7 +34,7 @@ class DetailedSessionFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_detailed_session, container, false)
-        textView = view.findViewById(R.id.detailedSessionHeader)
+        detailedSessionName = view.findViewById(R.id.detailedSessionHeader)
         oxygenLevelChart = view.findViewById(R.id.oxygenLevelChart)
         pulseRateChart = view.findViewById(R.id.pulseRateChart)
 
@@ -58,25 +58,42 @@ class DetailedSessionFragment : Fragment() {
                     // Convert startTime to a formatted string and compare
                     val date = Instant.ofEpochSecond(data.startTime)
                     val formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss")
-                    val dateString = formatter.format(LocalDateTime.ofInstant(date, ZoneId.systemDefault()))
+                    val dateString =
+                        formatter.format(LocalDateTime.ofInstant(date, ZoneId.systemDefault()))
                     dateString == timestamp
                 }
                 if (csvData != null) {
                     Log.d(TAG, csvData.csv)
-                    textView.text = filename
+                    detailedSessionName.text = filename
 
                     val (oxygenLevelEntries, pulseRateEntries) = parseCSVData(csvData.csv)
 
                     // Set up Oxygen Level chart
-                    setupChart(oxygenLevelChart, oxygenLevelEntries, "Oxygen Level (%)")
+                    setupChart(
+                        oxygenLevelChart,
+                        oxygenLevelEntries,
+                        80f,
+                        100f,
+                        "Oxygen Level (%)",
+                        Color.parseColor("#07a4d9"),
+                        R.drawable.gradient_fill_spo2
+                    )
 
                     // Set up Pulse Rate chart
-                    setupChart(pulseRateChart, pulseRateEntries, "Pulse Rate (bpm)")
+                    setupChart(
+                        pulseRateChart,
+                        pulseRateEntries,
+                        null,
+                        null,
+                        "Pulse Rate (bpm)",
+                        Color.parseColor("#bf1728"),
+                        R.drawable.gradient_fill_pr
+                    )
                 } else {
-                    textView.text = "No matching CSV data found."
+                    detailedSessionName.text = "No matching CSV data found."
                 }
             } else {
-                textView.text = "No CSV data available."
+                detailedSessionName.text = "No CSV data available."
             }
         }
     }
@@ -106,18 +123,24 @@ class DetailedSessionFragment : Fragment() {
         return Pair(oxygenLevelEntries, pulseRateEntries)
     }
 
-    private fun setupChart(chart: LineChart, entries: List<Entry>, label: String) {
+    private fun setupChart(
+        chart: LineChart,
+        entries: List<Entry>,
+        minY: Float? = null,
+        maxY: Float? = null,
+        label: String,
+        color: Int,
+        gradient: Int
+    ) {
         val dataSet = LineDataSet(entries, label).apply {
-            color = when (label) {
-                "Oxygen Level (%)" -> Color.BLUE
-                "Pulse Rate (bpm)" -> Color.RED
-                else -> Color.BLACK
-            }
+            this.color = color
             valueTextColor = Color.BLACK
-            lineWidth = 2f
+            lineWidth = 2.5f
             setCircleColor(Color.BLACK)
             circleRadius = 2f
-            setDrawCircleHole(false)
+            setDrawCircleHole(true)
+            setDrawFilled(true)
+            fillDrawable = ContextCompat.getDrawable(requireContext(), gradient)
         }
 
         val lineData = LineData(dataSet)
@@ -132,6 +155,9 @@ class DetailedSessionFragment : Fragment() {
         // Customize Y-axis
         val yAxis = chart.axisLeft
         yAxis.setDrawGridLines(false)
+
+        minY?.let { yAxis.axisMinimum = minY }
+        maxY?.let { yAxis.axisMaximum = maxY }
 
         // Disable right Y-axis
         chart.axisRight.isEnabled = false
