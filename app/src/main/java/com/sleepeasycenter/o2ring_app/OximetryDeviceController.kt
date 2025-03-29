@@ -8,6 +8,7 @@ import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.lifecycleScope
 import com.github.mikephil.charting.data.Entry
 import com.jeremyliao.liveeventbus.LiveEventBus
 import com.lepu.blepro.constants.Ble
@@ -24,8 +25,10 @@ import com.sleepeasycenter.o2ring_app.api.SleepEasyAPI
 import com.sleepeasycenter.o2ring_app.utils.OxyCsvData
 import com.sleepeasycenter.o2ring_app.utils.bleState
 import com.sleepeasycenter.o2ring_app.utils.convertToCsv
+import com.sleepeasycenter.o2ring_app.utils.readPatientAutoUpload
 import com.sleepeasycenter.o2ring_app.utils.readPatientId
 import kotlinx.coroutines.Runnable
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.yield
 import no.nordicsemi.android.ble.observer.ConnectionObserver
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -69,13 +72,14 @@ private constructor() : BleChangeObserver {
     var progress_min: MutableLiveData<Int> = MutableLiveData(0)
     var progress_max: MutableLiveData<Int> = MutableLiveData(0)
 
-    var oxyLevel: MutableLiveData<String> = MutableLiveData()
-    var pulseRate: MutableLiveData<String> = MutableLiveData()
-    var motion: MutableLiveData<String> = MutableLiveData()
-    var oxyPi: MutableLiveData<String> = MutableLiveData()
-    var currentState: MutableLiveData<Int> = MutableLiveData(1)
+    var oxyLevel: MutableLiveData<String?> = MutableLiveData()
+    var pulseRate: MutableLiveData<String?> = MutableLiveData()
+    var motion: MutableLiveData<String?> = MutableLiveData()
+    var oxyPi: MutableLiveData<String?> = MutableLiveData()
+    var currentState: MutableLiveData<Int> = MutableLiveData(-1)
 
     var deviceName: String = ""
+    var isRecordingValidData: Boolean = true
 
     val TAG: String = "OxiController"
 
@@ -95,26 +99,24 @@ private constructor() : BleChangeObserver {
         private var isRunning: Boolean = false
 
         override fun run() {
-            if (isRunning) {
-                rtHandler.post(this)
-                BleServiceHelper.BleServiceHelper.oxyGetRtParam(model)
-            }
+            if (!isRunning) return
+            rtHandler.post(this)
+            BleServiceHelper.BleServiceHelper.oxyGetRtParam(model)
         }
 
         fun start() {
-            if (!isRunning) {
-                isRunning = true
-                rtHandler.post(this)
-                Log.d(TAG, "rtTask started.")
-            }
+            if (isRunning) return
+            isRunning = true
+            rtHandler.post(this)
+            Log.d(TAG, "rtTask started.")
         }
 
         fun stop() {
-            if (isRunning) {
-                isRunning = false
-                rtHandler.removeCallbacks(this)
-                Log.d(TAG, "rtTask stopped.")
-            }
+            if (!isRunning) return
+            isRunning = false
+            rtHandler.removeCallbacks(this)
+            Log.d(TAG, "rtTask stopped.")
+
         }
     }
 
@@ -129,18 +131,20 @@ private constructor() : BleChangeObserver {
 
 
                 if ((data.spo2 in 1..149) || (data.pr in 1..349)) {
+                    isRecordingValidData = true
                     oxyLevel.value = data.spo2.toString()
                     pulseRate.value = data.pr.toString()
                     oxyPi.value = data.pi.toString()
+                    motion.value = data.vector.toString()
                 }
                 else {
-                    rtTask.stop()
-                    oxyLevel.value = "--"
-                    pulseRate.value = "--"
-                    oxyPi.value = "--"
+                    isRecordingValidData = false
+                    BleServiceHelper.BleServiceHelper.oxyGetInfo(model)
+                    oxyLevel.value = null
+                    pulseRate.value = null
+                    oxyPi.value = null
+                    motion.value = null
                 }
-
-                motion.value = data.vector.toString()
             }
 
         LiveEventBus.get<InterfaceEvent>(InterfaceEvent.Oxy.EventOxySyncDeviceInfo)
@@ -158,6 +162,7 @@ private constructor() : BleChangeObserver {
             val filtered = list.filter { it != ""; }.toTypedArray()
 
             Log.d(TAG, "Current state: ${data.curState}")
+            Log.d(TAG, "Work mode: ${data.workMode}")
             currentState.value = data.curState
             _filenames.postValue(filtered)
             Log.d("FILENAMES", filtered.toString())
@@ -225,9 +230,6 @@ private constructor() : BleChangeObserver {
                 _connected.value = false;
             }
 
-
-
-
     }
 
     fun connectDevice(
@@ -248,7 +250,7 @@ private constructor() : BleChangeObserver {
     }
 
     fun refreshFiles() {
-        if (connected.value == true && connected_device != null) {
+        if (connected.value == true || connected_device != null) {
             Log.d(TAG, "Refreshing files...")
 
             // Clear existing files and reset state
@@ -263,6 +265,15 @@ private constructor() : BleChangeObserver {
         } else {
             Log.d(TAG, "Cannot refresh files: Device is not connected.")
         }
+    }
+
+    fun runAutoUpload(activity: FragmentActivity): Boolean {
+        if (connected.value == true && connected_device != null && readPatientAutoUpload(activity)) {
+            Toast.makeText(activity, "Attempting auto upload...", Toast.LENGTH_SHORT).show()
+            return true
+        }
+
+        return false
     }
 
     override fun onBleStateChanged(model: Int, state: Int) {

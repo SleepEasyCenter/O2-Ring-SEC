@@ -166,6 +166,7 @@ class HomeDeviceDashboard : Fragment(), BleChangeObserver {
         OximetryDeviceController.instance.oxyLevel.observe(viewLifecycleOwner) { value ->
             binding.tvOxy.text = value ?: "--"
             determineTextColor(value)
+            if (value != null)
             addLineEntry(
                 spo2Chart,
                 value.toFloatOrNull(),
@@ -178,6 +179,7 @@ class HomeDeviceDashboard : Fragment(), BleChangeObserver {
 
         OximetryDeviceController.instance.pulseRate.observe(viewLifecycleOwner) { value ->
             binding.tvPr.text = value ?: "--"
+            if (value != null)
             addLineEntry(
                 prChart,
                 value.toFloatOrNull(),
@@ -193,6 +195,7 @@ class HomeDeviceDashboard : Fragment(), BleChangeObserver {
         }
 
         OximetryDeviceController.instance.motion.observe(viewLifecycleOwner) { value ->
+            if (value != null)
             addLineEntry(
                 motionChart,
                 value.toFloatOrNull(),
@@ -205,7 +208,8 @@ class HomeDeviceDashboard : Fragment(), BleChangeObserver {
 
     }
 
-    private fun determineTextColor(dataVal: String) {
+    private fun determineTextColor(dataVal: String? = null) {
+        if (dataVal == null) return
         val value = dataVal.toFloatOrNull()
         val baseline = readPatientOxyBaseline(requireActivity())?.toFloat()
 

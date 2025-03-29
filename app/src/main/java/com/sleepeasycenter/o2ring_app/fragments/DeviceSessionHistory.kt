@@ -58,9 +58,16 @@ class DeviceSessionHistory: Fragment(), BleChangeObserver, DeviceFileListViewAda
             swipeRefreshLayout.isRefreshing = false
         }
 
+
         binding.btnUpload.isEnabled = false;
         binding.btnUpload.setOnClickListener {
             binding.btnUpload.isEnabled = false;
+            requireActivity().lifecycleScope.launch {
+                OximetryDeviceController.instance.uploadToServer(requireActivity())
+            }
+        }
+
+        if (OximetryDeviceController.instance.runAutoUpload(requireActivity())) {
             requireActivity().lifecycleScope.launch {
                 OximetryDeviceController.instance.uploadToServer(requireActivity())
             }

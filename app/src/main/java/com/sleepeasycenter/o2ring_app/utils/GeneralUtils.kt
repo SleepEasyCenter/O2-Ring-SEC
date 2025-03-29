@@ -28,8 +28,16 @@ public val SharedPref_PatientOxyBaseline_Key = "patient_oxybaseline"
 
 public val SharedPref_PatientPRBaseline_Key = "patient_prbaseline"
 
+public val SharedPref_PatientAutoUpload_Key = "patient_autoupload"
+
 public fun getAppSharedPref(activity: Activity): SharedPreferences{
     return activity.getSharedPreferences(SHARED_PREF_KEY, Context.MODE_PRIVATE)
+}
+
+public fun readPatientAutoUpload(any_activity: Activity): Boolean {
+    var sharedPref = getAppSharedPref(any_activity as Activity)
+    val oxyBaseline = sharedPref.getBoolean(SharedPref_PatientAutoUpload_Key, true)
+    return oxyBaseline
 }
 
 public fun readPatientOxyBaseline(any_activity: Activity): String? {
@@ -54,6 +62,11 @@ public fun readPatientO2Serial(any_activity: Activity): String? {
     var sharedPref = getAppSharedPref(any_activity as Activity)
     val patient_o2serial = sharedPref.getString(SharedPref_PatientO2Serial_Key, "-")
     return patient_o2serial
+}
+
+public fun setPatientAutoUpload(any_activity: Activity, patient_autoupload: Boolean) {
+    var sharedPref = getAppSharedPref(any_activity as Activity)
+    sharedPref.edit().putBoolean(SharedPref_PatientAutoUpload_Key, patient_autoupload).apply()
 }
 
 public fun setPatientOxyBaseline(any_activity: Activity, patient_oxybaseline: String?) {

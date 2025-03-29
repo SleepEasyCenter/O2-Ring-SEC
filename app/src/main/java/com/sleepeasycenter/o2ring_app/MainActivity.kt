@@ -4,12 +4,16 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.lepu.blepro.ext.BleServiceHelper
 import com.lepu.blepro.objs.Bluetooth
 import com.sleepeasycenter.o2ring_app.databinding.ActivityMainBinding
+import com.sleepeasycenter.o2ring_app.utils.readPatientAutoUpload
+import com.sleepeasycenter.o2ring_app.utils.readPatientId
+import kotlinx.coroutines.launch
 
 
 class MainActivity : AppCompatActivity(), DeviceSelectCallback {
@@ -29,6 +33,7 @@ class MainActivity : AppCompatActivity(), DeviceSelectCallback {
 
         OximetryDeviceController.instance.initEventBus(this);
 
+
     }
 
     public fun startScanActivity() {
@@ -46,6 +51,7 @@ class MainActivity : AppCompatActivity(), DeviceSelectCallback {
         val intent: Intent = Intent(this@MainActivity, ConfigureBaselineActivity::class.java)
         startActivity(intent)
     }
+
 
     override fun onDeviceSelect(device: Bluetooth) {
         // connect
