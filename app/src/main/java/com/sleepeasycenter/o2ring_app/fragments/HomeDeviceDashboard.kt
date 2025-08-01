@@ -77,6 +77,43 @@ class HomeDeviceDashboard : Fragment(), BleChangeObserver {
         return view;
     }
 
+    private lateinit var ppgChart: LineChart
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        ppgChart = view.findViewById(R.id.ppgChart)
+
+        // Observe both pulse rate and PI
+        val controller = OximetryDeviceController.instance
+
+        controller.pulseRate.observe(viewLifecycleOwner) { pr ->
+            controller.oxyPi.value?.let { pi ->
+                if (pr != null && pi != null) {
+                    val waveform = generateSimulatedPPG(pr.toInt(), pi.toFloat())
+                    setupPpgChart(ppgChart, waveform)
+                }
+            }
+        }
+    }
+
+    private fun setupPpgChart(chart: LineChart, entries: List<Entry>) {
+        val dataSet = LineDataSet(entries, "PPG").apply {
+            color = Color.MAGENTA
+            lineWidth = 2f
+            setDrawCircles(false)
+            setDrawValues(false)
+            setDrawFilled(true)
+        }
+
+        chart.data = LineData(dataSet)
+        chart.axisLeft.setDrawGridLines(false)
+        chart.axisRight.isEnabled = false
+        chart.xAxis.setDrawGridLines(false)
+        chart.xAxis.position = XAxis.XAxisPosition.BOTTOM
+        chart.invalidate()
+    }
+
     private fun setupLineChart(
         chart: LineChart,
         minY: Float? = null,
@@ -115,6 +152,23 @@ class HomeDeviceDashboard : Fragment(), BleChangeObserver {
 
         chart.axisRight.isEnabled = false
         chart.legend.isEnabled = false
+    }
+
+    fun generateSimulatedPPG(pulseRate: Int, perfusionIndex: Float, durationSeconds: Int = 5): List<Entry> {
+        val entries = ArrayList<Entry>()
+        val samplesPerSecond = 100
+        val totalSamples = durationSeconds * samplesPerSecond
+        val frequency = pulseRate / 60.0  // Hz
+
+        for (i in 0 until totalSamples) {
+            val time = i / samplesPerSecond.toFloat()
+            val phase = (2 * Math.PI * frequency) * time
+            val amplitude = perfusionIndex / 10.0  // Scale it down
+            val y = (Math.sin(phase) * amplitude).toFloat()
+            entries.add(Entry(time, y))
+        }
+
+        return entries
     }
 
     // adds real-time data values into dashboard linecharts

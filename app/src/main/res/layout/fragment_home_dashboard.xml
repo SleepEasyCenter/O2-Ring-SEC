@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -6,224 +5,256 @@
     android:layout_height="match_parent"
     tools:context=".fragments.HomeDeviceDashboard">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:fillViewport="true">
 
-        <!-- SEC Logo -->
-
-        <ImageView
-            android:id="@+id/SECLogo"
-            android:layout_width="150dp"
-            android:layout_height="50dp"
-            android:layout_marginTop="4dp"
-            android:alpha="1"
-            android:src="@drawable/seclogo"
-            app:layout_constraintEnd_toEndOf="@+id/cardView"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="@+id/cardView"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <!-- OXY Info Card -->
-
-        <!-- Oxygen Level Chart Card -->
-        <androidx.cardview.widget.CardView
-            android:id="@+id/cardView"
-            android:layout_width="385dp"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="16dp"
-            android:layout_marginTop="8dp"
-            app:cardBackgroundColor="#FFFFFFFF"
-            app:cardCornerRadius="5dp"
-            app:cardElevation="3dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/SECLogo">
+            android:paddingBottom="16dp">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
+            <!-- SEC Logo -->
+            <ImageView
+                android:id="@+id/SECLogo"
+                android:layout_width="150dp"
+                android:layout_height="50dp"
+                android:layout_marginTop="4dp"
+                android:alpha="1"
+                android:src="@drawable/seclogo"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/cardView"
+                app:layout_constraintEnd_toEndOf="@+id/cardView" />
+
+            <!-- Oxygen Level Card -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardView"
+                android:layout_width="385dp"
                 android:layout_height="wrap_content"
-                android:padding="8dp">
+                android:layout_marginTop="8dp"
+                android:layout_marginHorizontal="16dp"
+                app:cardCornerRadius="5dp"
+                app:cardElevation="3dp"
+                app:layout_constraintTop_toBottomOf="@+id/SECLogo"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent">
 
-                <!-- Oxygen Level Header -->
-                <TextView
-                    android:id="@+id/oxygenLevelHeader"
-                    android:layout_width="wrap_content"
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Oxygen Level"
-                    android:textColor="@color/black"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    app:layout_constraintEnd_toStartOf="@+id/tv_oxy"
-                    app:layout_constraintHorizontal_bias="0.0"
-                    app:layout_constraintStart_toStartOf="@+id/spo2Chart"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    android:padding="8dp">
 
-                <TextView
-                    android:id="@+id/tv_oxy"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/black"
-                    android:textSize="24sp"
-                    android:textStyle="bold"
-                    app:layout_constraintBottom_toTopOf="@+id/spo2Chart"
-                    app:layout_constraintEnd_toStartOf="@id/tv_oxy_unit" />
+                    <TextView
+                        android:id="@+id/oxygenLevelHeader"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Oxygen Level"
+                        android:textColor="@color/black"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintStart_toStartOf="@+id/spo2Chart"
+                        app:layout_constraintEnd_toStartOf="@+id/tv_oxy" />
 
-                <TextView
-                    android:id="@+id/tv_oxy_unit"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="16dp"
-                    android:text=" %"
-                    android:textColor="@color/black"
-                    android:textSize="12sp"
-                    android:textStyle="bold"
-                    app:layout_constraintBottom_toBottomOf="@+id/tv_oxy"
-                    app:layout_constraintEnd_toStartOf="@+id/tv_pi" />
+                    <TextView
+                        android:id="@+id/tv_oxy"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/black"
+                        android:textSize="24sp"
+                        android:textStyle="bold"
+                        app:layout_constraintBottom_toTopOf="@+id/spo2Chart"
+                        app:layout_constraintEnd_toStartOf="@id/tv_oxy_unit" />
 
-                <TextView
-                    android:id="@+id/tv_pi"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/black"
-                    android:textSize="16sp"
-                    android:textStyle="normal"
-                    app:layout_constraintBottom_toBottomOf="@+id/tv_pi_unit"
-                    app:layout_constraintEnd_toStartOf="@id/tv_pi_unit" />
+                    <TextView
+                        android:id="@+id/tv_oxy_unit"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=" %"
+                        android:textColor="@color/black"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        android:layout_marginEnd="16dp"
+                        app:layout_constraintBottom_toBottomOf="@+id/tv_oxy"
+                        app:layout_constraintEnd_toStartOf="@+id/tv_pi" />
 
-                <TextView
-                    android:id="@+id/tv_pi_unit"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="32dp"
-                    android:text=" %"
-                    android:textColor="@color/black"
-                    android:textSize="12sp"
-                    android:textStyle="bold"
-                    app:layout_constraintBottom_toBottomOf="@+id/tv_oxy_unit"
-                    app:layout_constraintEnd_toEndOf="@+id/spo2Chart" />
+                    <TextView
+                        android:id="@+id/tv_pi"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/black"
+                        android:textSize="16sp"
+                        app:layout_constraintBottom_toBottomOf="@+id/tv_pi_unit"
+                        app:layout_constraintEnd_toStartOf="@id/tv_pi_unit" />
 
-                <!-- Oxygen Level Chart -->
-                <com.github.mikephil.charting.charts.LineChart
-                    android:id="@+id/spo2Chart"
-                    android:layout_width="0dp"
-                    android:layout_height="185dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/oxygenLevelHeader" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
-        </androidx.cardview.widget.CardView>
+                    <TextView
+                        android:id="@+id/tv_pi_unit"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=" %"
+                        android:textColor="@color/black"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        android:layout_marginEnd="32dp"
+                        app:layout_constraintBottom_toBottomOf="@+id/tv_oxy_unit"
+                        app:layout_constraintEnd_toEndOf="@+id/spo2Chart" />
 
-        <!-- Pulse Rate Chart Card -->
-        <androidx.cardview.widget.CardView
-            android:id="@+id/cardView2"
-            android:layout_width="385dp"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="16dp"
-            android:layout_marginTop="8dp"
-            app:cardCornerRadius="5dp"
-            app:cardElevation="3dp"
-            app:layout_constraintEnd_toEndOf="@+id/cardView"
-            app:layout_constraintStart_toStartOf="@+id/cardView"
-            app:layout_constraintTop_toBottomOf="@+id/cardView">
+                    <com.github.mikephil.charting.charts.LineChart
+                        android:id="@+id/spo2Chart"
+                        android:layout_width="0dp"
+                        android:layout_height="185dp"
+                        app:layout_constraintTop_toBottomOf="@+id/oxygenLevelHeader"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.cardview.widget.CardView>
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
+            <!-- Pulse Rate Card -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardView2"
+                android:layout_width="385dp"
                 android:layout_height="wrap_content"
-                android:padding="8dp">
+                android:layout_marginTop="8dp"
+                android:layout_marginHorizontal="16dp"
+                app:cardCornerRadius="5dp"
+                app:cardElevation="3dp"
+                app:layout_constraintTop_toBottomOf="@+id/cardView"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent">
 
-                <!-- Pulse Rate Header -->
-                <TextView
-                    android:id="@+id/pulseRateHeader"
-                    android:layout_width="wrap_content"
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Pulse Rate"
-                    android:textColor="@color/black"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    app:layout_constraintEnd_toStartOf="@+id/tv_pr"
-                    app:layout_constraintHorizontal_bias="0.0"
-                    app:layout_constraintStart_toStartOf="@+id/prChart"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    android:padding="8dp">
 
-                <TextView
-                    android:id="@+id/tv_pr"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/black"
-                    android:textSize="24sp"
-                    android:textStyle="bold"
-                    app:layout_constraintBottom_toTopOf="@+id/prChart"
-                    app:layout_constraintEnd_toStartOf="@+id/tv_pr_unit" />
+                    <TextView
+                        android:id="@+id/pulseRateHeader"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Pulse Rate"
+                        android:textColor="@color/black"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintStart_toStartOf="@+id/prChart"
+                        app:layout_constraintEnd_toStartOf="@+id/tv_pr" />
 
-                <TextView
-                    android:id="@+id/tv_pr_unit"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="32dp"
-                    android:text=" /min"
-                    android:textColor="@color/black"
-                    android:textSize="12sp"
-                    android:textStyle="bold"
-                    app:layout_constraintBottom_toBottomOf="@+id/tv_pr"
-                    app:layout_constraintEnd_toEndOf="@+id/prChart" />
+                    <TextView
+                        android:id="@+id/tv_pr"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/black"
+                        android:textSize="24sp"
+                        android:textStyle="bold"
+                        app:layout_constraintBottom_toTopOf="@+id/prChart"
+                        app:layout_constraintEnd_toStartOf="@+id/tv_pr_unit" />
 
-                <!-- Pulse Rate Chart -->
-                <com.github.mikephil.charting.charts.LineChart
-                    android:id="@+id/prChart"
-                    android:layout_width="0dp"
-                    android:layout_height="200dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/pulseRateHeader" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
-        </androidx.cardview.widget.CardView>
+                    <TextView
+                        android:id="@+id/tv_pr_unit"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text=" /min"
+                        android:textColor="@color/black"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        android:layout_marginEnd="32dp"
+                        app:layout_constraintBottom_toBottomOf="@+id/tv_pr"
+                        app:layout_constraintEnd_toEndOf="@+id/prChart" />
 
-        <!-- Motion Chart Card -->
-        <androidx.cardview.widget.CardView
-            android:layout_width="385dp"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="16dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="16dp"
-            app:cardCornerRadius="5dp"
-            app:cardElevation="3dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="@+id/cardView"
-            app:layout_constraintStart_toStartOf="@+id/cardView"
-            app:layout_constraintTop_toBottomOf="@+id/cardView2"
-            app:layout_constraintVertical_bias="0.0">
+                    <com.github.mikephil.charting.charts.LineChart
+                        android:id="@+id/prChart"
+                        android:layout_width="0dp"
+                        android:layout_height="200dp"
+                        app:layout_constraintTop_toBottomOf="@+id/pulseRateHeader"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.cardview.widget.CardView>
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
+            <!-- PPG Chart Card -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardViewPPG"
+                android:layout_width="385dp"
                 android:layout_height="wrap_content"
-                android:padding="8dp">
+                android:layout_marginTop="8dp"
+                android:layout_marginHorizontal="16dp"
+                app:cardCornerRadius="5dp"
+                app:cardElevation="3dp"
+                app:layout_constraintTop_toBottomOf="@+id/cardView2"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent">
 
-                <!-- Motion Header -->
-                <TextView
-                    android:id="@+id/motionHeader"
-                    android:layout_width="wrap_content"
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Motion"
-                    android:textColor="@color/black"
-                    android:textSize="14sp"
-                    android:textStyle="bold"
-                    app:layout_constraintStart_toStartOf="@+id/motionChart"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    android:padding="8dp">
 
-                <!-- Motion Chart -->
-                <com.github.mikephil.charting.charts.LineChart
-                    android:id="@+id/motionChart"
-                    android:layout_width="0dp"
-                    android:layout_height="100dp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/motionHeader" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
-        </androidx.cardview.widget.CardView>
+                    <TextView
+                        android:id="@+id/ppgHeader"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Simulated PPG Waveform"
+                        android:textColor="@color/black"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintStart_toStartOf="parent" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+                    <com.github.mikephil.charting.charts.LineChart
+                        android:id="@+id/ppgChart"
+                        android:layout_width="0dp"
+                        android:layout_height="200dp"
+                        app:layout_constraintTop_toBottomOf="@+id/ppgHeader"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- Motion Chart Card -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardViewMotion"
+                android:layout_width="385dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="16dp"
+                android:layout_marginHorizontal="16dp"
+                app:cardCornerRadius="5dp"
+                app:cardElevation="3dp"
+                app:layout_constraintTop_toBottomOf="@+id/cardViewPPG"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="8dp">
+
+                    <TextView
+                        android:id="@+id/motionHeader"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Motion"
+                        android:textColor="@color/black"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintStart_toStartOf="@+id/motionChart" />
+
+                    <com.github.mikephil.charting.charts.LineChart
+                        android:id="@+id/motionChart"
+                        android:layout_width="0dp"
+                        android:layout_height="100dp"
+                        app:layout_constraintTop_toBottomOf="@+id/motionHeader"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.cardview.widget.CardView>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
 </FrameLayout>
