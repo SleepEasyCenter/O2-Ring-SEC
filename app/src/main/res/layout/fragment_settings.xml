@@ -127,4 +127,14 @@
         app:layout_constraintStart_toStartOf="@+id/cardView"
         app:layout_constraintTop_toBottomOf="@+id/cardView" />
 
+    <Button
+        android:id="@+id/btn_patient_bloodpressure_baseline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="Edit Blood Pressure Baselines"
+        app:layout_constraintEnd_toEndOf="@+id/cardView"
+        app:layout_constraintStart_toStartOf="@+id/cardView"
+        app:layout_constraintTop_toBottomOf="@+id/btn_patient_baseline_edit" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

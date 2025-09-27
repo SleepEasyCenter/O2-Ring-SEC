@@ -28,6 +28,16 @@ android {
         buildConfigField("String", "API_USERNAME", apikeyProperties['API_USERNAME'])
         buildConfigField("String", "API_PASSWORD", apikeyProperties['API_PASSWORD'])
         versionNameSuffix '-alpha'
+        externalNativeBuild {cmake { cppFlags "" }}
+        ndk { abiFilters "armeabi-v7a", "arm64-v8a" }
+    }
+    externalNativeBuild {
+        cmake { path "src/main/java/com/sleepeasycenter/o2ring_app/bp/CMakeLists.txt" }
+    }
+    packagingOptions {
+        jniLibs {
+        useLegacyPackaging = true
+        }
     }
 
     buildTypes {
@@ -120,7 +130,7 @@ dependencies {
     implementation 'com.opencsv:opencsv:5.5.2'
 
     implementation 'no.nordicsemi.android:ble:2.2.4'
-    implementation(name: 'lepu-blepro-1.0.7', ext: 'aar')
+    implementation(name: 'lepu-blepro-1.0.13', ext: 'aar')
     implementation 'io.github.jeremyliao:live-event-bus-x:1.8.0'
     implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:3.0.4'
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.8.6'

@@ -4,17 +4,12 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.lepu.blepro.ext.BleServiceHelper
 import com.lepu.blepro.objs.Bluetooth
 import com.sleepeasycenter.o2ring_app.databinding.ActivityMainBinding
-import com.sleepeasycenter.o2ring_app.utils.readPatientAutoUpload
-import com.sleepeasycenter.o2ring_app.utils.readPatientId
-import kotlinx.coroutines.launch
-
 
 class MainActivity : AppCompatActivity(), DeviceSelectCallback {
     private val TAG: String = "MainActivity"
@@ -27,23 +22,22 @@ class MainActivity : AppCompatActivity(), DeviceSelectCallback {
         setContentView(binding.root)
 
         val navHostFragment =
-            supportFragmentManager.findFragmentById(R.id.navhost) as NavHostFragment;
-        navController = navHostFragment.navController;
-        binding.bottomNavigationView.setupWithNavController(navController);
+                supportFragmentManager.findFragmentById(R.id.navhost) as NavHostFragment
+        navController = navHostFragment.navController
+        binding.bottomNavigationView.setupWithNavController(navController)
 
-        OximetryDeviceController.instance.initEventBus(this);
-
-
+        OximetryDeviceController.instance.initEventBus(this)
+        OximetryIIDeviceController.instance.initEventBus(this)
     }
 
     public fun startScanActivity() {
-        val intent: Intent = Intent(this@MainActivity, DeviceScanActivity::class.java);
+        val intent: Intent = Intent(this@MainActivity, DeviceScanActivity::class.java)
         startActivity(intent)
         DeviceScanActivity.resultCallback = this
     }
 
     public fun startPatientEditActivity() {
-        val intent: Intent = Intent(this@MainActivity, ConfigurePatientActivity::class.java);
+        val intent: Intent = Intent(this@MainActivity, ConfigurePatientActivity::class.java)
         startActivity(intent)
     }
 
@@ -52,16 +46,30 @@ class MainActivity : AppCompatActivity(), DeviceSelectCallback {
         startActivity(intent)
     }
 
+    public fun startBloodPressureBaselineActivity() {
+        val intent: Intent =
+                Intent(this@MainActivity, ConfigureBloodpressureBaselinesActivity::class.java)
+        startActivity(intent)
+    }
 
     override fun onDeviceSelect(device: Bluetooth) {
         // connect
         Toast.makeText(this, "Connecting to ..." + device.name, Toast.LENGTH_SHORT).show()
-        OximetryDeviceController.instance.connectDevice(
-            device,
-            BleServiceHelper.BleServiceHelper,
-            applicationContext,
-            lifecycle
-        );
-
+        val model = device.model
+        if (model == Bluetooth.MODEL_O2RING_S || model == Bluetooth.MODEL_S8_AW) {
+            OximetryIIDeviceController.instance.connectDevice(
+                    device,
+                    BleServiceHelper.BleServiceHelper,
+                    applicationContext,
+                    lifecycle
+            )
+        } else {
+            OximetryDeviceController.instance.connectDevice(
+                    device,
+                    BleServiceHelper.BleServiceHelper,
+                    applicationContext,
+                    lifecycle
+            )
+        }
     }
 }

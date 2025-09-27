@@ -36,6 +36,9 @@
             android:name=".ConfigureBaselineActivity"
             android:exported="false" />
         <activity
+            android:name=".ConfigureBloodpressureBaselinesActivity"
+            android:exported="false" />
+        <activity
             android:name=".ShareReceiveAndUploadActivity"
             android:exported="true">
             <intent-filter>
